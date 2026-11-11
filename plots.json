@@ -1,8 +1,0 @@
-{
-  "_comment": "Fill in real plot records from the official MJR Township layout & price sheet. Do not invent values. Each entry in 'plots' should have: number (string, e.g. '01'), areaSqYd (number | null), roadWidth (string | null, e.g. '30 FT' or '40 FT'), facing (string | null, e.g. 'East'), status ('Available' | 'Reserved' | 'Sold' | null), and optional polygon points or x/y/w/h.",
-  "_comment": "Fill in real plot records from the official MJR Township layout & price sheet. Do not invent values. Each entry in 'plots' should have: number (string, e.g. '01'), areaSqYd (number | null), roadWidth (string | null, e.g. '30 FT' or '40 FT'), facing (string | null, e.g. 'East'), status ('available' | 'reserved' | 'sold' | null), and optional polygon points or x/y/w/h.",
-  "asOfDate": "October 2026",
-  "source": "Pending user input from official layout / price sheet",
-  "plots": []
-}
-

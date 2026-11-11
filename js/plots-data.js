@@ -6,7 +6,7 @@
    image changes.
    Plots 1-3 are the EV charging station and plot 42 is not for sale: their tiles
    show on the plan but they cannot be selected or enquired about.
-   Sizes come from the drawn areas, and facing, availability and highlights are
+   Sizes come from the drawn areas, and facing and availability are
    working values: replace them with the sales team's schedule before launch. */
 (() => {
   const IMG_W = 2560;
@@ -159,41 +159,10 @@
     p.reserved = RESERVED[p.n] || null;
     p.sold = !p.reserved && SOLD.has(p.n);
     p.corner = p.first || p.last;
-    p.mainRoad = p.road === 150;
-    p.nearMain = p.mainRoad || p.block.startsWith('C');
-    p.edge = p.irregular || p.corner;
-
     // Facing follows the road the plot fronts; corners take the side road as well
     const base = p.side === 'top' ? 'North' : 'South';
     const ew = p.corner ? (p.first ? 'West' : 'East') : '';
     p.facing = ew ? `${base}-${ew}` : base;
-
-    // Highlight selection in priority order: unique -> road -> location -> other
-    const tags = [];
-    const push = (t) => { if (!tags.includes(t) && tags.length < 4) tags.push(t); };
-    if (p.corner) push('Corner Plot');
-    if (p.mainRoad) push(p.corner ? 'Multiple Road Access' : '150 FT Main Road Facing');
-    else if (p.nearMain) push('Near 150 FT Main Road');
-    if (p.road === 40) push('40 FT Road');
-    if (p.corner || p.mainRoad) push(p.mainRoad ? 'Wide Frontage' : 'Wide Road Frontage');
-    if (p.open) push('Near Open Space');
-    if (p.social) push('Near Social Infrastructure');
-    if (p.road === 30) push('30 FT Road');
-    if (p.irregular) push('Irregular Plot');
-    else if (p.edge) push('Edge Plot');
-    if (tags.length < 3) push(p.corner || p.edge ? 'Good Visibility' : 'Internal Plot');
-    p.highlights = tags;
-
-    // One sentence on the strongest differentiator
-    if (p.mainRoad && p.corner) p.desc = 'A corner plot on the 150 FT main road with frontage on two roads.';
-    else if (p.mainRoad) p.desc = 'A well-positioned residential plot with direct frontage on the 150 FT main road.';
-    else if (p.corner) p.desc = 'A spacious corner plot with excellent road frontage and convenient access.';
-    else if (p.open) p.desc = 'A well-positioned plot a short walk from the open space.';
-    else if (p.irregular) p.desc = 'An irregular plot at the edge of the layout with extra room to plan.';
-    else if (p.social) p.desc = 'A quiet plot close to the social infrastructure.';
-    else if (p.road === 40) p.desc = 'A residential plot with frontage on a wide 40 FT internal road.';
-    else if (p.nearMain) p.desc = 'A residential plot one block from the 150 FT main road.';
-    else p.desc = 'A regular plot on a quiet 30 FT internal road, away from main-road traffic.';
 
     p.label = pad(p.n);
     p.px = p.x / IMG_W; // fractions of the plan image
@@ -201,5 +170,6 @@
   });
 
   const list = Object.values(plots).sort((a, b) => a.n - b.n);
-  window.MJR_PLOTS = { list, byNo: plots, IMG_W, IMG_H };
+  // shortcut: SOLD/sizes/facing above are working values; replace with the sales schedule before launch
+  window.MJR_PLOTS = { list, byNo: plots, IMG_W, IMG_H, asOf: "October 2026" };
 })();

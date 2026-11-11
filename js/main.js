@@ -1,1065 +1,564 @@
-// ==========================================================================
-// MJR TOWNSHIP @ KALWAKURTHY — CLIENT CONTROLLER
-// ==========================================================================
-
-let PLOTS_RECORDS = [];
-let AS_OF_DATE = 'October 2026';
-
-document.addEventListener('DOMContentLoaded', async () => {
-  initNavigation();
-  initHeroControls();
-  await loadPlotsData();
-  initMasterPlan();
-  initPlotFinder();
-  initAmenitiesShowcase();
-  initLocationShowcase();
-  initFAQ();
-  initModals();
-  initForms();
-  initStickyMobileBar();
-});
-
-/* --------------------------------------------------------------------------
-   0. LOAD REAL PLOT DATA FROM plots.json (Zero Invented Values)
-   -------------------------------------------------------------------------- */
-async function loadPlotsData() {
-  try {
-    const res = await fetch('plots.json', { cache: 'no-store' });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.asOfDate) AS_OF_DATE = data.asOfDate;
-      if (Array.isArray(data.plots)) {
-        PLOTS_RECORDS = data.plots;
-      }
-    }
-  } catch (err) {
-    PLOTS_RECORDS = [];
-  }
-
-  const metaEl = document.getElementById('availabilityAsOf');
-  if (metaEl) {
-    metaEl.textContent = `Availability as of ${AS_OF_DATE} · Confirm availability with our team`;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   1. NAVIGATION & MOBILE DRAWER
-   -------------------------------------------------------------------------- */
-function initNavigation() {
-  const header = document.getElementById('siteHeader');
-  const mobileToggle = document.getElementById('mobileNavToggle');
-  const mobileDrawer = document.getElementById('mobileNavDrawer');
-  const mobileOverlay = document.getElementById('mobileNavOverlay');
-  const mobileClose = document.getElementById('mobileNavClose');
-  const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
-
-  const updateHeaderHeightVar = () => {
-    if (header && window.scrollY <= 24) {
-      document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
-    }
-  };
-  updateHeaderHeightVar();
-  window.addEventListener('resize', updateHeaderHeightVar, { passive: true });
-
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 24) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  }, { passive: true });
-
-  const openDrawer = () => {
-    mobileDrawer.classList.add('open');
-    mobileOverlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeDrawer = () => {
-    mobileDrawer.classList.remove('open');
-    mobileOverlay.classList.remove('open');
-    document.body.style.overflow = '';
-  };
-
-  if (mobileToggle) mobileToggle.addEventListener('click', openDrawer);
-  if (mobileClose) mobileClose.addEventListener('click', closeDrawer);
-  if (mobileOverlay) mobileOverlay.addEventListener('click', closeDrawer);
-
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      const targetId = link.getAttribute('href');
-      if (targetId && targetId.startsWith('#')) {
-        e.preventDefault();
-        const targetSection = document.querySelector(targetId);
-        if (targetSection) {
-          closeDrawer();
-          const offsetTop = targetSection.getBoundingClientRect().top + window.scrollY - 82;
-          window.scrollTo({ top: offsetTop, behavior: 'smooth' });
-        }
-      }
-    });
-  });
-
-  // Scrollspy
-  const sections = document.querySelectorAll('section[id]');
-  window.addEventListener('scroll', () => {
-    let current = 'hero';
-    const scrollPos = window.scrollY + 140;
-    sections.forEach(sec => {
-      if (scrollPos >= sec.offsetTop && scrollPos < sec.offsetTop + sec.offsetHeight) {
-        current = sec.id;
-      }
-    });
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
-    });
-  }, { passive: true });
-}
-
-/* --------------------------------------------------------------------------
-   2. HERO VIDEO CONTROLS & REDUCED MOTION
-   -------------------------------------------------------------------------- */
-function initHeroControls() {
-  const heroVideo = document.getElementById('heroVideo');
-  const playBtn = document.getElementById('heroPlayToggle');
-  const muteBtn = document.getElementById('heroMuteToggle');
-
-  if (!heroVideo) return;
-
-  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const applyMotionPreference = (matches) => {
-    if (matches) {
-      heroVideo.pause();
-      heroVideo.removeAttribute('autoplay');
-    } else {
-      heroVideo.play().catch(() => { });
-    }
-  };
-  applyMotionPreference(reducedMotionQuery.matches);
-  if (typeof reducedMotionQuery.addEventListener === 'function') {
-    reducedMotionQuery.addEventListener('change', (e) => applyMotionPreference(e.matches));
-  }
-
-  if (playBtn) {
-    playBtn.addEventListener('click', () => {
-      if (heroVideo.paused) {
-        heroVideo.play();
-        playBtn.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
-      } else {
-        heroVideo.pause();
-        playBtn.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
-      }
-    });
-  }
-
-  if (muteBtn) {
-    muteBtn.addEventListener('click', () => {
-      heroVideo.muted = !heroVideo.muted;
-      if (heroVideo.muted) {
-        muteBtn.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
-      } else {
-        muteBtn.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
-      }
-    });
-  }
-}
-
-/* --------------------------------------------------------------------------
-   3. MASTER PLAN WORKBENCH & INSPECTOR (MJR M4 Map Layout & Interactivity)
-   -------------------------------------------------------------------------- */
-let selectMasterPlanPlot = null;
-
-function initMasterPlan() {
-  const viewport = document.getElementById('masterPlanViewport');
-  const stage = document.getElementById('masterPlanStage');
-  const bgImg = document.getElementById('mplanBgImg');
-  const pinsEl = document.getElementById('planPins');
-  const shape = document.getElementById('planShape');
-  const compass = document.getElementById('mapCompassBadge');
-  const zoomInBtn = document.getElementById('zoomInMasterPlan');
-  const zoomOutBtn = document.getElementById('zoomOutMasterPlan');
-  const zoomResetBtn = document.getElementById('zoomResetMasterPlan');
-
-  const data = window.MJR_PLOTS;
-  if (!viewport || !stage || !pinsEl || !data) return;
-
-  const FACING_ANGLES = {
-    'North': 0,
-    'North-East': 45,
-    'East': 90,
-    'South-East': 135,
-    'South': 180,
-    'South-West': 225,
-    'West': 270,
-    'North-West': 315,
-  };
-
-  let selectedNo = null;
-  let userZoom = 1;
-  const pins = {};
-
-  const statusText = (p) => (p.reserved ? p.reserved : p.sold ? 'Sold Out' : 'Available');
-
-  // Create all 104 interactive plot pins on the MJR M4 layout
-  pinsEl.innerHTML = '';
-  data.list.forEach((p) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'pin map-plot-node' + (p.sold ? ' is-sold' : '') + (p.reserved ? ' is-reserved' : '');
-    b.dataset.plotNum = String(p.n);
-    b.textContent = p.n;
-    b.title = `Plot ${p.label} — ${statusText(p)} (${p.size} sq. yd.)`;
-    b.setAttribute('aria-label', `Plot ${p.label}, ${statusText(p)}`);
-    b.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (selectedNo === p.n) {
-        selectPlot(null);
-      } else {
-        selectPlot(p.n);
-      }
-    });
-    pinsEl.appendChild(b);
-    pins[p.n] = b;
-  });
-
-  // Outline the selected plot to its exact drawn shape on the 2560 x 1440 layout
-  const showShape = (p) => {
-    if (!shape) return;
-    if (p && p.shape) shape.setAttribute('points', p.shape);
-    shape.classList.toggle('is-on', !!(p && p.shape));
-  };
-
-  // Stage geometry & screen-space pin positioning (MJR M4 coordinates)
-  const ROAD_X0 = 0.1102;
-  const ROAD_X1 = 0.8914;
-  const ROAD_SPAN = ROAD_X1 - ROAD_X0;
-
-  const applyView = () => {
-    const vpW = viewport.clientWidth || 880;
-    const vpH = viewport.clientHeight || 620;
-    const stageBaseH = vpW * (data.IMG_H / data.IMG_W);
-
-    let targetScale, targetX, targetY, bgScale;
-
-    if (selectedNo !== null && data.byNo[selectedNo]) {
-      const p = data.byNo[selectedNo];
-      targetScale = 2.45 * userZoom;
-      targetX = (vpW * 0.5) - (p.px * vpW * targetScale);
-      targetY = (vpH * 0.52) - (p.py * stageBaseH * targetScale);
-      bgScale = 1.12;
-      viewport.classList.add('is-zoomed');
-    } else {
-      const fitW = 1 / ROAD_SPAN;
-      const fitH = vpH / (0.94 * stageBaseH);
-      targetScale = Math.min(fitW, fitH) * userZoom;
-      const scaledW = vpW * targetScale;
-      const scaledH = stageBaseH * targetScale;
-      targetX = (vpW - ROAD_SPAN * scaledW) / 2 - ROAD_X0 * scaledW;
-      const topPad = 0.04 * scaledH;
-      const botEdge = 0.988 * scaledH;
-      const spanH = botEdge - topPad;
-      targetY = (vpH - spanH) / 2 - topPad;
-      bgScale = 1;
-      viewport.classList.remove('is-zoomed');
-    }
-
-    stage.style.transform = `translate3d(${targetX.toFixed(1)}px, ${targetY.toFixed(1)}px, 0) scale(${targetScale.toFixed(4)})`;
-    if (bgImg) {
-      bgImg.style.transform = `scale(${bgScale})`;
-    }
-
-    const sW = vpW * targetScale;
-    const sH = stageBaseH * targetScale;
-    for (let i = 0; i < data.list.length; i++) {
-      const p = data.list[i];
-      const pin = pins[p.n];
-      if (!pin) continue;
-      const px = targetX + p.px * sW;
-      const py = targetY + p.py * sH;
-      pin.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0) translate(-50%, -50%)`;
-      pin.classList.toggle('is-selected', selectedNo === p.n);
-    }
-  };
-
-  const selectPlot = (n) => {
-    if (n === null || !data.byNo[n]) {
-      selectedNo = null;
-      userZoom = 1;
-      showShape(null);
-      if (compass) compass.style.transform = 'rotate(0deg)';
-      applyView();
-      renderInspector(null, selectPlot);
-      return;
-    }
-
-    const p = data.byNo[n];
-    selectedNo = p.n;
-    userZoom = 1;
-    showShape(p);
-    if (compass) {
-      const deg = FACING_ANGLES[p.facing] ?? 0;
-      compass.style.transform = `rotate(${deg}deg)`;
-    }
-    applyView();
-    renderInspector(p, selectPlot);
-  };
-
-  selectMasterPlanPlot = selectPlot;
-
-  // Clicking empty map area resets selection back to overview
-  viewport.addEventListener('click', (e) => {
-    if (e.target.closest('.pin')) return;
-    if (selectedNo !== null) {
-      selectPlot(null);
-    }
-  });
-
-  if (zoomInBtn) {
-    zoomInBtn.addEventListener('click', () => {
-      userZoom = Math.min(userZoom + 0.25, 2.0);
-      applyView();
-    });
-  }
-  if (zoomOutBtn) {
-    zoomOutBtn.addEventListener('click', () => {
-      userZoom = Math.max(userZoom - 0.25, 0.75);
-      applyView();
-    });
-  }
-  if (zoomResetBtn) {
-    zoomResetBtn.addEventListener('click', () => {
-      selectPlot(null);
-    });
-  }
-
-  window.addEventListener('resize', applyView);
-
-  // Initial render: overview map + right column legend & dropdown
-  applyView();
-  renderInspector(null, selectPlot);
-}
-
-function renderInspector(plot, onSelectPlot) {
-  const inspector = document.getElementById('plotInspector');
-  const data = window.MJR_PLOTS;
-  if (!inspector || !data) return;
-
-  // Build dropdown options for all 104 plots
-  let optionsHtml = `<option value="" ${!plot ? 'selected' : ''}>Select a Plot (01 – 104)...</option>`;
-  data.list.forEach((p) => {
-    const statusTag = p.reserved ? p.reserved : p.sold ? 'Sold Out' : 'Available';
-    const isSel = plot && plot.n === p.n ? 'selected' : '';
-    optionsHtml += `<option value="${p.n}" ${isSel}>Plot #${p.label} — ${p.size} sq. yd. (${statusTag})</option>`;
-  });
-
-  // Legend HTML (Always shown in the right column)
-  const legendHtml = `
-    <div class="inspector-legend-box" aria-label="Map Legend">
-      <span class="inspector-legend-title">Map Legend</span>
-      <div class="inspector-legend-grid">
-        <span class="inspector-legend-item">
-          <span class="legend-pin-swatch swatch-m4-avail"></span>
-          <span>Available</span>
-        </span>
-        <span class="inspector-legend-item">
-          <span class="legend-pin-swatch swatch-m4-sold"></span>
-          <span>Sold Out</span>
-        </span>
-        <span class="inspector-legend-item">
-          <span class="legend-pin-swatch swatch-m4-selected"></span>
-          <span>Selected</span>
-        </span>
-        <span class="inspector-legend-item">
-          <span class="legend-pin-swatch swatch-m4-reserved"></span>
-          <span>Reserved / EV</span>
-        </span>
-      </div>
-    </div>
-  `;
-
-  // Dropdown Selector HTML
-  const selectorHtml = `
-    <div class="inspector-selector-field">
-      <label class="spec-label" for="inspectorPlotSelect">Choose from dropdown or click any plot on map</label>
-      <select id="inspectorPlotSelect" class="inspector-select">
-        ${optionsHtml}
-      </select>
-    </div>
-  `;
-
-  let detailsHtml = '';
-
-  if (plot) {
-    const statusClass = plot.reserved ? 'is-reserved' : plot.sold ? 'is-sold' : '';
-    const statusLabel = plot.reserved ? plot.reserved : plot.sold ? 'Sold Out' : 'Available';
-    const highlightsHtml = (plot.highlights || [])
-      .map((h) => `<span class="inspector-hl-tag">${h}</span>`)
-      .join('');
-
-    const actionBtnHtml = plot.reserved
-      ? `<button type="button" class="btn btn-outline-light btn-pill btn-block" disabled style="opacity:0.55; cursor:not-allowed;">${plot.reserved} — Not for Sale</button>`
-      : `<button type="button" class="btn btn-gold btn-pill btn-block" id="inspectorEnquireBtn">
-           Enquire About Plot #${plot.label}
-         </button>`;
-
-    detailsHtml = `
-      <div>
-        <span class="inspector-kicker">Block ${plot.block} &middot; ${plot.road} FT Road Frontage</span>
-        <div class="inspector-heading-row">
-          <h3 class="inspector-heading">Plot #${plot.label}</h3>
-          <span class="inspector-status-pill ${statusClass}">${statusLabel}</span>
-        </div>
-        <p class="inspector-desc" style="margin-top: 8px;">${plot.desc}</p>
-      </div>
-
-      <div class="inspector-specs">
-        <div class="inspector-spec-cell">
-          <span class="spec-label">Plot Size</span>
-          <span class="spec-value">${plot.size.toFixed(1)} sq. yd.</span>
-        </div>
-        <div class="inspector-spec-cell">
-          <span class="spec-label">Direction</span>
-          <span class="spec-value">${plot.facing} Facing</span>
-        </div>
-        <div class="inspector-spec-cell">
-          <span class="spec-label">Abutting Road</span>
-          <span class="spec-value">${plot.road} FT Wide</span>
-        </div>
-        <div class="inspector-spec-cell">
-          <span class="spec-label">Position</span>
-          <span class="spec-value">${plot.corner ? 'Corner Plot' : 'Regular Plot'}</span>
-        </div>
-      </div>
-
-      <div>
-        <span class="spec-label" style="display:block; margin-bottom:6px;">Highlights</span>
-        <div class="inspector-highlights">${highlightsHtml}</div>
-      </div>
-
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        ${actionBtnHtml}
-      </div>
-    `;
-  } else {
-    // Overview state before a specific plot is chosen (shows township summary + prompt)
-    detailsHtml = `
-      <div>
-        <span class="inspector-kicker">Interactive Layout Plan</span>
-        <div class="inspector-heading-row">
-          <h3 class="inspector-heading">Select a Plot (01–104)</h3>
-        </div>
-        <p class="inspector-desc" style="margin-top: 8px;">
-          Click any numbered plot directly on the master plan or select a plot number from the dropdown above to zoom in and view its exact size, direction, road width and availability.
-        </p>
-      </div>
-
-      <div class="inspector-specs">
-        <div class="inspector-spec-cell">
-          <span class="spec-label">Approx. plot sizes</span>
-          <span class="spec-value">120–550 sq. yd.</span>
-        </div>
-        <div class="inspector-spec-cell">
-          <span class="spec-label">Internal roads</span>
-          <span class="spec-value">30 &amp; 40 FT</span>
-        </div>
-        <div class="inspector-spec-cell">
-          <span class="spec-label">Abutting highway</span>
-          <span class="spec-value">150 FT</span>
-        </div>
-        <div class="inspector-spec-cell">
-          <span class="spec-label">Total plots</span>
-          <span class="spec-value">104 Plots</span>
-        </div>
-      </div>
-
-      <button type="button" class="btn btn-gold btn-pill btn-block" id="inspectorEnquireBtn">
-        Enquire About Available Plots
-      </button>
-    `;
-  }
-
-  inspector.innerHTML = `
-    ${legendHtml}
-    ${selectorHtml}
-    ${detailsHtml}
-  `;
-
-  const selectEl = document.getElementById('inspectorPlotSelect');
-  if (selectEl && typeof onSelectPlot === 'function') {
-    selectEl.addEventListener('change', () => {
-      const val = selectEl.value ? Number(selectEl.value) : null;
-      onSelectPlot(val);
-    });
-  }
-
-  const enquireBtn = document.getElementById('inspectorEnquireBtn');
-  if (enquireBtn) {
-    enquireBtn.addEventListener('click', () => {
-      if (plot) {
-        openPlotEnquiryModal(plot.label, `${plot.size.toFixed(1)}`, `${plot.road} FT`);
-      } else {
-        openPlotEnquiryModal('General Plot Enquiry', '', '');
-      }
-    });
-  }
-}
-
-/* --------------------------------------------------------------------------
-   4. PLOT FINDER (2 Filters: Plot Size & Road Width)
-   -------------------------------------------------------------------------- */
-function initPlotFinder() {
-  const sizeChips = document.querySelectorAll('.chip-size');
-  const roadChips = document.querySelectorAll('.chip-road');
-  const resetBtn = document.getElementById('resetFiltersBtn');
-
-  let activeSize = 'all';
-  let activeRoad = 'Either';
-
-  const SIZE_LABELS = {
-    '120-150': 'up to 150 sq. yd.',
-    '150-200': '151–200 sq. yd.',
-    '200-300': '201–300 sq. yd.',
-    '300+': 'above 300 sq. yd.'
-  };
-
-  // Dim map plots that fall outside the active filters (null = compute from MJR_PLOTS or show all)
-  const highlightOnMap = (matchSet) => {
-    const isFiltered = activeSize !== 'all' || activeRoad !== 'Either';
-    const data = window.MJR_PLOTS;
-    document.querySelectorAll('.map-plot-node').forEach(node => {
-      const plotNum = node.getAttribute('data-plot-num');
-      let dim = false;
-      if (isFiltered) {
-        if (matchSet !== null) {
-          dim = !matchSet.has(String(plotNum));
-        } else if (data && data.byNo[Number(plotNum)]) {
-          const p = data.byNo[Number(plotNum)];
-          const matchSize = activeSize === 'all' || getBucket(p.size) === activeSize;
-          const matchRoad = activeRoad === 'Either' || `${p.road} FT` === activeRoad;
-          dim = !(matchSize && matchRoad);
-        }
-      }
-      node.classList.toggle('is-filtered-out', dim);
-      node.classList.toggle('is-dimmed', dim);
-    });
-  };
-
-  const getBucket = (area) => {
-    if (!area) return 'all';
-    if (area <= 150) return '120-150';
-    if (area <= 200) return '150-200';
-    if (area <= 300) return '200-300';
-    return '300+';
-  };
-
-  const renderSchedule = () => {
-    const grid = document.getElementById('finderResultsGrid');
-    const countEl = document.getElementById('finderMatchCount');
-    if (!grid) return;
-
-    if (PLOTS_RECORDS.length === 0) {
-      const sizeText = activeSize === 'all' ? '120–550 sq. yd.' : SIZE_LABELS[activeSize];
-      const roadText = activeRoad === 'Either' ? '30 & 40 FT roads' : `${activeRoad} road`;
-      highlightOnMap(null);
-      if (countEl) {
-        countEl.textContent = `Your preference: ${sizeText}, ${roadText}`;
-      }
-      grid.innerHTML = `
-        <div class="schedule-empty-card">
-          <div>
-            <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">
-              Request plots matching ${sizeText} on ${roadText}
-            </h3>
-            <p style="font-size: 0.94rem; color: var(--text-secondary);">
-              Leave your number, and our team will share the official plot schedule, exact dimensions and current availability from the layout sheet.
-            </p>
-          </div>
-          <button type="button" class="btn btn-gold btn-pill" onclick="openPlotEnquiryModal('Preference: ${sizeText} (${roadText})', '', '')">
-            Get Matching Plots
-          </button>
-        </div>
-      `;
-      return;
-    }
-
-    const filtered = PLOTS_RECORDS.filter(p => {
-      const matchSize = activeSize === 'all' || getBucket(p.areaSqYd) === activeSize;
-      const matchRoad = activeRoad === 'Either' || p.roadWidth === activeRoad;
-      return matchSize && matchRoad;
-    });
-
-    if (countEl) {
-      countEl.textContent = `${filtered.length} of ${PLOTS_RECORDS.length} plots match`;
-    }
-    highlightOnMap(new Set(filtered.map(p => String(p.number))));
-
-    if (filtered.length === 0) {
-      grid.innerHTML = `
-        <div class="schedule-empty-card">
-          <p style="font-size: 0.95rem; color: var(--text-secondary);">No plots match the selected combination.</p>
-          <button type="button" class="btn btn-outline btn-sm" id="emptyResetBtn">Reset Filters</button>
-        </div>
-      `;
-      const emptyReset = document.getElementById('emptyResetBtn');
-      if (emptyReset) emptyReset.addEventListener('click', resetAll);
-      return;
-    }
-
-    let rows = filtered.map(p => `
-      <tr>
-        <td><strong>Plot #${p.number}</strong></td>
-        <td>${p.areaSqYd ? `${p.areaSqYd} sq. yd.` : '—'}</td>
-        <td>${p.roadWidth || '—'}</td>
-        <td>${p.facing || '—'}</td>
-        <td>${p.status || 'Available'}</td>
-        <td style="text-align:right;">
-          <button type="button" class="btn btn-gold btn-sm btn-pill" onclick="openPlotEnquiryModal('${p.number}', '${p.areaSqYd || ''}', '${p.roadWidth || ''}')">
-            Enquire About This Plot
-          </button>
-        </td>
-      </tr>
-    `).join('');
-
-    grid.innerHTML = `
-      <div style="overflow-x:auto;">
-        <table class="schedule-table">
-          <thead>
-            <tr>
-              <th>Plot No.</th>
-              <th>Area</th>
-              <th>Road Width</th>
-              <th>Facing</th>
-              <th>Status</th>
-              <th style="text-align:right;">Action</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-    `;
-  };
-
-  const resetAll = () => {
-    activeSize = 'all';
-    activeRoad = 'Either';
-    sizeChips.forEach(c => c.classList.toggle('active', c.dataset.value === 'all'));
-    roadChips.forEach(c => c.classList.toggle('active', c.dataset.value === 'Either'));
-    renderSchedule();
-  };
-
-  sizeChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      sizeChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      activeSize = chip.dataset.value;
-      renderSchedule();
-    });
-  });
-
-  roadChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      roadChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      activeRoad = chip.dataset.value;
-      renderSchedule();
-    });
-  });
-
-  if (resetBtn) resetBtn.addEventListener('click', resetAll);
-  renderSchedule();
-}
-
-/* --------------------------------------------------------------------------
-   5. AMENITIES INTERACTIVE SHOWCASE
-   -------------------------------------------------------------------------- */
-function initAmenitiesShowcase() {
-  const stageImgA = document.getElementById('amenityStageImgA');
-  const stageImgB = document.getElementById('amenityStageImgB');
-  const stageCaption = document.getElementById('amenityStageCaption');
-  const prevBtn = document.getElementById('amenityPrevBtn');
-  const nextBtn = document.getElementById('amenityNextBtn');
-  const stepCountEl = document.getElementById('amenityStepCount');
-  const detailCategoryEl = document.getElementById('amenityDetailCategory');
-  const detailNameEl = document.getElementById('amenityDetailName');
-  const detailDescEl = document.getElementById('amenityDetailDesc');
-  const pillarBlocks = Array.from(document.querySelectorAll('.amenity-pillar-block'));
-  const listItems = Array.from(document.querySelectorAll('.amenity-list-item'));
-  const rowWraps = Array.from(document.querySelectorAll('.amenity-row-wrap'));
-
-  if (!listItems.length) return;
-
-  // E. Preload all amenity images to avoid flicker
-  listItems.forEach(item => {
-    const src = item.dataset.img;
-    if (src) {
-      const preload = new Image();
-      preload.src = src;
-    }
-  });
-
-  let activeIndex = listItems.findIndex(item => item.classList.contains('active'));
-  if (activeIndex < 0) activeIndex = 0;
-
-  let showingImgA = true;
-
-  const crossfadePreview = (imgSrc, amenityName) => {
-    if (stageCaption && amenityName) {
-      stageCaption.textContent = amenityName;
-    }
-    if (!stageImgA || !stageImgB || !imgSrc) return;
-
-    const currentImg = showingImgA ? stageImgA : stageImgB;
-    const nextImg = showingImgA ? stageImgB : stageImgA;
-
-    if (currentImg.getAttribute('src') === imgSrc) {
-      currentImg.alt = amenityName || '';
-      return;
-    }
-
-    nextImg.src = imgSrc;
-    nextImg.alt = amenityName || '';
-    nextImg.removeAttribute('aria-hidden');
-    currentImg.setAttribute('aria-hidden', 'true');
-
-    nextImg.classList.add('is-visible');
-    currentImg.classList.remove('is-visible');
-    showingImgA = !showingImgA;
-  };
-
-  const selectAmenityByIndex = (index, options = {}) => {
-    const { focusTab = false, toggleMobileInline = false } = options;
-    const total = listItems.length;
-    const normalizedIndex = ((index % total) + total) % total;
-    const targetBtn = listItems[normalizedIndex];
-    if (!targetBtn) return;
-
-    const targetWrap = targetBtn.closest('.amenity-row-wrap');
-    const wasAlreadyOpen = targetWrap && targetWrap.classList.contains('is-open');
-
-    activeIndex = normalizedIndex;
-
-    // Update all 10 tab buttons
-    listItems.forEach((btn, idx) => {
-      const isSelected = idx === activeIndex;
-      btn.classList.toggle('active', isSelected);
-      btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-      btn.setAttribute('tabindex', isSelected ? '0' : '-1');
-      if (isSelected && focusTab) {
-        btn.focus();
-      }
-    });
-
-    // Update mobile inline image expansion (only one open at a time)
-    rowWraps.forEach(wrap => {
-      if (wrap === targetWrap) {
-        if (toggleMobileInline && window.innerWidth < 768 && wasAlreadyOpen) {
-          wrap.classList.remove('is-open');
-        } else {
-          wrap.classList.add('is-open');
-        }
-      } else {
-        wrap.classList.remove('is-open');
-      }
-    });
-
-    // F. Highlight the category block containing the active amenity
-    const parentBlock = targetBtn.closest('.amenity-pillar-block');
-    pillarBlocks.forEach(block => {
-      const isActiveBlock = block === parentBlock;
-      block.classList.toggle('active', isActiveBlock);
-      const trigger = block.querySelector('.amenity-pillar-trigger');
-      if (trigger) {
-        trigger.setAttribute('aria-expanded', isActiveBlock ? 'true' : 'false');
-      }
-    });
-
-    // E. Crossfade preview image & show only amenity name in caption
-    crossfadePreview(targetBtn.dataset.img, targetBtn.dataset.name);
-
-    // D. Update amenity details block below the sticky preview (category, name, description)
-    if (detailCategoryEl && targetBtn.dataset.category) {
-      detailCategoryEl.textContent = targetBtn.dataset.category;
-    }
-    if (detailNameEl && targetBtn.dataset.name) {
-      detailNameEl.textContent = targetBtn.dataset.name;
-    }
-    if (detailDescEl && targetBtn.dataset.desc) {
-      detailDescEl.textContent = targetBtn.dataset.desc;
-    }
-
-    // A. Update "X / 10" stepper indicator
-    if (stepCountEl) {
-      stepCountEl.textContent = `${activeIndex + 1} / ${total}`;
-    }
-  };
-
-  // Row click & keyboard navigation (role="tab")
-  listItems.forEach((item, idx) => {
-    item.addEventListener('click', () => {
-      selectAmenityByIndex(idx, { toggleMobileInline: true });
-    });
-
-    item.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-        e.preventDefault();
-        selectAmenityByIndex(activeIndex + 1, { focusTab: true });
-      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-        e.preventDefault();
-        selectAmenityByIndex(activeIndex - 1, { focusTab: true });
-      } else if (e.key === 'Home') {
-        e.preventDefault();
-        selectAmenityByIndex(0, { focusTab: true });
-      } else if (e.key === 'End') {
-        e.preventDefault();
-        selectAmenityByIndex(listItems.length - 1, { focusTab: true });
-      }
-    });
-  });
-
-  // Category header trigger click (activates category + its first amenity, or toggles accordion on mobile)
-  pillarBlocks.forEach(block => {
-    const trigger = block.querySelector('.amenity-pillar-trigger');
-    if (trigger) {
-      trigger.addEventListener('click', () => {
-        const isMobile = window.innerWidth < 768;
-        if (isMobile && block.classList.contains('active')) {
-          block.classList.remove('active');
-          trigger.setAttribute('aria-expanded', 'false');
-          return;
-        }
-        const firstItem = block.querySelector('.amenity-list-item');
-        if (firstItem) {
-          const itemIdx = listItems.indexOf(firstItem);
-          if (itemIdx !== -1) {
-            selectAmenityByIndex(itemIdx);
-          }
-        }
-      });
-    }
-  });
-
-  // A. Previous / Next stepper arrow buttons
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      selectAmenityByIndex(activeIndex - 1);
-    });
-  }
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      selectAmenityByIndex(activeIndex + 1);
-    });
-  }
-
-  // Initialize state cleanly
-  selectAmenityByIndex(activeIndex);
-}
-
-/* --------------------------------------------------------------------------
-   6. LOCATION INTERACTIVE CORRIDORS
-   -------------------------------------------------------------------------- */
-function initLocationShowcase() {
-  const cards = document.querySelectorAll('.location-corridor-card');
-  const videoEl = document.getElementById('locationVideo');
-  const titleEl = document.getElementById('locationMediaTitle');
-
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      cards.forEach(c => c.classList.remove('active'));
-      card.classList.add('active');
-      const vSrc = card.dataset.video;
-      const vTitle = card.dataset.title;
-      if (titleEl && vTitle) titleEl.textContent = vTitle;
-      if (videoEl && vSrc) {
-        const source = videoEl.querySelector('source');
-        if (source && source.getAttribute('src') !== vSrc) {
-          source.setAttribute('src', vSrc);
-          videoEl.load();
-          videoEl.play().catch(() => { });
-        }
-      }
-    });
-  });
-}
-
-/* --------------------------------------------------------------------------
-   7. FAQ ACCORDION
-   -------------------------------------------------------------------------- */
-function initFAQ() {
-  const faqCards = document.querySelectorAll('.faq-card');
-  faqCards.forEach(card => {
-    const trigger = card.querySelector('.faq-trigger');
-    if (trigger) {
-      trigger.addEventListener('click', () => {
-        const isOpen = card.classList.contains('active');
-        faqCards.forEach(c => {
-          c.classList.remove('active');
-          const t = c.querySelector('.faq-trigger');
-          if (t) t.setAttribute('aria-expanded', 'false');
-        });
-        if (!isOpen) {
-          card.classList.add('active');
-          trigger.setAttribute('aria-expanded', 'true');
-        }
-      });
-    }
-  });
-}
-
-/* --------------------------------------------------------------------------
-   8. MODALS & FORMS
-   -------------------------------------------------------------------------- */
-function initModals() {
-  const triggers = document.querySelectorAll('[data-open-modal]');
-  const modalMap = {
-    'site-visit': document.getElementById('modalSiteVisit'),
-    'brochure': document.getElementById('modalBrochure')
-  };
-
-  triggers.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const key = btn.getAttribute('data-open-modal');
-      const targetModal = modalMap[key];
-      if (targetModal) openModal(targetModal);
-    });
-  });
-
-  document.querySelectorAll('.modal-close-btn, .modal-backdrop').forEach(el => {
-    el.addEventListener('click', (e) => {
-      if (e.target === el || el.classList.contains('modal-close-btn')) {
-        closeAllModals();
-      }
-    });
-  });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeAllModals();
-  });
-}
-
-function openModal(modal) {
-  if (!modal) return;
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeAllModals() {
-  document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('open'));
-  document.body.style.overflow = '';
-}
-
-window.openPlotEnquiryModal = function (plotNum, area, road) {
-  const modal = document.getElementById('modalPlotEnquiry');
-  const inputNum = document.getElementById('enquiryPlotNumber');
-  const detail = document.getElementById('enquiryPlotDetail');
-
-  if (inputNum) inputNum.value = plotNum;
-  if (detail) {
-    const parts = [`Plot ${plotNum}`];
-    if (area) parts.push(`${area} sq. yd.`);
-    if (road) parts.push(road);
-    detail.textContent = `${parts.join(' · ')} — Leave your number, and our team will call with current prices and payment details.`;
-  }
-  openModal(modal);
+// MJR Township: page behaviour (scroll motion, dialogs, lead forms, master plan, shortlist)
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const PHONE_DISPLAY = '+91 90100 55596';
+const field = (form, name) => form.elements.namedItem(name);
+const wa = (msg) => `https://wa.me/919010055596?text=${encodeURIComponent(msg)}`;
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wide = matchMedia('(min-width: 768px)');
+const store = {
+  get(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } },
+  set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private mode: nothing to keep */ } },
 };
 
-function initForms() {
-  const mainForm = document.getElementById('mainEnquiryForm');
-  const chips = document.querySelectorAll('.interest-chip');
-  const hiddenInput = document.getElementById('selectedInterestInput');
-
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('selected'));
-      chip.classList.add('selected');
-      if (hiddenInput) hiddenInput.value = chip.dataset.val;
-    });
-  });
-
-  if (mainForm) {
-    mainForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const feedback = document.getElementById('mainFormFeedback');
-      if (feedback) feedback.style.display = 'block';
-      mainForm.reset();
-    });
-  }
-
-  document.querySelectorAll('.modal-dialog form').forEach(form => {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Thank you. Our team will call you shortly to share pricing and availability and to answer your questions.');
-      closeAllModals();
-      form.reset();
-    });
+/* ---------- Smooth scroll (Lenis), off for reduced motion ---------- */
+const lenis = !reduceMotion && window.Lenis ? new Lenis({ prevent: (node) => !!node.closest?.('dialog, .plan-scroll, .projects-row') }) : null;
+if (lenis) {
+  const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+  requestAnimationFrame(raf);
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    const target = a && a.getAttribute('href').length > 1 && $(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    // A menu link: restart Lenis now, or its later start() would reset (cancel) this scroll
+    a.closest('dialog')?.close();
+    if (!$('dialog[open]')) lenis.start();
+    lenis.scrollTo(target, { offset: a.getAttribute('href') === '#top' ? 0 : -8, duration: 1.1, easing: (t) => 1 - Math.pow(1 - t, 4) });
+    history.replaceState(null, '', a.getAttribute('href'));
   });
 }
 
-/* --------------------------------------------------------------------------
-   9. STICKY MOBILE BAR AUTO-HIDE
-   -------------------------------------------------------------------------- */
-function initStickyMobileBar() {
-  const stickyBar = document.querySelector('.mobile-sticky-bar');
-  if (!stickyBar) return;
+/* ---------- Scroll helper: one loop writes --p (0..1) on every [data-progress] ---------- */
+const root = document.documentElement;
+const banner = $('#banner');
+const progressEls = $$('[data-progress]');
+const darkEls = $$('[data-header-theme="dark"]');
+const tracks = $$('.hs');
 
-  let isFormInView = false;
-  let isInspectorInView = false;
-  let isKeyboardOpen = false;
+function layoutTracks() {
+  tracks.forEach((sec) => {
+    const track = $('.hs-track', sec);
+    const on = wide.matches && !reduceMotion;
+    sec.classList.toggle('is-sticky', on);
+    if (!on) { sec.style.height = ''; return; }
+    const max = Math.max(0, track.scrollWidth - innerWidth);
+    track.style.setProperty('--max', max);
+    sec.style.height = `${Math.round(max * 0.5) + innerHeight}px`; // half a screen of scroll per screen of sideways movement
+  });
+}
 
-  const updateVisibility = () => {
-    const isModalOpen = document.querySelector('.modal-backdrop.open') !== null;
-    if (isFormInView || isInspectorInView || isKeyboardOpen || isModalOpen) {
-      stickyBar.classList.add('is-hidden');
-      stickyBar.setAttribute('aria-hidden', 'true');
-    } else {
-      stickyBar.classList.remove('is-hidden');
-      stickyBar.removeAttribute('aria-hidden');
-    }
+function tick() {
+  const vh = innerHeight;
+  progressEls.forEach((el) => {
+    const r = el.getBoundingClientRect();
+    if (r.bottom < -vh || r.top > vh * 2) return;
+    const p = el.dataset.progress === 'sticky'
+      ? -r.top / Math.max(1, r.height - vh)
+      : (vh - r.top) / (vh * 0.75);
+    el.style.setProperty('--p', reduceMotion ? 1 : clamp01(p).toFixed(4));
+  });
+  root.style.setProperty('--page-p', clamp01(scrollY / Math.max(1, root.scrollHeight - vh)).toFixed(4));
+  const y = 40; // header line
+  banner.classList.toggle('is-dark', darkEls.some((el) => { const r = el.getBoundingClientRect(); return r.top <= y && r.bottom >= y; }));
+}
+
+let ticking = false;
+addEventListener('scroll', () => {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => { tick(); ticking = false; });
+}, { passive: true });
+addEventListener('resize', () => { layoutTracks(); tick(); });
+addEventListener('load', () => { layoutTracks(); tick(); });
+layoutTracks();
+tick();
+
+/* ---------- S02 Hero: video + changing line, one pause button for both ---------- */
+const heroVideo = $('#heroVideo');
+const heroPause = $('#heroPause');
+const heroWords = $$('.hero-word');
+let heroIndex = 0;
+let heroTimer = null;
+let heroOnScreen = true;
+// Paused for good when the visitor asks for less motion or less data
+let heroWanted = !reduceMotion && !navigator.connection?.saveData;
+
+function rotateHero() {
+  const out = heroWords[heroIndex];
+  out.classList.replace('is-in', 'is-out');
+  setTimeout(() => out.classList.remove('is-out'), 700);
+  heroIndex = (heroIndex + 1) % heroWords.length;
+  heroWords[heroIndex].classList.add('is-in');
+}
+
+function syncHero() {
+  const run = heroWanted && heroOnScreen;
+  clearInterval(heroTimer);
+  heroTimer = run ? setInterval(rotateHero, 3200) : null;
+  if (run) {
+    heroVideo.preload = 'auto';
+    heroVideo.play().catch(() => {}); // blocked autoplay: the poster stays
+  } else {
+    heroVideo.pause();
+  }
+  heroPause.setAttribute('aria-pressed', String(!heroWanted));
+  heroPause.setAttribute('aria-label', heroWanted ? 'Pause the video and moving text' : 'Play the video and moving text');
+}
+
+heroPause.addEventListener('click', () => { heroWanted = !heroWanted; syncHero(); });
+new IntersectionObserver(([e]) => { heroOnScreen = e.isIntersecting; syncHero(); }).observe($('#top'));
+
+/* ---------- S04: numbers count up once when they come into view (final values stay in the HTML) ---------- */
+if (!reduceMotion) {
+  const show = (el, v) => { el.textContent = v.toFixed((el.dataset.count.split('.')[1] || '').length); };
+  const countIO = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    countIO.unobserve(e.target);
+    const el = e.target;
+    const to = Number(el.dataset.count);
+    const t0 = performance.now();
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / 1800);
+      show(el, to * (1 - (1 - k) ** 3)); // ease-out
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }), { threshold: 0.6 });
+  $$('[data-count]').forEach((el) => { show(el, 0); countIO.observe(el); });
+}
+
+/* ---------- S04: the developer card turns to its contact side (hover, or its button for touch and keyboard) ---------- */
+const quoteFlip = $('#quoteFlip');
+const quoteFront = $('.quote-front', quoteFlip);
+const quoteBack = $('#quoteBack');
+const quoteTurn = $('.quote-turn', quoteFront);
+function turnQuote(on, moveFocus) {
+  quoteFlip.classList.toggle('is-flipped', on);
+  quoteBack.inert = !on; // the hidden side is never tabbable or read out
+  quoteFront.inert = on;
+  quoteTurn.setAttribute('aria-expanded', String(on));
+  if (moveFocus) (on ? $('button, a', quoteBack) : quoteTurn).focus();
+}
+quoteTurn.addEventListener('click', () => turnQuote(true, true));
+$('.quote-turn-back', quoteBack).addEventListener('click', () => turnQuote(false, true));
+if (matchMedia('(hover: hover)').matches) {
+  quoteFlip.addEventListener('mouseenter', () => turnQuote(true));
+  // keep it open while a keyboard user is working inside the back
+  quoteFlip.addEventListener('mouseleave', () => { if (!$(':focus-visible', quoteBack)) turnQuote(false); });
+}
+
+/* ---------- S05 Journey: the rail and chapters follow the chapter in the middle of the screen ---------- */
+const chapters = $$('.chapter');
+const railItems = $$('.journey-rail li');
+const chapterIO = new IntersectionObserver((entries) => entries.forEach((e) => {
+  if (!e.isIntersecting) return;
+  const i = chapters.indexOf(e.target);
+  chapters.forEach((c, j) => c.classList.toggle('is-active', i === j));
+  railItems.forEach((c, j) => c.classList.toggle('is-active', i === j));
+}), { rootMargin: '-45% 0px -45% 0px' });
+chapters.forEach((c) => chapterIO.observe(c));
+
+/* ---------- S08 Infrastructure: tabs swap the photo (click, hover on desktop, arrow keys) ---------- */
+const infraTabs = $$('.infra-tab');
+const infraShots = $$('.infra-shot');
+function showInfra(i, moveFocus) {
+  infraTabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+  infraShots.forEach((img, k) => img.classList.toggle('is-on', k === i));
+  $('#infraPanel').setAttribute('aria-labelledby', infraTabs[i].id);
+  $('#infraCapName').textContent = infraShots[i].dataset.name;
+  $('#infraCapLine').textContent = infraShots[i].dataset.line;
+  if (moveFocus) infraTabs[i].focus();
+  if (!wide.matches) { const row = infraTabs[i].parentElement; row.scrollTo({ left: infraTabs[i].offsetLeft - (row.clientWidth - infraTabs[i].offsetWidth) / 2, behavior: reduceMotion ? 'auto' : 'smooth' }); } // centre the chip without moving the page
+}
+infraTabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => showInfra(i));
+  if (matchMedia('(hover: hover)').matches) tab.addEventListener('pointerenter', () => showInfra(i));
+  tab.addEventListener('keydown', (e) => {
+    const n = infraTabs.length;
+    const to = { ArrowDown: i + 1, ArrowRight: i + 1, ArrowUp: i - 1, ArrowLeft: i - 1, Home: 0, End: n - 1 }[e.key];
+    if (to === undefined) return;
+    e.preventDefault();
+    showInfra((to + n) % n, true);
+  });
+});
+
+/* ---------- S03: the sticky caption follows the card in view ---------- */
+const cardsNo = $('#cardsNo');
+const cardsCaption = $('#cardsCaption');
+const cardIO = new IntersectionObserver((entries) => entries.forEach((e) => {
+  if (!e.isIntersecting) return;
+  cardsNo.textContent = $$('.card-item').indexOf(e.target) + 1;
+  cardsCaption.textContent = $('.card-cap .h-s', e.target).textContent;
+}), { rootMargin: '-45% 0px -45% 0px' });
+$$('.card-item').forEach((el) => cardIO.observe(el));
+
+/* ---------- Dialogs: menu and enquiry ---------- */
+const enquiry = $('#enquiry');
+
+function openDialog(d) {
+  if (d.open) return;
+  d.showModal();
+  lenis?.stop();
+}
+$$('dialog').forEach((d) => {
+  d.addEventListener('close', () => { if (!$('dialog[open]')) lenis?.start(); });
+  // Click on the backdrop closes a dialog (keyboard "clicks" have their target inside, so they never match)
+  d.addEventListener('click', (e) => {
+    if (e.target !== d) return;
+    const r = d.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
+  });
+});
+
+const ENQUIRY = {
+  visit: { title: 'Book a site visit', sub: "Leave your number and we'll call to fix a time that suits you.", interest: 'Site visit', cta: 'Book my visit' },
+  plot: { title: 'Ask about Plot {n}', sub: "Leave your number and we'll call with this plot's price and availability.", interest: 'Plot enquiry', cta: 'Call me back' },
+  price: { title: 'Get the price list', sub: "Leave your number and we'll send the current price list.", interest: 'Price list', cta: 'Send me the price list' },
+};
+
+function openEnquiry(kind, plot = '') {
+  const k = ENQUIRY[kind] || ENQUIRY.visit;
+  const form = $('form', enquiry);
+  $('#enquiryTitle').textContent = k.title.replace('{n}', plot);
+  $('#enquirySub').textContent = k.sub;
+  $('#enquirySubmit').textContent = k.cta;
+  field(form, 'interest').value = k.interest;
+  field(form, 'plot').value = plot;
+  $('.form-status', form).textContent = '';
+  // "When suits you?" is for visits only; disabled fields stay out of the submitted data
+  const when = $('#enquiryWhen');
+  when.hidden = when.disabled = kind !== 'visit';
+  openDialog(enquiry);
+}
+
+$('#menuOpen').addEventListener('click', () => openDialog($('#menu')));
+$('#shortlistOpen').addEventListener('click', () => openDialog($('#menu')));
+
+document.addEventListener('click', (e) => {
+  const closer = e.target.closest('[data-close]');
+  if (closer) closer.closest('dialog')?.close();
+  const opener = e.target.closest('[data-enquiry]');
+  if (opener) {
+    hidePopup();
+    openEnquiry(opener.dataset.enquiry, opener.dataset.plot);
+  }
+});
+
+// Menu: the left image follows the hovered link
+const navImage = $('#navImage');
+$$('.nav-main a').forEach((a) => ['pointerenter', 'focus'].forEach((ev) => a.addEventListener(ev, () => {
+  if (navImage.getAttribute('src') !== a.dataset.image) navImage.src = a.dataset.image;
+})));
+
+/* ---------- Lead forms ---------- */
+function normalisePhone(value) {
+  // Accept "+91 90100 55596", "09010055596" or "9010055596"
+  return value.replace(/\D/g, '').replace(/^(91|0)(?=\d{10}$)/, '');
+}
+
+function showStatus(el, text, isError, fallbackMsg) {
+  el.classList.toggle('is-error', isError);
+  el.textContent = text;
+  if (fallbackMsg) {
+    const a = Object.assign(document.createElement('a'), { href: wa(fallbackMsg), target: '_blank', rel: 'noopener', className: 'link', textContent: 'Send it on WhatsApp instead' });
+    el.append(' ', a, '.');
+  }
+}
+
+$$('.lead-form').forEach((form) => form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const status = $('.form-status', form);
+  const btn = $('button[type="submit"]', form);
+  field(form, 'phone').value = normalisePhone(field(form, 'phone').value);
+  field(form, 'name').value = field(form, 'name').value.trim();
+
+  const invalid = $$('input[required]', form).filter((f) => !f.checkValidity());
+  $$('input[required]', form).forEach((f) => f.setAttribute('aria-invalid', String(invalid.includes(f))));
+  if (invalid.length) {
+    showStatus(status, 'Please enter your name and a 10-digit mobile number.', true);
+    invalid[0].focus();
+    return;
+  }
+
+  const lead = Object.fromEntries(new FormData(form));
+  if (lead.when) { // the server stores one message line, so the preferred time travels in it
+    lead.message = [`Preferred time: ${lead.when}`, lead.message].filter(Boolean).join(' · ');
+    delete lead.when;
+  }
+  const summary = `Hello, I'm ${lead.name} (${lead.phone}). I'd like ${lead.interest || 'a call back'}${lead.plot ? ` for Plot ${lead.plot}` : ''} at MJR Township.${lead.message ? ` ${lead.message}` : ''}`;
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/enquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    showStatus(status, `Thank you, ${lead.name}. Our team will call ${lead.phone} soon.`, false);
+    form.reset();
+  } catch {
+    showStatus(status, `We couldn't send your details. Please call ${PHONE_DISPLAY}, or`, true, summary);
+  } finally {
+    btn.disabled = false;
+  }
+}));
+
+/* ---------- Location map: load Google Maps only on request ---------- */
+$('#loadMap')?.addEventListener('click', (e) => {
+  const frame = $('#mapFrame');
+  if (!frame.hidden) return frame.scrollIntoView({ block: 'center' });
+  frame.hidden = false;
+  frame.classList.add('is-loaded');
+  // shortcut: map searches by name; swap in the site's exact lat/long once sales confirms the pin
+  frame.innerHTML = '<iframe title="MJR Township on Google Maps" src="https://www.google.com/maps?q=MJR+Township+Kalwakurthy&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+  e.currentTarget.textContent = 'Map loaded below';
+});
+
+/* ---------- S06: copy the site address ---------- */
+$('#copyAddress')?.addEventListener('click', async (e) => {
+  const label = $('span', e.currentTarget);
+  let msg = 'Address copied';
+  try { await navigator.clipboard.writeText($('#siteAddress').textContent.trim()); } catch { msg = 'Copy not available, select the address instead'; }
+  label.textContent = msg.split(',')[0];
+  $('#copyStatus').textContent = msg;
+  setTimeout(() => { label.textContent = 'Copy address'; }, 2200);
+});
+
+/* ---------- S06: three steps; the route draws during step 02 and a marker travels along it ---------- */
+const locPin = $('.loc-pin');
+const locSteps = $$('.loc-step');
+const locRoute = $('.m-route');
+const locCar = $('.m-car');
+const locLen = locRoute.getTotalLength();
+function locUpdate() {
+  const pinned = wide.matches && !reduceMotion;
+  const p = pinned ? Number(locPin.style.getPropertyValue('--p')) || 0 : 1;
+  const step = Math.min(2, Math.floor(p * 3));
+  const r = pinned ? clamp01((p - 0.3) / 0.3) : 1;
+  locPin.dataset.step = pinned ? step : 'all';
+  locPin.style.setProperty('--route', r.toFixed(4));
+  locSteps.forEach((el, i) => el.classList.toggle('is-active', !pinned || i === step));
+  const pt = locRoute.getPointAtLength(locLen * r);
+  locCar.setAttribute('cx', pt.x.toFixed(1));
+  locCar.setAttribute('cy', pt.y.toFixed(1));
+}
+let locTicking = false;
+addEventListener('scroll', () => {
+  if (locTicking) return;
+  locTicking = true;
+  requestAnimationFrame(() => { locUpdate(); locTicking = false; }); // queued after tick(), which writes --p first
+}, { passive: true });
+addEventListener('resize', locUpdate);
+locUpdate();
+
+/* ---------- Shortlist (header heart): plot numbers kept in this browser only ---------- */
+let shortlist = store.get('mjr-shortlist', []).filter(Number.isInteger);
+
+function renderShortlist() {
+  const n = shortlist.length;
+  const count = $('#shortlistCount');
+  count.hidden = !n;
+  count.textContent = n;
+  $('#shortlistOpen').setAttribute('aria-label', n ? `Your shortlist: ${n} plot${n === 1 ? '' : 's'}` : 'Your shortlist: no plots saved');
+  const list = shortlist.slice().sort((a, b) => a - b).join(', ');
+  $('#shortlistText').textContent = n ? `Plot${n === 1 ? '' : 's'} ${list}` : 'Tap the heart on a plot in the master plan to save it here.';
+  const link = $('#shortlistWa');
+  link.hidden = !n;
+  link.href = wa(`Hello, I'm interested in Plot${n === 1 ? '' : 's'} ${list} at MJR Township. Please share the price and availability.`);
+}
+
+function toggleShortlist(n) {
+  shortlist = shortlist.includes(n) ? shortlist.filter((x) => x !== n) : [...shortlist, n];
+  store.set('mjr-shortlist', shortlist);
+  renderShortlist();
+}
+renderShortlist();
+
+/* ---------- S07 Master plan ---------- */
+(function initPlan() {
+  const data = window.MJR_PLOTS;
+  if (!data) return;
+
+  const svg = $('#plan');
+  const zoom = $('#planZoom');
+  const layer = $('#planPlots');
+  const select = $('#plotSelect');
+  const body = $('#inspectorBody');
+  const reset = $('#planReset');
+  const scroller = $('#planScroll');
+  const count = $('#matchCount');
+  const cta = $('#planCta');
+  const filter = { size: 'all', road: 'all' };
+  let selected = null;
+
+  const STATUS = { available: 'Available', sold: 'Sold', reserved: 'Not for sale' };
+  const status = (p) => (p.reserved ? 'reserved' : p.sold ? 'sold' : 'available');
+  const approx = (p) => Math.round(p.size / 5) * 5; // indicative until the sales schedule is in
+  const roadText = (p) => (p.road === 150 ? '150 ft highway' : `${p.road} ft road`);
+  const filtering = () => filter.size !== 'all' || filter.road !== 'all';
+  const matches = (p) => {
+    if (p.reserved) return false;
+    const [lo, hi] = filter.size === 'all' ? [0, Infinity] : filter.size.split('-').map(Number);
+    const size = Math.round(p.size);
+    return size >= lo && size <= hi && (filter.road === 'all' || p.road === Number(filter.road));
   };
 
-  const contactSection = document.getElementById('contact');
-  if (contactSection && 'IntersectionObserver' in window) {
-    const formObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        isFormInView = entry.isIntersecting;
-        updateVisibility();
-      });
-    }, { threshold: 0.08 });
-    formObserver.observe(contactSection);
-  }
-
-  const plotInspector = document.getElementById('plotInspector');
-  if (plotInspector && 'IntersectionObserver' in window) {
-    const inspectorObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        isInspectorInView = entry.isIntersecting;
-        updateVisibility();
-      });
-    }, { threshold: 0.25 });
-    inspectorObserver.observe(plotInspector);
-  }
-
-  document.addEventListener('focusin', (e) => {
-    if (e.target && e.target.matches('input, select, textarea')) {
-      isKeyboardOpen = true;
-      updateVisibility();
-    }
+  // Draw every plot as its traced outline, coloured by status
+  const NS = 'http://www.w3.org/2000/svg';
+  const nodes = {};
+  data.list.forEach((p) => {
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', `plot is-${status(p)}`);
+    const poly = document.createElementNS(NS, 'polygon');
+    poly.setAttribute('points', p.shape);
+    const label = document.createElementNS(NS, 'text');
+    label.setAttribute('x', p.x);
+    label.setAttribute('y', p.y);
+    label.textContent = p.n;
+    const title = document.createElementNS(NS, 'title');
+    title.textContent = p.reserved ? `Plot ${p.n}: ${p.reserved}` : `Plot ${p.n}: ${STATUS[status(p)]}`;
+    g.append(poly, label, title);
+    if (!p.reserved) g.addEventListener('click', () => choose(p.n === selected ? null : p.n));
+    layer.append(g);
+    nodes[p.n] = g;
   });
 
-  document.addEventListener('focusout', (e) => {
-    if (e.target && e.target.matches('input, select, textarea')) {
-      setTimeout(() => {
-        const active = document.activeElement;
-        isKeyboardOpen = !!(active && active.matches && active.matches('input, select, textarea'));
-        updateVisibility();
-      }, 100);
-    }
+  svg.addEventListener('click', (e) => { if (!e.target.closest('.plot')) choose(null); });
+  select.addEventListener('change', () => choose(select.value ? Number(select.value) : null));
+  reset.addEventListener('click', () => choose(null));
+  body.addEventListener('click', (e) => {
+    const heart = e.target.closest('.heart');
+    if (!heart) return;
+    toggleShortlist(Number(heart.dataset.plot));
+    heart.setAttribute('aria-pressed', String(shortlist.includes(Number(heart.dataset.plot))));
   });
 
-  if (window.visualViewport) {
-    const initialHeight = window.innerHeight;
-    window.visualViewport.addEventListener('resize', () => {
-      isKeyboardOpen = window.visualViewport.height < initialHeight * 0.78;
-      updateVisibility();
+  $$('#plots .chip').forEach((chip) => chip.addEventListener('click', () => {
+    const key = chip.dataset.size ? 'size' : 'road';
+    filter[key] = chip.dataset[key];
+    $$(`#plots [data-${key}]`).forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+    renderFilters();
+    render();
+  }));
+
+  $('#planNote').textContent = `Availability updated ${data.asOf}. Plot sizes, facing and availability are indicative until our sales team confirms them.`;
+  if (scroller.scrollWidth > scroller.clientWidth) {
+    scroller.insertAdjacentHTML('afterend', '<p class="label plan-hint">Drag the plan sideways to see every plot.</p>');
+  }
+
+  function choose(n) {
+    selected = n;
+    const p = n && data.byNo[n];
+    if (p) {
+      const vb = svg.viewBox.baseVal;
+      const s = 2.4;
+      const cx = vb.x + vb.width / 2;
+      const cy = vb.y + vb.height / 2;
+      zoom.style.transform = `translate(${cx - p.x * s}px, ${cy - p.y * s}px) scale(${s})`;
+      scroller.scrollLeft = (scroller.scrollWidth - scroller.clientWidth) / 2;
+    } else {
+      zoom.style.transform = '';
+    }
+    reset.hidden = !p;
+    render();
+  }
+
+  function renderFilters() {
+    const available = data.list.filter((p) => !p.sold && matches(p)).length;
+    // available is a count we computed, so it is safe in innerHTML
+    count.innerHTML = !filtering() ? `<b>${available}</b>plots available`
+      : available ? `<b>${available}</b>available plot${available === 1 ? '' : 's'} match`
+      : 'No plots match. Ask us on WhatsApp about this size.';
+    select.innerHTML = '<option value="">Choose a plot</option>' + data.list.filter(matches)
+      .map((p) => `<option value="${p.n}">Plot ${p.n}: about ${approx(p)} sq. yd., ${roadText(p)}${p.sold ? ' (sold)' : ''}</option>`)
+      .join('');
+  }
+
+  function render() {
+    data.list.forEach((p) => {
+      nodes[p.n].classList.toggle('is-selected', p.n === selected);
+      nodes[p.n].classList.toggle('is-out', filtering() && !matches(p));
     });
+    select.value = selected ?? '';
+
+    const p = selected && data.byNo[selected];
+    if (p) layer.append(nodes[p.n]); // draw last so the outline sits above its neighbours
+    const st = p && status(p);
+    cta.dataset.enquiry = st === 'available' ? 'plot' : 'price';
+    cta.dataset.plot = st === 'available' ? p.n : '';
+    cta.textContent = st === 'available' ? `Ask about Plot ${p.n}` : 'Get the price list';
+
+    if (!p) {
+      body.innerHTML = `
+        <div class="inspector-head"><h3 class="h-s" id="inspectorTitle">Pick a plot</h3></div>
+        <p>Tap a plot on the plan, or choose one from the list, to see its size, road and facing.</p>
+        <a class="link" href="${wa('Hello, please send me the list of available plots at MJR Township.')}" target="_blank" rel="noopener">Get available plots on WhatsApp</a>`;
+      return;
+    }
+
+    const saved = shortlist.includes(p.n);
+    const actions = st === 'available'
+      ? `<a class="pill wa-pill" href="${wa(`Hello, I'm interested in Plot ${p.n} at MJR Township. Please share the price and availability.`)}" target="_blank" rel="noopener"><svg class="icon"><use href="#i-wa"/></svg>Ask on WhatsApp</a>`
+      : `<a class="pill wa-pill" href="${wa(`Hello, Plot ${p.n} at MJR Township is sold. Please suggest similar available plots.`)}" target="_blank" rel="noopener"><svg class="icon"><use href="#i-wa"/></svg>Ask for similar plots</a>`;
+
+    body.innerHTML = `
+      <div class="inspector-head">
+        <h3 class="h-s" id="inspectorTitle">Plot ${p.n}</h3>
+        <div>
+          <span class="status status-${st}">${STATUS[st]}</span>
+          <button type="button" class="heart" data-plot="${p.n}" aria-pressed="${saved}" aria-label="Save Plot ${p.n} to your shortlist"><svg class="icon"><use href="#i-heart"/></svg></button>
+        </div>
+      </div>
+      <dl class="spec">
+        <div><dt class="label">Size*</dt><dd>About ${approx(p)} sq. yd.</dd></div>
+        <div><dt class="label">Road</dt><dd>${roadText(p)}</dd></div>
+        <div><dt class="label">Facing*</dt><dd>${p.facing}</dd></div>
+        <div><dt class="label">Block</dt><dd>${p.block}${p.corner ? ', corner' : ''}</dd></div>
+      </dl>
+      <div class="inspector-actions">${actions}</div>
+      <p class="inspector-note">* Indicative. Our sales team confirms the exact size, facing and price.</p>`;
   }
+
+  renderFilters();
+  render();
+})();
+
+/* ---------- S12 FAQ: the side image follows the open question ---------- */
+const faqImage = $('#faqImage');
+$$('.tabs details').forEach((d) => d.addEventListener('toggle', () => {
+  if (d.open && d.dataset.image) faqImage.src = d.dataset.image;
+}));
+
+/* ---------- S13 Other projects carousel ---------- */
+const projRow = $('#projRow');
+const projStep = () => (projRow.firstElementChild?.offsetWidth || 300) + 16;
+$('#projPrev').addEventListener('click', () => projRow.scrollBy({ left: -projStep(), behavior: reduceMotion ? 'auto' : 'smooth' }));
+$('#projNext').addEventListener('click', () => projRow.scrollBy({ left: projStep(), behavior: reduceMotion ? 'auto' : 'smooth' }));
+const projProgress = () => {
+  const max = projRow.scrollWidth - projRow.clientWidth;
+  $('#projBar').style.setProperty('--cp', max > 0 ? Math.max(projRow.clientWidth / projRow.scrollWidth, projRow.scrollLeft / max) : 1);
+};
+projRow.addEventListener('scroll', projProgress, { passive: true });
+projProgress();
+
+/* ---------- S16 Promo popup: once per visitor, never over the plan, wide screens only ---------- */
+const pop = $('#promoPop');
+function hidePopup() {
+  if (pop.hidden) return;
+  pop.hidden = true;
+  store.set('mjr-popup-seen', true);
 }
+$('#popClose').addEventListener('click', hidePopup);
+if (!store.get('mjr-popup-seen', false)) {
+  setTimeout(() => {
+    const plan = $('#plots').getBoundingClientRect();
+    const overPlan = plan.top < innerHeight && plan.bottom > 0;
+    if (!wide.matches || overPlan || $('dialog[open]')) return;
+    pop.hidden = false;
+    requestAnimationFrame(() => pop.classList.add('is-in'));
+  }, 9000);
+}
+
+/* ---------- S15 Phone action bar: step aside while the footer form is on screen ---------- */
+const bar = $('#actionBar');
+new IntersectionObserver(([entry]) => bar.classList.toggle('is-hidden', entry.isIntersecting), { threshold: 0.15 })
+  .observe($('#contact'));
