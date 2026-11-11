@@ -126,9 +126,9 @@ Same features and ids as before; cleaner layout.
 
 ## S08 · Infrastructure (navy selector, 11 Nov 2026)
 
-Navy section. Left: INFRASTRUCTURE, "Everything is in place **before you build**" (gold highlight), and six tabs (Roads · Water · Power · EV charging · Security · Drainage), each an icon and a name; the selected tab turns white and shows one line. Right: a large photo that cross-fades to the selected item. Click, hover (desktop) or arrow keys / Home / End change it; it is an ARIA tab list with one tab stop. Phones: the tabs are a swipeable chip row above the photo (the selected chip centres itself) and a caption chip on the photo carries the line.
+Navy section. Left: INFRASTRUCTURE, "Everything is in place **before you build**" (gold highlight), and five tabs (Roads · Water · Power · EV charging · Security; Drainage removed at the user's request), each an icon and a name; the selected tab turns white and shows one line. Right: a large photo that cross-fades to the selected item. Click, hover (desktop) or arrow keys / Home / End change it; it is an ARIA tab list with one tab stop. Phones: the tabs are a swipeable chip row above the photo (the selected chip centres itself) and a caption chip on the photo carries the line.
 
-Photos: Roads `journey-03-roads`, Water `infra-water`, EV `infra-ev`; Power, Security and Drainage use stand-ins until **I1–I3** from [IMAGE-PROMPTS-S08.md](IMAGE-PROMPTS-S08.md) arrive.
+Photos: Roads `journey-03-roads`, Water `infra-water`, Power `infra-power`, EV `infra-ev`, Security `infra-security` (I1–I2 from [IMAGE-PROMPTS-S08.md](IMAGE-PROMPTS-S08.md); `infra-drainage.webp` is no longer used).
 
 ## S09 · Site visit (light, 11 Nov 2026)
 
@@ -144,14 +144,17 @@ Removed at the user's request, together with its lightbox. The menu and footer "
 
 ## S12 · About MJR + FAQ (navy, 11 Nov 2026)
 
-The one dark-blue section among the later sections (S05 is the other navy block). Navy `#1D2856` with a lighter glow top-left; cream headings, light-blue labels, gold numbers (2012 · 9 · 1,200+ 🔒 confirm) and gold chevrons. FAQ accordion (one open at a time) on the left; on the right a large image that stays in view and changes with the open question, now using the new photography (site aerial, approved drawing, parks, roads, highway, family on their plot). The background is **N1 `about-navy-texture.webp`** (subtle contour lines) under the navy glow.
+The one dark-blue section among the later sections (S05 is the other navy block). Navy `#1D2856` with a lighter glow top-left; cream headings, light-blue labels, gold numbers (2012 · 9 · 1,200+ 🔒 confirm) and gold chevrons. FAQ (redesigned 11 Nov 2026): a gold FAQ label and "Questions buyers ask us"; six numbered questions (01–06) with round +/− toggles, the open one on a softly lit panel, one open at a time; on the right, in an equal half, a large image that stays in view (sticky) and changes with the open question, with no caption, now using the new photography (site aerial, approved drawing, parks, roads, highway, family on their plot). The background is **N1 `about-navy-texture.webp`** (subtle contour lines) under the navy glow.
 
-## S13 · Footer (rebuilt 11 Nov 2026)
+## S13 · Footer (merged with About + FAQ, 11 Nov 2026)
 
-1. **Contact band:** a full-width site photo, **C1 `contact-band.webp`** (calm farmland and highway on the left, the layout on the right) under a navy overlay. Left: CONTACT, "Talk to the MJR sales team", one line, and four contact lines with round icons (phone, WhatsApp, email, address). Right: a white **Get a call back** form (name, mobile, I'd like: price list / site visit / investment advice, optional message), posting to `/api/enquiry`.
-2. **WhatsApp updates strip:** a white card with a WhatsApp icon, "Price list and updates on WhatsApp", and name + WhatsApp number + Join (`interest=Updates`).
-3. **Other MJR projects:** light green cards with a large faint "MJR" monogram, name, town and "Ask about it"; carousel arrows and a green progress line. Real photos 🔒.
-4. **Bottom:** light. Logo in its own colours, serif links in green with gold dots, RERA number, website, ©, legal note.
+The contact band (photo + "Get a call back" form) was **removed at the user's request**. The FAQ's navy texture now fades into the footer navy (`#111836`), so About + FAQ and the footer read as one ending:
+1. **Call to action:** STILL HAVE A QUESTION? / "Talk to our **sales team**" with **Book a site visit** (gold), a phone pill and a WhatsApp pill.
+2. **Four columns:** logo on a white tile + one line + RERA number · Explore links · Contact (phone, WhatsApp, email, address with Directions) · **Price list on WhatsApp** signup (name, WhatsApp number, Join; `interest=Updates`).
+3. **Other MJR projects:** a row of link pills (Greens · Enclave · Meadows), each opening WhatsApp. The carousel is gone.
+4. **Bottom bar:** © and website on the left, the legal note on the right.
+
+`#contact` now points at this footer; the phone action bar steps aside while it is on screen.
 
 ## S14 · Booking dialog (rebuilt 11 Nov 2026)
 

@@ -14,7 +14,7 @@ const store = {
 };
 
 /* ---------- Smooth scroll (Lenis), off for reduced motion ---------- */
-const lenis = !reduceMotion && window.Lenis ? new Lenis({ prevent: (node) => !!node.closest?.('dialog, .plan-scroll, .projects-row') }) : null;
+const lenis = !reduceMotion && window.Lenis ? new Lenis({ prevent: (node) => !!node.closest?.('dialog, .plan-scroll') }) : null;
 if (lenis) {
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
@@ -197,6 +197,8 @@ $$('.card-item').forEach((el) => cardIO.observe(el));
 
 /* ---------- Dialogs: menu and enquiry ---------- */
 const enquiry = $('#enquiry');
+const navLinks = $$('.nav-main a');
+const navImgs = $$('.nav-img');
 
 function openDialog(d) {
   if (d.open) return;
@@ -234,8 +236,20 @@ function openEnquiry(kind, plot = '') {
   openDialog(enquiry);
 }
 
-$('#menuOpen').addEventListener('click', () => openDialog($('#menu')));
-$('#shortlistOpen').addEventListener('click', () => openDialog($('#menu')));
+$('#menuOpen').addEventListener('click', () => {
+  // the section in view is marked in the menu, and its photo is shown first
+  const mid = innerHeight / 2;
+  let current = null;
+  navLinks.forEach((a) => {
+    const sec = $(a.getAttribute('href'));
+    const r = sec && sec.getBoundingClientRect();
+    const here = !!r && r.top <= mid && r.bottom >= mid;
+    if (here) current = a;
+    if (here) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+  });
+  showNavImage(current || navLinks[0], true);
+  openDialog($('#menu'));
+});
 
 document.addEventListener('click', (e) => {
   const closer = e.target.closest('[data-close]');
@@ -247,11 +261,17 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Menu: the left image follows the hovered link
-const navImage = $('#navImage');
-$$('.nav-main a').forEach((a) => ['pointerenter', 'focus'].forEach((ev) => a.addEventListener(ev, () => {
-  if (navImage.getAttribute('src') !== a.dataset.image) navImage.src = a.dataset.image;
-})));
+// Menu: the photo cross-fades to the hovered or focused link, with its name as a caption
+function showNavImage(a, instant) {
+  const [on, off] = navImgs[0].classList.contains('is-on') ? navImgs : [navImgs[1], navImgs[0]];
+  $('#navCap').textContent = $('.nm-t', a).textContent;
+  if (on.getAttribute('src') === a.dataset.image) return;
+  if (instant) { on.src = a.dataset.image; return; }
+  off.src = a.dataset.image;
+  const swap = () => { off.classList.add('is-on'); on.classList.remove('is-on'); };
+  if (off.complete) swap(); else off.addEventListener('load', swap, { once: true });
+}
+navLinks.forEach((a) => ['pointerenter', 'focus'].forEach((ev) => a.addEventListener(ev, () => showNavImage(a))));
 
 /* ---------- Lead forms ---------- */
 function normalisePhone(value) {
@@ -355,14 +375,10 @@ let shortlist = store.get('mjr-shortlist', []).filter(Number.isInteger);
 
 function renderShortlist() {
   const n = shortlist.length;
-  const count = $('#shortlistCount');
-  count.hidden = !n;
-  count.textContent = n;
-  $('#shortlistOpen').setAttribute('aria-label', n ? `Your shortlist: ${n} plot${n === 1 ? '' : 's'}` : 'Your shortlist: no plots saved');
+  $('#navShortlist').hidden = !n;
   const list = shortlist.slice().sort((a, b) => a - b).join(', ');
   $('#shortlistText').textContent = n ? `Plot${n === 1 ? '' : 's'} ${list}` : 'Tap the heart on a plot in the master plan to save it here.';
   const link = $('#shortlistWa');
-  link.hidden = !n;
   link.href = wa(`Hello, I'm interested in Plot${n === 1 ? '' : 's'} ${list} at MJR Township. Please share the price and availability.`);
 }
 
@@ -525,20 +541,9 @@ renderShortlist();
 /* ---------- S12 FAQ: the side image follows the open question ---------- */
 const faqImage = $('#faqImage');
 $$('.tabs details').forEach((d) => d.addEventListener('toggle', () => {
-  if (d.open && d.dataset.image) faqImage.src = d.dataset.image;
+  if (!d.open) return;
+  if (d.dataset.image) faqImage.src = d.dataset.image;
 }));
-
-/* ---------- S13 Other projects carousel ---------- */
-const projRow = $('#projRow');
-const projStep = () => (projRow.firstElementChild?.offsetWidth || 300) + 16;
-$('#projPrev').addEventListener('click', () => projRow.scrollBy({ left: -projStep(), behavior: reduceMotion ? 'auto' : 'smooth' }));
-$('#projNext').addEventListener('click', () => projRow.scrollBy({ left: projStep(), behavior: reduceMotion ? 'auto' : 'smooth' }));
-const projProgress = () => {
-  const max = projRow.scrollWidth - projRow.clientWidth;
-  $('#projBar').style.setProperty('--cp', max > 0 ? Math.max(projRow.clientWidth / projRow.scrollWidth, projRow.scrollLeft / max) : 1);
-};
-projRow.addEventListener('scroll', projProgress, { passive: true });
-projProgress();
 
 /* ---------- S16 Promo popup: once per visitor, never over the plan, wide screens only ---------- */
 const pop = $('#promoPop');

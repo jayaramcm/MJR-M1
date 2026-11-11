@@ -100,10 +100,6 @@
       <img src="Assets/TownShip logo_Final_New_Web_1.svg" alt="" width="364" height="201">
     </a>
     <div class="banner-right">
-      <button type="button" class="pill pill-icon" id="shortlistOpen" aria-label="Your shortlist: no plots saved"><svg
-          class="icon">
-          <use href="#i-heart" />
-        </svg><span class="shortlist-count" id="shortlistCount" hidden></span></button>
       <button type="button" class="pill" id="menuOpen" aria-haspopup="dialog" aria-label="Open menu"><span
           class="pill-text">Menu</span><svg class="icon">
           <use href="#i-menu" />
@@ -113,49 +109,44 @@
 
   <!-- S01 · Full-screen menu -->
   <dialog class="nav-panel" id="menu" aria-label="Menu">
-    <div class="nav-media" aria-hidden="true"><img id="navImage" src="Assets/web/hero-aerial-900.webp" alt=""></div>
+    <div class="nav-media" aria-hidden="true">
+      <img class="nav-img is-on" src="Assets/web/infra-security.webp" alt="">
+      <img class="nav-img" src="Assets/web/infra-security.webp" alt="">
+      <p class="nav-cap"><span class="label">MJR Township · Kalwakurthy</span><span class="nav-cap-title" id="navCap">Overview</span></p>
+    </div>
     <div class="nav-content">
-      <button type="button" class="pill pill-icon nav-close" aria-label="Close menu" data-close><svg class="icon">
-          <use href="#i-close" />
-        </svg></button>
-      <p class="nav-lang label"><a href="#top" aria-current="true" data-close>EN</a> <span aria-disabled="true"
-          title="Telugu version coming soon">తె · soon</span></p>
+      <div class="nav-top">
+        <p class="nav-lang label"><a href="#top" aria-current="true" data-close>EN</a><span aria-disabled="true" title="Telugu version coming soon">తె · soon</span></p>
+        <button type="button" class="pill pill-icon nav-close" aria-label="Close menu" data-close autofocus><svg class="icon"><use href="#i-close"/></svg></button>
+      </div>
       <nav aria-label="Menu">
-        <ul class="nav-main">
-          <li><a href="#overview" data-close data-image="Assets/web/s03-gate.webp">Overview</a></li>
-          <li><a href="#location" data-close data-image="Assets/web/loc-1.webp">Location</a></li>
-          <li><a href="#plots" data-close data-image="Assets/web/s03-layout.webp">Master plan</a></li>
-          <li><a href="#infrastructure" data-close data-image="Assets/web/internal-road.webp">Infrastructure</a></li>
-          <li><a href="#life" data-close data-image="Assets/web/amenity-pool.webp">Amenities</a></li>
-          <li><a href="#about" data-close data-image="Assets/web/visit-pavilion.webp">About MJR</a></li>
-          <li><a href="#faq" data-close data-image="Assets/web/amenity-parks.webp">FAQ</a></li>
-          <li><a href="#contact" data-close data-image="Assets/web/hero-aerial-900.webp">Contact</a></li>
-        </ul>
-        <ul class="nav-secondary label">
+        <ol class="nav-main">
+          <li style="--i: 0"><a href="#overview" data-close data-image="Assets/web/infra-security.webp"><span class="nm-t">Overview</span></a></li>
+          <li style="--i: 1"><a href="#location" data-close data-image="Assets/web/location-01-site.webp"><span class="nm-t">Location</span></a></li>
+          <li style="--i: 2"><a href="#plots" data-close data-image="Assets/web/journey-04-parks.webp"><span class="nm-t">Master plan</span></a></li>
+          <li style="--i: 3"><a href="#infrastructure" data-close data-image="Assets/web/infra-power.webp"><span class="nm-t">Infrastructure</span></a></li>
+          <li style="--i: 4"><a href="#life" data-close data-image="Assets/web/amenity-pool.webp"><span class="nm-t">Amenities</span></a></li>
+          <li style="--i: 5"><a href="#about" data-close data-image="Assets/web/hero-aerial-1600.webp"><span class="nm-t">About MJR</span></a></li>
+          <li style="--i: 6"><a href="#faq" data-close data-image="Assets/web/journey-02-documents.webp"><span class="nm-t">FAQ</span></a></li>
+          <li style="--i: 7"><a href="#contact" data-close data-image="Assets/web/visit-welcome.webp"><span class="nm-t">Contact</span></a></li>
+        </ol>
+      </nav>
+      <div class="nav-actions">
+        <button type="button" class="btn" data-enquiry="visit" data-close>Book a site visit</button>
+        <a class="pill" href="tel:+919010055596"><svg class="icon"><use href="#i-phone"/></svg>Call</a>
+        <a class="pill" href="https://wa.me/919010055596?text=Hello%2C%20I'd%20like%20details%20about%20MJR%20Township%2C%20Kalwakurthy." target="_blank" rel="noopener"><svg class="icon"><use href="#i-wa"/></svg>WhatsApp</a>
+      </div>
+      <div class="nav-shortlist" id="navShortlist" hidden>
+        <p class="label">Your shortlist</p>
+        <p id="shortlistText"></p>
+        <a class="link" id="shortlistWa" href="#plots" target="_blank" rel="noopener">Ask about these plots on WhatsApp</a>
+      </div>
+      <div class="nav-foot">
+        <ul class="nav-secondary">
           <li><a href="#faq" data-close>Purchase process and loans</a></li>
           <li><a href="#faq" data-close>Documents and RERA</a></li>
-          <li><button type="button" data-enquiry="visit" data-close>Book a site visit</button></li>
         </ul>
-      </nav>
-      <div class="nav-shortlist" id="navShortlist">
-        <p class="label">Your shortlist</p>
-        <p class="h-xs" id="shortlistText">Tap the heart on a plot in the master plan to save it here.</p>
-        <a class="btn" id="shortlistWa" href="#plots" hidden target="_blank" rel="noopener">Ask about these plots</a>
-      </div>
-      <div class="nav-contacts">
-        <div>
-          <p class="label">Sales</p>
-          <p class="label-l">MJR sales team</p>
-          <a href="tel:+919010055596">+91 90100 55596</a>
-          <a href="https://wa.me/919010055596?text=Hello%2C%20I%27d%20like%20details%20about%20MJR%20Township%2C%20Kalwakurthy."
-            target="_blank" rel="noopener">WhatsApp</a>
-          <a href="mailto:sales@mjrinfra.com">sales@mjrinfra.com</a>
-        </div>
-        <div>
-          <p class="label">Site</p>
-          <p class="label-l">MJR Township</p>
-          <p>Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy, Telangana 509 324</p>
-        </div>
+        <p>Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy · <a href="mailto:sales@mjrinfra.com">sales@mjrinfra.com</a></p>
       </div>
     </div>
   </dialog>
@@ -186,7 +177,7 @@
           </svg></a>
       </div>
 
-      <button type="button" class="pill pill-icon hero-pause" id="heroPause" aria-pressed="false"
+      <button type="button" class="pill pill-icon hero-pause sr-focusable" id="heroPause" aria-pressed="false"
         aria-label="Pause the video and moving text"><svg class="icon i-pause">
           <use href="#i-pause" />
         </svg><svg class="icon i-play">
@@ -220,8 +211,7 @@
         </div>
       </div>
       <ol class="cards-list">
-        <li class="card-item" data-progress><img src="Assets/web/s03-gate.webp" width="1400" height="933" loading="lazy"
-            alt="The MJR Township entrance gate, timber-clad on stone pillars">
+        <li class="card-item" data-progress><img src="Assets/web/infra-security.webp" width="1400" height="934" loading="lazy" alt="The MJR Township entrance gate and compound wall, with the security cabin inside">
           <p class="card-cap"><span class="label">1 / 4</span><span class="h-s">An entrance gate and compound wall
               around all 7.93 acres</span></p>
         </li>
@@ -264,7 +254,7 @@
             <button type="button" class="quote-turn" aria-controls="quoteBack" aria-expanded="false">Talk to the team<svg class="icon"><use href="#i-arrow"/></svg></button>
           </figure>
           <div class="quote-card quote-back" id="quoteBack" inert>
-            <img class="quote-back-img" src="Assets/web/s03-gate.webp" width="1400" height="933" loading="lazy" alt="">
+            <img class="quote-back-img" src="Assets/web/infra-security.webp" width="1400" height="934" loading="lazy" alt="">
             <div class="quote-back-body">
               <p class="label">Talk to the team</p>
               <h3 class="h-m">Ask the people who planned the layout</h3>
@@ -556,18 +546,13 @@
           <span class="infra-ico"><svg class="icon"><use href="#i-shield"/></svg></span>
           <span class="it-text"><span class="it-name">Security</span><span class="it-line">Gated entrance and compound wall</span></span>
         </button>
-        <button type="button" class="infra-tab" role="tab" id="it-drainage" aria-selected="false" aria-controls="infraPanel" tabindex="-1">
-          <span class="infra-ico"><svg class="icon"><use href="#i-waves"/></svg></span>
-          <span class="it-text"><span class="it-name">Drainage</span><span class="it-line">Storm-water drains on every road</span></span>
-        </button>
       </div>
       <div class="infra-panel" id="infraPanel" role="tabpanel" aria-labelledby="it-roads">
         <img class="infra-shot is-on" src="Assets/web/journey-03-roads.webp" width="1400" height="788" loading="lazy" alt="Blacktop internal roads being finished across the layout" data-name="Roads" data-line="30 and 40 ft blacktop roads">
         <img class="infra-shot" src="Assets/web/infra-water.webp" width="1200" height="900" loading="lazy" alt="The overhead water tank beside a landscaped park" data-name="Water" data-line="Overhead tank and supply lines">
-        <img class="infra-shot" src="Assets/web/internal-road.webp" width="1400" height="934" loading="lazy" alt="An internal road lined with streetlights" data-name="Power" data-line="Power lines and streetlights">
+        <img class="infra-shot" src="Assets/web/infra-power.webp" width="1400" height="934" loading="lazy" alt="Streetlights and tidy power lines along an internal road, with a fenced transformer box" data-name="Power" data-line="Power lines and streetlights">
         <img class="infra-shot" src="Assets/web/infra-ev.webp" width="1100" height="826" loading="lazy" alt="The planned EV charging station under a solar canopy" data-name="EV charging" data-line="Charging station at the entrance, planned">
-        <img class="infra-shot" src="Assets/web/s03-gate.webp" width="1400" height="933" loading="lazy" alt="The entrance gate and compound wall" data-name="Security" data-line="Gated entrance and compound wall">
-        <img class="infra-shot" src="Assets/web/journey-03-roads.webp" width="1400" height="788" loading="lazy" alt="Roads with kerbs and covered drains along them" data-name="Drainage" data-line="Storm-water drains on every road">
+        <img class="infra-shot" src="Assets/web/infra-security.webp" width="1400" height="934" loading="lazy" alt="The entrance gate, security cabin and compound wall" data-name="Security" data-line="Gated entrance and compound wall">
         <p class="infra-cap" aria-hidden="true"><span id="infraCapName">Roads</span><span id="infraCapLine">30 and 40 ft blacktop roads</span></p>
       </div>
       <p class="read-more infra-more"><span class="label">Life inside the gate</span><a class="h-s link" href="#life">See the amenities</a></p>
@@ -642,36 +627,36 @@
       </ul>
       <div class="tabs-wrap" id="faq">
         <div class="tabs-list">
-          <h3 class="label">Questions buyers ask us</h3>
+          <header class="faq-head"><p class="label">FAQ</p><h3 class="h-m">Questions buyers ask us</h3></header>
           <details name="faq" open data-image="Assets/web/location-01-site.webp">
-            <summary class="h-s">What is the price of a plot?</summary>
+            <summary><span class="faq-no">01</span><span class="faq-q">What is the price of a plot?</span><span class="faq-ico" aria-hidden="true"></span></summary>
             <p>Prices depend on the plot's size, road and facing. <a class="link"
                 href="https://wa.me/919010055596?text=Hello%2C%20please%20send%20me%20the%20MJR%20Township%20price%20list."
                 target="_blank" rel="noopener">Ask on WhatsApp</a> and we'll send the current price list.</p>
           </details>
           <details name="faq" data-image="Assets/web/journey-02-documents.webp">
-            <summary class="h-s">Is the project RERA registered?</summary>
+            <summary><span class="faq-no">02</span><span class="faq-q">Is the project RERA registered?</span><span class="faq-ico" aria-hidden="true"></span></summary>
             <p>Yes. MJR Township is registered with TG RERA under number <span translate="no">P01600010465</span>. You
               can check it on the <a class="link" href="https://rera.telangana.gov.in/" target="_blank"
                 rel="noopener">TG RERA website</a>.</p>
           </details>
           <details name="faq" data-image="Assets/web/journey-04-parks.webp">
-            <summary class="h-s">How many plots, and what sizes?</summary>
+            <summary><span class="faq-no">03</span><span class="faq-q">How many plots, and what sizes?</span><span class="faq-ico" aria-hidden="true"></span></summary>
             <p>104 residential plots on 7.93 acres, from about 120 to 550 sq. yd.</p>
           </details>
-          <details name="faq" data-image="Assets/web/journey-03-roads.webp">
-            <summary class="h-s">Is it a gated community?</summary>
+          <details name="faq" data-image="Assets/web/infra-security.webp">
+            <summary><span class="faq-no">04</span><span class="faq-q">Is it a gated community?</span><span class="faq-ico" aria-hidden="true"></span></summary>
             <p>Yes. It's a gated layout with 30 and 40 ft internal roads and frontage on the 150 ft Tirupati Highway.
             </p>
           </details>
           <details name="faq" data-image="Assets/web/location-02-highway.webp">
-            <summary class="h-s">Where exactly is the site?</summary>
+            <summary><span class="faq-no">05</span><span class="faq-q">Where exactly is the site?</span><span class="faq-ico" aria-hidden="true"></span></summary>
             <p>Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy, Nagarkurnool district, Telangana 509
               324. <a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=MJR+Township+Kalwakurthy"
                 target="_blank" rel="noopener">Open in Google Maps</a>.</p>
           </details>
           <details name="faq" data-image="Assets/web/journey-05-your-plot.webp">
-            <summary class="h-s">Can I visit before deciding?</summary>
+            <summary><span class="faq-no">06</span><span class="faq-q">Can I visit before deciding?</span><span class="faq-ico" aria-hidden="true"></span></summary>
             <p>Yes. <button type="button" class="link" data-enquiry="visit">Book a visit</button> and our team will show
               you the plots, the roads and the layout in person.</p>
           </details>
@@ -679,119 +664,80 @@
         <figure class="tabs-image" aria-hidden="true"><img id="faqImage" src="Assets/web/location-01-site.webp"
             width="1400" height="1244" loading="lazy" alt=""></figure>
       </div>
-      <p class="read-more center"><span class="label">Still have a question?</span><a class="h-s link"
-          href="#contact">Talk to sales</a></p>
     </section>
   </main>
 
-  <!-- S13 · Footer: contact band, WhatsApp updates, other projects, links -->
-  <footer class="footer" id="contact">
-    <section class="contact-band" aria-labelledby="contactTitle" data-header-theme="dark">
-      <img class="contact-bg" src="Assets/web/contact-band.webp" width="2000" height="1000" loading="lazy" alt="">
-      <div class="contact-inner">
-        <div class="contact-copy">
-          <p class="label">Contact</p>
-          <h2 class="h-l" id="contactTitle">Talk to the MJR sales team</h2>
-          <p>The price list, plot availability, documents or a site visit: leave your number and we&rsquo;ll call you back.</p>
-          <ul class="contact-lines">
-            <li><span class="cl-ico"><svg class="icon"><use href="#i-phone"/></svg></span><a href="tel:+919010055596">+91 90100 55596</a></li>
-            <li><span class="cl-ico"><svg class="icon"><use href="#i-wa"/></svg></span><a href="https://wa.me/919010055596?text=Hello%2C%20I'd%20like%20details%20about%20MJR%20Township%2C%20Kalwakurthy." target="_blank" rel="noopener">WhatsApp us</a></li>
-            <li><span class="cl-ico"><svg class="icon"><use href="#i-mail"/></svg></span><a href="mailto:sales@mjrinfra.com">sales@mjrinfra.com</a></li>
-            <li><span class="cl-ico"><svg class="icon"><use href="#i-pin"/></svg></span><span>Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy, Telangana 509 324</span></li>
-          </ul>
-        </div>
-        <form class="lead-form line-form contact-form" novalidate>
-          <h3 class="h-m">Get a call back</h3>
-          <div class="line-field"><input id="cName" name="name" autocomplete="name" required maxlength="80" placeholder=" "><label for="cName">Name</label></div>
-          <div class="line-field"><input id="cPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" required pattern="[6-9][0-9]{9}" placeholder=" "><label for="cPhone">Mobile number (10 digits)</label></div>
-          <fieldset class="radio-chips">
-            <legend class="label">I&rsquo;d like</legend>
-            <label><input type="radio" name="interest" value="Price list" checked><span>The price list</span></label>
-            <label><input type="radio" name="interest" value="Site visit"><span>A site visit</span></label>
-            <label><input type="radio" name="interest" value="Investment advice"><span>Investment advice</span></label>
-          </fieldset>
-          <div class="line-field"><textarea id="cMsg" name="message" rows="2" maxlength="500" placeholder=" "></textarea><label for="cMsg">Message (optional)</label></div>
-          <button type="submit" class="btn">Call me back</button>
-          <p class="form-status" role="status"></p>
-          <p class="privacy">We only use your number to call you about MJR Township.</p>
-        </form>
+  <!-- S13 · Footer: one navy ending with the FAQ (call to action, four columns, other projects, legal) -->
+  <footer class="footer" id="contact" data-header-theme="dark">
+    <div class="f-cta">
+      <div>
+        <p class="label">Still have a question?</p>
+        <h2 class="h-l">Talk to our <span class="hl">sales team</span></h2>
       </div>
-    </section>
-
-    <div class="updates-strip">
-      <div class="updates-copy">
-        <span class="updates-ico"><svg class="icon"><use href="#i-wa"/></svg></span>
-        <div>
-          <h3 class="h-s">Price list and updates on WhatsApp</h3>
-          <p>The current price list now, and a message when new plots open or prices change.</p>
-        </div>
+      <div class="f-cta-actions">
+        <button type="button" class="btn" data-enquiry="visit">Book a site visit</button>
+        <a class="pill" href="tel:+919010055596"><svg class="icon"><use href="#i-phone"/></svg>+91 90100 55596</a>
+        <a class="pill" href="https://wa.me/919010055596?text=Hello%2C%20I'd%20like%20details%20about%20MJR%20Township%2C%20Kalwakurthy." target="_blank" rel="noopener"><svg class="icon"><use href="#i-wa"/></svg>WhatsApp</a>
       </div>
-      <form class="lead-form line-form updates-form" novalidate>
-        <input type="hidden" name="interest" value="Updates">
-        <div class="line-field"><input id="uName" name="name" autocomplete="name" required maxlength="80" placeholder=" "><label for="uName">Name</label></div>
-        <div class="line-field"><input id="uPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" required pattern="[6-9][0-9]{9}" placeholder=" "><label for="uPhone">WhatsApp number</label></div>
-        <button type="submit" class="btn">Join</button>
-        <p class="form-status" role="status"></p>
-        <p class="privacy">Reply STOP on WhatsApp at any time.</p>
-      </form>
     </div>
 
-    <div class="projects" id="projects">
-      <div class="projects-head">
-        <h2 class="h-m">Explore other MJR projects</h2>
-        <div class="carousel-controls">
-          <button type="button" class="pill pill-icon" id="projPrev" aria-label="Previous project"><svg
-              class="icon flip">
-              <use href="#i-chev" />
-            </svg></button>
-          <button type="button" class="pill pill-icon" id="projNext" aria-label="Next project"><svg class="icon">
-              <use href="#i-chev" />
-            </svg></button>
-        </div>
+    <div class="f-grid">
+      <div class="f-brand">
+        <span class="f-logo"><img src="Assets/TownShip logo_Final_New_Web_1.svg" alt="MJR Township" width="364" height="201"></span>
+        <p>A gated layout of 104 residential plots on the Tirupati Highway, five minutes from Kalwakurthy town.</p>
+        <p class="label">TG RERA <span translate="no">P01600010465</span></p>
       </div>
-      <ul class="projects-row" id="projRow">
-        <li class="project-card"><span class="project-mark" aria-hidden="true">MJR</span><div class="project-glass">
-            <h3 class="h-m">MJR Greens</h3>
-            <p>Jadcherla</p><a class="btn"
-              href="https://wa.me/919010055596?text=Hello%2C%20please%20share%20details%20of%20MJR%20Greens%2C%20Jadcherla."
-              target="_blank" rel="noopener">Ask about it</a>
-          </div>
-        </li>
-        <li class="project-card"><span class="project-mark" aria-hidden="true">MJR</span><div class="project-glass">
-            <h3 class="h-m">MJR Enclave</h3>
-            <p>Nagarkurnool</p><a class="btn"
-              href="https://wa.me/919010055596?text=Hello%2C%20please%20share%20details%20of%20MJR%20Enclave%2C%20Nagarkurnool."
-              target="_blank" rel="noopener">Ask about it</a>
-          </div>
-        </li>
-        <li class="project-card"><span class="project-mark" aria-hidden="true">MJR</span><div class="project-glass">
-            <h3 class="h-m">MJR Meadows</h3>
-            <p>Achampet</p><a class="btn"
-              href="https://wa.me/919010055596?text=Hello%2C%20please%20share%20details%20of%20MJR%20Meadows%2C%20Achampet."
-              target="_blank" rel="noopener">Ask about it</a>
-          </div>
-        </li>
-      </ul>
-      <div class="carousel-progress" aria-hidden="true"><span id="projBar"></span></div>
-    </div>
 
-    <div class="footer-bottom">
-      <img class="footer-logo" src="Assets/TownShip logo_Final_New_Web_1.svg" alt="MJR Township" width="364" height="201">
-      <nav aria-label="Footer">
-        <ul class="f-links">
+      <nav class="f-col" aria-label="Footer">
+        <p class="label">Explore</p>
+        <ul class="f-list">
           <li><a href="#overview">Overview</a></li>
           <li><a href="#location">Location</a></li>
           <li><a href="#plots">Master plan</a></li>
+          <li><a href="#infrastructure">Infrastructure</a></li>
           <li><a href="#life">Amenities</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
-      <ul class="f-secondary label">
-        <li>TG RERA <span translate="no">P01600010465</span></li>
-        <li><a href="https://www.mjrinfra.com.in" target="_blank" rel="noopener">mjrinfra.com.in</a></li>
-        <li>© 2026 MJR Infra Developers</li>
+
+      <div class="f-col">
+        <p class="label">Contact</p>
+        <ul class="f-list f-contact">
+          <li><svg class="icon"><use href="#i-phone"/></svg><a href="tel:+919010055596">+91 90100 55596</a></li>
+          <li><svg class="icon"><use href="#i-wa"/></svg><a href="https://wa.me/919010055596?text=Hello%2C%20I'd%20like%20details%20about%20MJR%20Township%2C%20Kalwakurthy." target="_blank" rel="noopener">WhatsApp us</a></li>
+          <li><svg class="icon"><use href="#i-mail"/></svg><a href="mailto:sales@mjrinfra.com">sales@mjrinfra.com</a></li>
+          <li><svg class="icon"><use href="#i-pin"/></svg><span>Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy, Telangana 509 324 · <a href="https://www.google.com/maps/search/?api=1&amp;query=MJR+Township+Kalwakurthy" target="_blank" rel="noopener">Directions</a></span></li>
+        </ul>
+      </div>
+
+      <div class="f-col">
+        <p class="label">Price list on WhatsApp</p>
+        <form class="lead-form f-form" novalidate>
+          <input type="hidden" name="interest" value="Updates">
+          <label class="sr-only" for="uName">Name</label>
+          <input id="uName" name="name" autocomplete="name" required maxlength="80" placeholder="Your name">
+          <label class="sr-only" for="uPhone">WhatsApp number</label>
+          <div class="f-form-row">
+            <input id="uPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" required pattern="[6-9][0-9]{9}" placeholder="WhatsApp number">
+            <button type="submit" class="btn">Join</button>
+          </div>
+          <p class="form-status" role="status"></p>
+          <p class="privacy">The current price list now, and a message when new plots open. Reply STOP any time.</p>
+        </form>
+      </div>
+    </div>
+
+    <div class="f-projects">
+      <p class="label">Other MJR projects</p>
+      <ul>
+        <li><a href="https://wa.me/919010055596?text=Hello%2C%20please%20share%20details%20of%20MJR%20Greens%2C%20Jadcherla." target="_blank" rel="noopener"><span>MJR Greens</span><span class="f-town">Jadcherla</span></a></li>
+        <li><a href="https://wa.me/919010055596?text=Hello%2C%20please%20share%20details%20of%20MJR%20Enclave%2C%20Nagarkurnool." target="_blank" rel="noopener"><span>MJR Enclave</span><span class="f-town">Nagarkurnool</span></a></li>
+        <li><a href="https://wa.me/919010055596?text=Hello%2C%20please%20share%20details%20of%20MJR%20Meadows%2C%20Achampet." target="_blank" rel="noopener"><span>MJR Meadows</span><span class="f-town">Achampet</span></a></li>
       </ul>
+    </div>
+
+    <div class="f-bottom">
+      <p>© 2026 MJR Infra Developers · <a href="https://www.mjrinfra.com.in" target="_blank" rel="noopener">mjrinfra.com.in</a></p>
       <p class="legal">Images, plans, dimensions, amenities and specifications on this website are indicative of the development as proposed and are subject to approval from the competent authorities.</p>
     </div>
   </footer>

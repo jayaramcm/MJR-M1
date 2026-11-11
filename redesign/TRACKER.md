@@ -88,7 +88,7 @@ Slot-by-slot list: [IMAGE-PROMPTS.md § 0](IMAGE-PROMPTS.md#0-slot-map-which-ima
 | V1 | Site visit welcome ([brief](IMAGE-PROMPTS-S09-S12-S13.md)) | S09 | P2 | ✅ | ✅ |
 | C1 | Contact band background | S13 | P2 | ✅ | ✅ |
 | N1 | Navy topographic texture | S12 | P3 | ✅ | ✅ (under a lighter glow) |
-| I1–I3 | Infrastructure: power, security, drainage ([brief](IMAGE-PROMPTS-S08.md)) | S08 | P2 | ⏳ | stand-ins in place |
+| I1–I3 | Infrastructure: power, security, drainage ([brief](IMAGE-PROMPTS-S08.md)) | S08 | P2 | ✅ | ✅ (I2 also replaces the old flag-lettered gate render in S03 card 1, the S04 flip card, the FAQ and the menu) |
 
 ## Phase 6 · Real data from MJR 🔒
 
@@ -153,6 +153,7 @@ Slot-by-slot list: [IMAGE-PROMPTS.md § 0](IMAGE-PROMPTS.md#0-slot-map-which-ima
 | Light gradient headings now fade green → sage `#7E9673` | Brand colour; also fixes the earlier 2:1 faded-word contrast (now above 4:1) | – |
 | Phone page is now about 18,800 px (22 screens) | The reference phone page is about 20,000 px; the earlier Daylight Sage page was 9,166 px | Shorten in stage 2 by section |
 | Hero video brought back (`hero-compressed.mp4`) with a changing line | User's request (11 Nov 2026): the still hero text read too faint | Swap the `<video>` back for the IMG-01 `<picture>` if weight matters more |
+| Footer contact band removed; FAQ and footer merged into one navy ending (11 Nov 2026) | User's request | In git history; `contact-band.webp` (C1) is no longer used |
 | Amenities gallery (S11) and its lightbox removed (11 Nov 2026) | User's request | In git history; amenity links now go to `#life` |
 | Approvals section removed (11 Nov 2026) | User's request | The markup is in git history; RERA is still shown in the hero, journey, FAQ and footer |
 | Only Lenis kept from the reference's libraries | Everything else is done with CSS, `<dialog>`, `<details>` and one scroll helper | – |
