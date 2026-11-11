@@ -14,7 +14,7 @@ const store = {
 };
 
 /* ---------- Smooth scroll (Lenis), off for reduced motion ---------- */
-const lenis = !reduceMotion && window.Lenis ? new Lenis({ prevent: (node) => !!node.closest?.('dialog, .plan-scroll') }) : null;
+const lenis = !reduceMotion && window.Lenis ? new Lenis({ prevent: (node) => !!node.closest?.('dialog') }) : null;
 if (lenis) {
   const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);

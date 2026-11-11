@@ -80,9 +80,9 @@ const server = http.createServer((req, res) => {
     return handleLead(req, res);
   }
 
-  if (reqUrl === '/' || reqUrl === '') {
-    reqUrl = '/index.html';
-  }
+  if (reqUrl === '') reqUrl = '/';
+  // A folder address serves its index.html, as Vercel does (/ and /old/)
+  if (reqUrl.endsWith('/')) reqUrl += 'index.html';
 
   // Never serve dotfiles or dot-folders (.leads, .git, .agents)
   if (reqUrl.split(/[\/\\]/).some((part) => part.startsWith('.'))) {
@@ -95,6 +95,10 @@ const server = http.createServer((req, res) => {
   const filePath = path.join(ROOT, safePath);
 
   fs.stat(filePath, (err, stats) => {
+    if (!err && stats.isDirectory()) { // /old -> /old/; built from the cleaned path with one leading slash, so it can't point off-site
+      res.writeHead(301, { Location: '/' + safePath.replace(/\\/g, '/').replace(/^\/+/, '') + '/' });
+      return res.end();
+    }
     if (err || !stats.isFile()) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       res.end('404 Not Found');
