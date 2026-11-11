@@ -1,937 +1,1336 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>MJR Township, Kalwakurthy | Residential Plots on the Tirupati Highway</title>
-  <meta name="description" content="MJR Township at Kalwakurthy: 104 residential plots across 7.93 acres on the Tirupati Highway (NH 167K). Plot sizes from 120 to 550 sq. yd. Schedule a site visit.">
-  <meta name="theme-color" content="#1d2856">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MJR Township @ Kalwakurthy | A Foundation For Your Future</title>
+  <meta name="description"
+    content="A thoughtfully planned plotted development at Kalwakurthy, TG RERA registered (P01600010465). 7.93 Acres, 104 residential plots, 30 & 40 FT roads, and 150 FT abutting highway.">
+  <link rel="icon" type="image/svg+xml" href="Assets/MJR Infra Developers_Logo_Web_Web.svg">
+
+  <!-- Typography: Strictly 2 Typefaces (Plus Jakarta Sans + Newsreader Display) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Marcellus&display=swap" rel="stylesheet">
-  <link rel="preload" as="video" href="Assets/hero-day-and-night.mp4" type="video/mp4">
-  <link rel="stylesheet" href="css/styles.css?v=43">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-  <a class="skip-link" href="#overview">Skip to content</a>
 
-  <!-- 01. Sticky navigation -->
-  <header class="nav" id="siteNav">
-    <div class="nav__bar">
-      <div class="nav__side nav__side--left">
-        <button class="nav__menu-btn" id="menuOpenBtn" type="button" aria-haspopup="dialog" aria-controls="menuDialog">
-          <span class="nav__menu-icon" aria-hidden="true"><span></span><span></span></span>
-          <span class="nav__menu-label">Menu</span>
-        </button>
-        <button class="nav__text-link nav__brochure" id="navBrochureBtn" type="button" data-open-booking="brochure">Download Brochure</button>
-      </div>
-
-      <a class="nav__logo" href="#top" aria-label="MJR Township, back to top">
-        <svg viewBox="96 8 274 342" role="img" aria-hidden="true" focusable="false">
-          <g class="lg-gold">
-            <rect x="182.82" y="314.53" width="30.15" height="29.53"/>
-            <polygon points="182.11,61.7 182.11,159.08 212.2,159.08 212.2,43.62"/>
-            <polygon points="230.14,31.9 230.14,159.08 260.23,159.08 260.23,13.82"/>
-            <polygon points="308.26,71.8 308.26,159.08 278.17,159.08 278.17,53.72"/>
-          </g>
-          <g class="lg-ink">
-            <path d="M212.2,344.07v-29.53c5.19,0,17.94,1.54,17.94-17.32V175.88h30.09v121.39C260.23,332.31,241.15,344.07,212.2,344.07z"/>
-            <path d="M309.92,255.94h-1.65v41.08h-30.09V175.88h39.28c24.68,0,46.23,10.53,46.23,39.150c0,19.66-10.73,31.95-24.27,37.57l28.29,44.42h-34.15L309.92,255.94z M316.09,232.94c9.48,0,16.75-5.27,16.75-15.8c0-10.36-7.27-15.1-16.9-15.1h-7.67v30.9H316.09z"/>
-            <path d="M156.61,220.91l25.5-45.03h30.09v116.48c0,2.58-2.09,4.67-4.67,4.67h-25.43v-67.89l-25.5,41.78l-25.5-41.78v67.89h-30.09V175.880h30.09L156.61,220.91z"/>
-          </g>
-        </svg>
+  <!-- ======================================================================
+       1. NAVIGATION (Sticky White Header — Shared 1280px Container)
+       ====================================================================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="shell header-inner">
+      <a href="#hero" class="brand-identity" aria-label="MJR Infra Developers">
+        <img src="Assets/MJR Infra Developers_Logo_Web_Web.svg" alt="MJR Infra Developers" class="brand-logo">
       </a>
 
-      <div class="nav__side nav__side--right">
-        <a class="nav__text-link nav__phone" href="tel:+919010055596">+91 90100 55596</a>
-        <button class="btn btn--gold nav__cta" id="navVisitBtn" type="button" data-open-booking="visit">
-          <span class="nav__cta-long">Schedule a Site Visit</span>
-          <span class="nav__cta-short" aria-hidden="true">Site Visit</span>
+      <nav class="primary-nav" aria-label="Primary Navigation">
+        <ul class="nav-list">
+          <li><a href="#why-mjr" class="nav-link">Why MJR</a></li>
+          <li><a href="#location" class="nav-link">Location</a></li>
+          <li><a href="#master-plan" class="nav-link">Master Plan</a></li>
+          <li><a href="#amenities" class="nav-link">Amenities</a></li>
+          <li><a href="#trust" class="nav-link">Approvals</a></li>
+          <li><a href="#about-mjr" class="nav-link">About</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-right">
+        <a href="tel:+919010055596" class="header-phone-link" aria-label="Call +91-90100 55596">
+          <svg class="header-phone-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+          </svg>
+          <span>+91-90100 55596</span>
+        </a>
+
+        <div class="header-ctas">
+          <button type="button" class="btn btn-outline btn-sm" data-open-modal="brochure">
+            Brochure
+          </button>
+          <button type="button" class="btn btn-gold btn-sm" data-open-modal="site-visit">
+            Book a Site Visit
+          </button>
+        </div>
+
+        <button type="button" class="mobile-menu-btn" id="mobileNavToggle" aria-label="Open Navigation Menu">
+          <span class="menu-bars" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+          <span>Menu</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Full-screen menu -->
-  <dialog class="menu" id="menuDialog" aria-label="Site menu">
-    <div class="menu__inner">
-      <div class="menu__top">
-        <button class="menu__close" id="menuCloseBtn" type="button">
-          <span class="menu__close-x" aria-hidden="true"></span>
-          <span>Close</span>
-        </button>
-        <span class="menu__brand">MJR Township</span>
-      </div>
-
-      <nav class="menu__nav" aria-label="Site sections">
-        <ol>
-          <li><a href="#overview"><span class="menu__num">01</span>Overview</a></li>
-          <li><a href="#mplan"><span class="menu__num">02</span>Master Plan</a></li>
-          <li><a href="#amenities"><span class="menu__num">03</span>Amenities</a></li>
-          <li><a href="#location"><span class="menu__num">04</span>Location</a></li>
-          <li><a href="#mplan"><span class="menu__num">05</span>Plot Options</a></li>
-          <li><a href="#about"><span class="menu__num">06</span>About MJR</a></li>
-          <li><a href="#contact"><span class="menu__num">07</span>Contact</a></li>
-        </ol>
-      </nav>
-
-      <aside class="menu__aside">
-        <div class="menu__actions">
-          <button class="btn btn--gold" type="button" data-open-booking="visit">Schedule a Site Visit</button>
-          <button class="btn btn--line-light" type="button" data-open-booking="brochure">Download Brochure</button>
-        </div>
-        <dl class="menu__info">
-          <div>
-            <dt>Project</dt>
-            <dd>MJR Township @ Kalwakurthy</dd>
-          </div>
-          <div>
-            <dt>Address</dt>
-            <dd>Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy, Nagarkurnool (D), Telangana 509 324</dd>
-          </div>
-          <div>
-            <dt>Sales</dt>
-            <dd><a href="tel:+919010055596">+91 90100 55596</a><br><a href="mailto:sales@mjrinfra.com">sales@mjrinfra.com</a></dd>
-          </div>
-          <div>
-            <dt>TG RERA</dt>
-            <dd>P01600010465</dd>
-          </div>
-        </dl>
-      </aside>
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer-backdrop" id="mobileNavOverlay"></div>
+  <aside class="mobile-drawer" id="mobileNavDrawer" aria-label="Mobile Navigation">
+    <div class="mobile-drawer-head">
+      <img src="Assets/MJR Infra Developers_Logo_Web_Web.svg" alt="MJR Infra Developers" class="drawer-logo">
+      <button type="button" class="icon-close-btn" id="mobileNavClose" aria-label="Close Menu">&times;</button>
     </div>
-  </dialog>
+    <ul class="mobile-drawer-links">
+      <li><a href="#why-mjr" class="mobile-nav-link">Why MJR</a></li>
+      <li><a href="#location" class="mobile-nav-link">Location</a></li>
+      <li><a href="#master-plan" class="mobile-nav-link">Master Plan</a></li>
+      <li><a href="#amenities" class="mobile-nav-link">Amenities</a></li>
+      <li><a href="#trust" class="mobile-nav-link">Approvals</a></li>
+      <li><a href="#about-mjr" class="mobile-nav-link">About</a></li>
+      <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+    </ul>
+    <div class="mobile-drawer-footer">
+      <a href="tel:+919010055596" class="drawer-contact-line">+91-90100 55596</a>
+      <a href="mailto:sales@mjrinfra.com" class="drawer-contact-line">sales@mjrinfra.com</a>
+      <button type="button" class="btn btn-outline" data-open-modal="brochure">Brochure</button>
+      <button type="button" class="btn btn-gold" data-open-modal="site-visit">Book a Site Visit</button>
+    </div>
+  </aside>
 
-  <main>
-    <!-- 02. Hero -->
-    <div class="hero-pin" id="heroPin">
-    <section class="hero" id="top" aria-labelledby="heroTitle">
-      <div class="hero__media" aria-hidden="true">
-        <video class="hero__video" id="heroVideo" autoplay muted loop playsinline preload="auto">
-          <source src="Assets/hero-day-and-night.mp4" type="video/mp4">
-        </video>
-      </div>
-      <div class="hero__shade" aria-hidden="true"></div>
-      <canvas class="hero__ink" id="heroInk" aria-hidden="true"></canvas>
-      <svg class="sr-defs" aria-hidden="true" focusable="false">
-        <filter id="inkEdge" x="-10%" y="-10%" width="120%" height="120%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.016" numOctaves="3" seed="7" result="n"/>
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="70" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
-      </svg>
+  <!-- Single Floating WhatsApp / Call Button (Bottom-Right, No Vertical Side Tab) -->
+  <a href="https://wa.me/919010055596?text=Hello%20MJR%20Infra%2C%20I%20would%20like%20details%20about%20MJR%20Township%2C%20Kalwakurthy."
+    target="_blank" rel="noopener noreferrer" class="floating-contact-fab"
+    aria-label="Chat on WhatsApp or Call +91-90100 55596" title="WhatsApp / Call +91-90100 55596">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path
+        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+    </svg>
+  </a>
 
-      <div class="hero__content" id="heroContent">
-        <p class="hero__eyebrow reveal" style="--d:.55s">
-          <span class="hero__rule" aria-hidden="true"></span>
-          Plotted development at Kalwakurthy
-          <span class="hero__rule" aria-hidden="true"></span>
-        </p>
-        <h1 class="hero__title" id="heroTitle">
-          <span class="mask"><span style="--d:.7s">A foundation</span></span>
-          <span class="mask"><span style="--d:.85s">for your future.</span></span>
-        </h1>
-        <p class="hero__lede reveal" style="--d:1.15s">
-          A thoughtfully planned plotted development at Kalwakurthy, designed around the opportunity to own land, plan your future and build for tomorrow.
-        </p>
-        <div class="hero__ctas reveal" style="--d:1.3s">
-          <a class="btn btn--ivory" id="heroExploreBtn" href="#overview">Explore the Township</a>
-          <button class="btn btn--line-light" id="heroVisitBtn" type="button" data-open-booking="visit">Schedule a Site Visit</button>
+  <main id="mainContent">
+    <!-- ======================================================================
+         2. HERO (Full-Viewport Bleed + Centered Content + Frosted Glass Stats Bar)
+         ====================================================================== -->
+    <section class="hero-stage-section" id="hero">
+      <div class="hero-card-frame">
+        <div class="hero-media-layer">
+          <video class="hero-video" id="heroVideo" autoplay loop muted playsinline preload="metadata"
+            poster="Assets/hero-poster.jpg">
+            <source src="Assets/hero-compressed.mp4" type="video/mp4">
+            <source src="Assets/Hero-day-and-night-without-watermark.mp4" type="video/mp4">
+          </video>
+          <div class="hero-scrim"></div>
+        </div>
+
+        <!-- Pause / Mute Controls in Top-Right Corner of the Hero -->
+        <div class="hero-video-controls">
+          <button type="button" class="hero-ctrl-btn" id="heroPlayToggle" aria-label="Toggle Video Playback">
+            <svg class="btn-icon" viewBox="0 0 24 24">
+              <rect x="6" y="4" width="4" height="16" />
+              <rect x="14" y="4" width="4" height="16" />
+            </svg>
+          </button>
+          <button type="button" class="hero-ctrl-btn" id="heroMuteToggle" aria-label="Toggle Video Audio">
+            <svg class="btn-icon" viewBox="0 0 24 24">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="hero-stage-content">
+          <!-- Vertically Centered Left-Aligned Hero Copy & Actions -->
+          <div class="hero-copy-block">
+            <p class="hero-kicker">TG RERA REGISTERED PLOTTED DEVELOPMENT &middot; KALWAKURTHY</p>
+            <h1 class="hero-display-title">A Foundation for Your Future.</h1>
+            <p class="hero-lead">
+              A thoughtfully planned plotted development at Kalwakurthy, designed around the opportunity to own land,
+              plan your future and build for tomorrow.
+            </p>
+            <!-- TODO: restore once the real starting price is confirmed:
+            <p class="hero-price-highlight">Plots starting from &#8377;__ Lakhs</p> -->
+            <div class="hero-actions-row">
+              <button type="button" class="btn btn-gold btn-lg hero-cta-btn" data-open-modal="site-visit">
+                Book a Site Visit
+              </button>
+              <a href="#master-plan" class="btn btn-hero-outline btn-lg hero-cta-btn">
+                View the Master Plan
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="hero__base reveal" style="--d:1.5s">
-        <ul class="hero__facts" aria-label="Project facts">
-          <li><strong>7.93</strong><span>Acres*</span></li>
-          <li><strong>104</strong><span>Residential plots</span></li>
-          <li><strong>120&ndash;550</strong><span>Sq. yd. plot sizes (approx.)</span></li>
-        </ul>
-
-        <a class="hero__scroll" href="#overview" aria-label="Scroll to discover the township">
-          <span class="hero__scroll-label">Scroll to discover</span>
-          <span class="hero__scroll-ring" aria-hidden="true">
-            <svg viewBox="0 0 12 16" width="10" height="14"><path d="M6 0v14M1 9l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>
-          </span>
+      <!-- 5-Stat Bar (Frosted Glass Inside Hero on Desktop/Tablet; Scrollable Row Below Hero on Mobile) -->
+      <div class="snapshot-band-section" id="snapshot" role="region" aria-label="MJR Township Key Statistics">
+        <!-- Animated Scroll Cue Centered Just Above the Stats Bar -->
+        <a href="#why-mjr" class="hero-scroll-cue" aria-label="Scroll down to explore">
+          <span class="hero-scroll-label">Scroll</span>
+          <svg class="hero-scroll-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </a>
+        <div class="hero-stats-shell">
+          <div class="stats-overlap-card" role="list">
+            <!-- Stat 1: 7.93 Acres -->
+            <div class="stat-cell" role="listitem">
+              <svg class="stat-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <path d="M3 9h18M9 21V9" />
+              </svg>
+              <div class="stat-text">
+                <span class="stat-number">7.93 Acres</span>
+                <span class="stat-label">Total Layout Area</span>
+              </div>
+            </div>
 
-        <button class="hero__motion" id="videoToggle" type="button" aria-pressed="false" aria-label="Pause background video">
-          <span class="hero__motion-icon" aria-hidden="true"></span>
-          <span class="hero__motion-label">Pause</span>
-        </button>
-      </div>
+            <!-- Stat 2: 104 Plots -->
+            <div class="stat-cell" role="listitem">
+              <svg class="stat-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 21h18" />
+                <path d="M5 21V8l7-5 7 5v13" />
+                <path d="M9 21v-6h6v6" />
+              </svg>
+              <div class="stat-text">
+                <span class="stat-number">104 Plots</span>
+                <span class="stat-label">Residential Plots</span>
+              </div>
+            </div>
 
-      <!-- Intro sequence inside the hero stage so it triggers immediately when ink fade is done -->
-      <div class="intro" id="intro" aria-labelledby="introTitle">
-        <figure class="intro__photo">
-          <img class="intro__sketch" src="Assets/Architectural Sketch of MJR Gate Entrance.png" alt="" aria-hidden="true" decoding="async">
-          <img class="intro__color" src="Assets/entrance-mjr.jpg" alt="The landscaped entrance to MJR Township, Kalwakurthy" decoding="async">
-          <div class="intro__overlay" aria-hidden="true"></div>
-        </figure>
-        <h2 class="intro__word" id="introTitle">
-          <span class="intro__word-inner">Introducing</span>
-        </h2>
-        <div class="intro__card">
-          <img src="Assets/Township-Card.svg" alt="MJR Township @ Kalwakurthy" width="800" height="500" decoding="async">
-        </div>
-        <div class="intro__card intro__card--stats">
-          <img src="Assets/Township-stats-Card.svg" alt="MJR Township project statistics" width="802" height="501" decoding="async">
+            <!-- Stat 3: 120–550 sq. yd. -->
+            <div class="stat-cell" role="listitem">
+              <svg class="stat-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
+              </svg>
+              <div class="stat-text">
+                <span class="stat-number">120–550 sq. yd.</span>
+                <span class="stat-label">Plot Size Range</span>
+              </div>
+            </div>
+
+            <!-- Stat 4: 30 & 40 ft Roads -->
+            <div class="stat-cell" role="listitem">
+              <svg class="stat-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 19L8 5" />
+                <path d="M20 19L16 5" />
+                <line x1="12" y1="6" x2="12" y2="18" stroke-dasharray="2 2" />
+              </svg>
+              <div class="stat-text">
+                <span class="stat-number">30 &amp; 40 ft Roads</span>
+                <span class="stat-label">Internal Blacktop Roads</span>
+              </div>
+            </div>
+
+            <!-- Stat 5: 150 ft Main Road -->
+            <div class="stat-cell" role="listitem">
+              <svg class="stat-line-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 18L7 6h10l5 12" />
+                <line x1="12" y1="6" x2="12" y2="18" stroke-dasharray="2 2" />
+                <path d="M2 18h20" />
+              </svg>
+              <div class="stat-text">
+                <span class="stat-number">150 ft Main Road</span>
+                <span class="stat-label">Abutting Highway Frontage</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-    </div>
 
-    <!-- 03 Overview: pinned; panel 1 slides away horizontally to reveal the value pillars -->
-    <section class="why" id="overview" aria-labelledby="why-h">
-      <div class="why__track">
-        <div class="why__panel why__panel--intro">
-          <div class="why__scene" aria-hidden="true">
-            <img class="why__art why__art--palm" src="Assets/Tropical Gazebo Garden Cutout 1.png" alt="" decoding="async">
-            <img class="why__art why__art--gazebo" src="Assets/Tropical Garden Pavilion with Water Tower 1.png" alt="" decoding="async">
-            <img class="why__art why__art--tower" src="Assets/Tropical Garden Water Tower Scene.png" alt="" decoding="async">
+    <!-- ======================================================================
+         4. WHY MJR TOWNSHIP (2-Column Header + Full Entrance Gate + 4 Value Pillars)
+         ====================================================================== -->
+    <section class="editorial-section why-mjr-section" id="why-mjr">
+      <div class="shell">
+        <!-- Top Row: Two Columns, Vertically Aligned -->
+        <div class="why-top-row">
+          <div class="why-top-left">
+            <p class="section-gold-eyebrow">WHY MJR TOWNSHIP</p>
+            <h2 class="why-headline">Make Your Next Move Count.</h2>
+            <span class="gold-underline-accent" aria-hidden="true"></span>
           </div>
-          <div class="why__copy">
-            <h2 class="why__title" id="why-h">Make your next move count</h2>
-            <p class="why__lede">A property decision is about more than where you buy. It is about what you choose to build, the value you hope to create, and the plans you want to put into motion.</p>
+
+          <div class="why-top-right">
+            <p class="why-supporting-copy">
+              A property decision is about more than where you buy. It is about what you choose to build, the value you
+              hope to create, and the plans you want to put into motion.
+            </p>
+            <div class="why-cta-group">
+              <a href="#location" class="btn btn-gold btn-pill">
+                See the Location
+              </a>
+              <button type="button" class="why-text-link" data-open-modal="site-visit">
+                Book a Site Visit <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <div class="why__panel why__panel--pillars" aria-labelledby="pillars-h">
-          <div class="why__header why__header--pillars">
-            <p class="why__eyebrow why__eyebrow--pillars">But why a plot only at MJR Township? Because of the</p>
-            <h2 class="why__title why__title--pillars" id="pillars-h">Value pillars</h2>
-          </div>
-          <ul class="pillars">
-            <li class="pillar">
-              <img class="pillar__img" src="Assets/pillar.png" alt="" aria-hidden="true" decoding="async">
-              <div class="pillar__copy"><h3>Own</h3><p>A plot you can call your own.</p></div>
-            </li>
-            <li class="pillar">
-              <img class="pillar__img" src="Assets/pillar.png" alt="" aria-hidden="true" decoding="async">
-              <div class="pillar__copy"><h3>Build</h3><p>Freedom to plan and build your future.</p></div>
-            </li>
-            <li class="pillar">
-              <img class="pillar__img" src="Assets/pillar.png" alt="" aria-hidden="true" decoding="async">
-              <div class="pillar__copy"><h3>Belong</h3><p>A thoughtfully planned community with spaces for everyday living.</p></div>
-            </li>
-          </ul>
-          <div class="mplan" id="mplan">
-            <img class="mplan__img" src="Assets/Top-Down Grassy Landscape with Shrubs.png" alt="" aria-hidden="true" decoding="async">
-            <div class="mplan__stage" id="planStage">
-              <img class="mplan__plan" src="Assets/Top-Down Residential Landscape Masterplan.png" alt="MJR Township master layout: 104 plots between 30 ft and 40 ft internal roads, facing the 150 ft main road" decoding="async">
-            </div>
-            <div class="mplan__pins" id="planPins" aria-label="Plots on the master plan"></div>
+        <!-- Wide Rounded Image (24px Radius) of Township Entrance Gate, Fully Visible -->
+        <div class="why-entrance-frame">
+          <img src="Assets/entrance-mjr.jpg" alt="MJR Township Grand Entrance Gate on 150 ft Tirupati Highway"
+            class="why-entrance-img" loading="lazy">
+          <span class="entrance-caption-chip">Actual entrance render</span>
+        </div>
 
-            <!-- Selected plot details (respective-plot-card) -->
-            <article class="plotpop" id="plotPop" aria-live="polite" hidden>
-              <header class="plotpop__head">
-                <h3 class="plotpop__title" id="ppTitle">Plot 04</h3>
-                <span class="plotpop__status" id="ppStatus">Available</span>
-                <button class="plotpop__enquire" id="ppEnquire" type="button">Enquire this plot</button>
-              </header>
-              <div class="plotpop__facts">
-                <div class="plotpop__fact"><span class="plotpop__tab">Plot Size</span><p><strong id="ppSize">410.1</strong><span>Sq. Yards</span></p></div>
-                <div class="plotpop__fact"><span class="plotpop__tab">Direction</span><p><strong id="ppFacing">North-West</strong><span>Facing</span></p></div>
+        <!-- Value Pillars Row (4 Equal Cards with Thin Dividers Overlapping Image Bottom by ~40px) -->
+        <div class="why-pillars-row" role="list">
+          <!-- Pillar 1 -->
+          <article class="why-pillar-card" role="listitem">
+            <svg class="why-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+            <h3 class="why-pillar-title">Approved &amp; Clear Title</h3>
+            <p class="why-pillar-desc">TG RERA registered, No. P01600010465</p>
+          </article>
+
+          <!-- Pillar 2 -->
+          <article class="why-pillar-card" role="listitem">
+            <svg class="why-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <h3 class="why-pillar-title">Strategic Location</h3>
+            <p class="why-pillar-desc">On NH 167K Tirupati Hwy, 5 mins from Kalwakurthy</p>
+          </article>
+
+          <!-- Pillar 3 -->
+          <article class="why-pillar-card" role="listitem">
+            <svg class="why-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 19L8 5" />
+              <path d="M20 19L16 5" />
+              <line x1="12" y1="6" x2="12" y2="9" />
+              <line x1="12" y1="12" x2="12" y2="15" />
+              <line x1="12" y1="18" x2="12" y2="20" />
+            </svg>
+            <h3 class="why-pillar-title">Ready Infrastructure</h3>
+            <p class="why-pillar-desc">30 &amp; 40 ft roads, drainage, power, avenue trees</p>
+          </article>
+
+          <!-- Pillar 4 -->
+          <article class="why-pillar-card" role="listitem">
+            <svg class="why-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+              <polyline points="16 7 22 7 22 13" />
+            </svg>
+            <h3 class="why-pillar-title">Growth Corridor</h3>
+            <p class="why-pillar-desc">Rising demand along the Kalwakurthy belt</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         8. LOCATION (Asymmetric Split + 4 Connectivity Hubs + Video Stage)
+         ====================================================================== -->
+    <section class="editorial-section section-tinted" id="location">
+      <div class="shell">
+        <div class="split-header-grid">
+          <div class="split-left">
+            <span class="eyebrow-dash">Location</span>
+            <h2 class="display-h2">WHERE CONNECTIVITY MEETS CONVENIENCE.</h2>
+            <span class="accent-bar"></span>
+          </div>
+          <div class="split-right">
+            <p class="editorial-body-lg">
+              MJR Township sits on the Tirupati Highway (NH 167K) at Kalwakurthy, where the Srisailam Highway, the
+              Jadcherla–Kodad Highway and the Hyderabad–Nagarjuna Sagar Highway bring the wider region within easy
+              reach. Daily travel is simpler, and so is the way back to the city.
+            </p>
+            <div class="split-cta-wrap">
+              <a href="#master-plan" class="btn btn-gold btn-pill">
+                See the Master Plan
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-showcase-grid">
+          <!-- Left: 4 Interactive Location Corridors -->
+          <div class="location-cards-stack">
+            <article class="location-corridor-card active" data-video="Assets/mjr-location-1.mp4"
+              data-title="To Hyderabad">
+              <div class="corridor-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
               </div>
-              <p class="plotpop__desc" id="ppDesc"></p>
-              <h4 class="plotpop__hl-title">Highlights</h4>
-              <ul class="plotpop__hl" id="ppHighlights"></ul>
-              <button class="plotpop__close" id="ppClose" type="button" aria-label="Close plot details" title="Close">
-                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="#1D2856" stroke-width="2.5" stroke-linecap="round"/></svg>
-              </button>
+              <div class="corridor-body">
+                <h3 class="corridor-title">To Hyderabad</h3>
+                <p class="corridor-copy">
+                  Financial District, Gachibowli, Rajiv Gandhi International Airport and the Outer Ring Road, with the
+                  proposed Regional Ring Road in the larger picture.
+                </p>
+              </div>
             </article>
 
-            <!-- Flip card: Plot-card.svg (front) / Plot-Card-Selection.svg (back) -->
-            <div class="pcard" id="plotCard">
-              <!-- Floating controls on top-left outside of flipped card in vertical stack -->
-              <div class="pcard__controls" id="cardControls" aria-label="Card controls">
-                <button class="pcard__btn-corner pcard__btn-corner--back" id="cardBackBtn" type="button" aria-label="Back to overview" title="Back to overview">
-                  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 19l-7-7 7-7" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button class="pcard__btn-corner pcard__btn-corner--min" id="cardMinBtn" type="button" aria-label="Minimize card to legend" title="Minimize">
-                  <svg class="pcard__icon-min" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
-                  <svg class="pcard__icon-max" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
-                </button>
+            <article class="location-corridor-card" data-video="Assets/mjr-location-2.mp4"
+              data-title="Education nearby">
+              <div class="corridor-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
+              </div>
+              <div class="corridor-body">
+                <h3 class="corridor-title">Education nearby</h3>
+                <p class="corridor-copy">
+                  Global International School, Nishita College of Engineering &amp; Technology, Skill University.
+                </p>
+              </div>
+            </article>
+
+            <article class="location-corridor-card" data-video="Assets/mjr-location-3.mp4"
+              data-title="Healthcare nearby">
+              <div class="corridor-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                </svg>
+              </div>
+              <div class="corridor-body">
+                <h3 class="corridor-title">Healthcare nearby</h3>
+                <p class="corridor-copy">
+                  Bhoolaxmi Memorial Hospital, Grace Multispeciality Hospital, Madhavanji Super Speciality Hospital
+                  &amp; College.
+                </p>
+              </div>
+            </article>
+
+            <article class="location-corridor-card" data-video="Assets/mjr-location-4.mp4"
+              data-title="Around Kalwakurthy">
+              <div class="corridor-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20" />
+                  <path
+                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+              </div>
+              <div class="corridor-body">
+                <h3 class="corridor-title">Around Kalwakurthy</h3>
+                <p class="corridor-copy">
+                  Umamaheshwaram Temple, Gollatha Gudi (Alwanpalli Temple), the Nettempadu irrigation projects, and the
+                  statue of Gautama Buddha at Nagarkurnool.
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <!-- Right: Rounded Video & Landmark Showcase -->
+          <div class="location-video-frame">
+            <video class="location-stage-video" id="locationVideo" autoplay loop muted playsinline preload="metadata"
+              poster="Assets/hero-poster.jpg">
+              <source src="Assets/mjr-location-1.mp4" type="video/mp4">
+            </video>
+            <div class="location-video-caption">
+              <span class="location-caption-tag" id="locationMediaTitle">To Hyderabad</span>
+              <span class="location-caption-sub">Tirupati Highway (NH 167K), Kalwakurthy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. MASTER PLAN (Interactive Cadastral Workbench)
+         ====================================================================== -->
+    <section class="editorial-section" id="master-plan">
+      <div class="shell">
+        <div class="split-header-grid">
+          <div class="split-left">
+            <span class="eyebrow-dash">Master Plan</span>
+            <h2 class="display-h2">YOUR FUTURE ADDRESS</h2>
+            <span class="accent-bar"></span>
+          </div>
+          <div class="split-right">
+            <p class="editorial-body">
+              Explore the master plan to see how the plots are arranged, how the internal roads connect, and how the
+              layout comes together. Get a clear view of the available plots and the overall development before making
+              your choice.
+            </p>
+          </div>
+        </div>
+
+        <!-- Filters: highlight matching plots on the map and list them below -->
+        <div class="masterplan-filter-bar">
+          <div class="finder-controls-card">
+            <div class="finder-filter-group">
+              <span class="finder-filter-label">Plot size:</span>
+              <div class="finder-chips" role="group" aria-label="Filter by plot size">
+                <button type="button" class="filter-chip chip-size active" data-value="all">All Sizes</button>
+                <button type="button" class="filter-chip chip-size" data-value="120-150">Up to 150 sq. yd.</button>
+                <button type="button" class="filter-chip chip-size" data-value="150-200">151–200 sq. yd.</button>
+                <button type="button" class="filter-chip chip-size" data-value="200-300">201–300 sq. yd.</button>
+                <button type="button" class="filter-chip chip-size" data-value="300+">Above 300 sq. yd.</button>
+              </div>
+            </div>
+
+            <div class="finder-filter-group">
+              <span class="finder-filter-label">Road width:</span>
+              <div class="finder-chips" role="group" aria-label="Filter by road width">
+                <button type="button" class="filter-chip chip-road active" data-value="Either">Any</button>
+                <button type="button" class="filter-chip chip-road" data-value="30 FT">30 FT</button>
+                <button type="button" class="filter-chip chip-road" data-value="40 FT">40 FT</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Master Plan Interactive Frame (MJR M4 Map Layout & Background + Right Column Legend & Inspector) -->
+        <div class="masterplan-workbench">
+          <!-- Top Bar: Availability Meta + Zoom Controls -->
+          <div class="workbench-toolbar">
+            <div class="workbench-legend">
+              <span class="availability-meta" id="availabilityAsOf" style="padding-left:0; border-left:none;">
+                Interactive Master Layout Plan (104 Plots) &middot; Availability as of October 2026 &middot; Confirm availability with our team
+              </span>
+            </div>
+
+            <div class="workbench-controls">
+              <button type="button" class="ctrl-pill" id="zoomInMasterPlan" aria-label="Zoom In">+</button>
+              <button type="button" class="ctrl-pill" id="zoomOutMasterPlan" aria-label="Zoom Out">&minus;</button>
+              <button type="button" class="ctrl-pill" id="zoomResetMasterPlan">Reset</button>
+            </div>
+          </div>
+
+          <!-- Interactive Stage + Right Inspector Panel -->
+          <div class="workbench-body">
+            <div class="masterplan-viewport mplan is-exploring" id="masterPlanViewport">
+              <!-- MJR M4 Grass Ground Background -->
+              <img class="mplan__img" id="mplanBgImg" src="Assets/Lush Grassland Garden Clusters.png" alt="" aria-hidden="true" decoding="async">
+
+              <!-- MJR M4 Master Layout Stage (2560 x 1440) + Traced Plot Polygon Highlight -->
+              <div class="mplan__stage" id="masterPlanStage">
+                <img class="mplan__plan" src="Assets/layout MJR.png" alt="MJR Township Master Plan Layout: 104 plots across blocks with internal 30 & 40 ft roads facing the 150 ft highway" decoding="async">
+                <svg class="mplan__shape" viewBox="0 0 2560 1440" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <polygon id="planShape" points=""></polygon>
+                </svg>
               </div>
 
-              <div class="pcard__inner">
-                <div class="pcard__face pcard__face--front">
-                  <img src="Assets/Plot-card.svg" alt="" aria-hidden="true" width="700" height="900" decoding="async">
-                  <h2 class="sr-only">A closer look at your future address</h2>
-                  <button class="pcard__explore" id="exploreBtn" type="button">Explore the plots</button>
+              <!-- Crisp Screen-Space Interactive Plot Pins (1 to 104) -->
+              <div class="mplan__pins" id="planPins" aria-label="Plots on the master plan"></div>
+
+              <span class="masterplan-hint">Click any plot number on the map or choose from the dropdown</span>
+              <img src="Assets/compass.png" alt="North Compass" class="compass-badge" id="mapCompassBadge">
+            </div>
+
+            <!-- Right Column: Legend + Plot Dropdown + Selected Plot Details -->
+            <aside class="plot-inspector-panel" id="plotInspector" aria-live="polite">
+              <!-- Populated by main.js using MJR_PLOTS data -->
+            </aside>
+          </div>
+        </div>
+
+        <!-- Plot Schedule / Results Ledger (1px Hairline Rules Allowed Here) -->
+        <div class="plot-schedule-container">
+          <div class="plot-schedule-header">
+            <span class="schedule-status-text" id="finderMatchCount">Plot Schedule</span>
+            <button type="button" class="btn btn-outline btn-sm" id="resetFiltersBtn">Reset Filters</button>
+          </div>
+          <div id="finderResultsGrid" class="plot-schedule-body">
+            <!-- Populated from plots.json -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         7. AMENITIES (Interactive Tablist Left + Sticky Preview Right)
+         ====================================================================== -->
+    <section class="editorial-section section-tinted" id="amenities">
+      <div class="shell">
+        <div class="split-header-grid">
+          <div class="split-left">
+            <span class="eyebrow-dash">Amenities</span>
+            <h2 class="display-h2">A LITTLE MORE SPACE TO LIVE WELL.</h2>
+            <span class="accent-bar"></span>
+          </div>
+          <div class="split-right">
+            <p class="editorial-body-lg">
+              From play areas for children to quiet spaces for rest and fitness, the layout has outdoor amenities for
+              different ages and interests.
+            </p>
+            <p class="amenities-tap-hint">Tap an amenity to preview it.</p>
+            <div class="split-cta-wrap">
+              <button type="button" class="btn btn-gold btn-pill" data-open-modal="brochure">
+                Download Brochure
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Split: Left Interactive Tablist + Right Sticky Preview -->
+        <div class="interactive-showcase-split">
+          <!-- Left: 3 Category Cards (10 Amenity Rows Total inside role="tablist") -->
+          <div class="showcase-accordion-col" role="tablist" aria-label="Township Amenities" aria-orientation="vertical">
+            <!-- Group 1: LIVE -->
+            <div class="amenity-pillar-block active" data-pillar="live">
+              <button type="button" class="amenity-pillar-trigger" aria-expanded="true">
+                <span class="pillar-trigger-icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+                    <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+                    <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1" />
+                  </svg>
+                </span>
+                <div class="pillar-trigger-text">
+                  <span class="pillar-trigger-name">LIVE</span>
+                  <span class="pillar-trigger-sub">Everyday comforts, built into the community.</span>
                 </div>
-                <div class="pcard__face pcard__face--back" aria-labelledby="selectTitle">
-                  <img src="Assets/Plot-Card-Selection.svg?v=2" alt="" aria-hidden="true" width="700" height="900" decoding="async">
-                  <h2 class="sr-only" id="selectTitle">Find the plot that fits your plans</h2>
-                  <button class="pcard__filters" id="filterBtn" type="button" aria-haspopup="true" aria-expanded="false">Filters</button>
-                  <div class="pcard__filter-panel" id="filterMenu" hidden>
-                    <div class="pcard__filter-body">
-                      <!-- Left vertical tabs list -->
-                      <nav class="pcard__filter-tabs" role="tablist" aria-label="Filter categories">
-                        <button type="button" class="pcard__filter-tab is-active" role="tab" id="tabSize" aria-selected="true" aria-controls="paneSize" data-filter-tab="size">
-                          <span class="pcard__filter-tab-bar" aria-hidden="true"></span>
-                          <span class="pcard__filter-tab-text">Size</span>
-                        </button>
-                        <button type="button" class="pcard__filter-tab" role="tab" id="tabDirection" aria-selected="false" aria-controls="paneDirection" data-filter-tab="direction">
-                          <span class="pcard__filter-tab-bar" aria-hidden="true"></span>
-                          <span class="pcard__filter-tab-text">Direction</span>
-                        </button>
-                        <button type="button" class="pcard__filter-tab" role="tab" id="tabLocation" aria-selected="false" aria-controls="paneLocation" data-filter-tab="location">
-                          <span class="pcard__filter-tab-bar" aria-hidden="true"></span>
-                          <span class="pcard__filter-tab-text">Location</span>
-                        </button>
-                        <button type="button" class="pcard__filter-tab" role="tab" id="tabAvail" aria-selected="false" aria-controls="paneAvail" data-filter-tab="avail">
-                          <span class="pcard__filter-tab-bar" aria-hidden="true"></span>
-                          <span class="pcard__filter-tab-text">Availability</span>
-                        </button>
-                      </nav>
-
-                      <!-- Right options panels -->
-                      <div class="pcard__filter-content">
-                        <!-- Pane: Size -->
-                        <div class="pcard__filter-pane is-active" role="tabpanel" id="paneSize" aria-labelledby="tabSize" data-pane="size">
-                          <span class="pcard__filter-pane-title">Plot Size (Sq. Yds)</span>
-                          <div class="pcard__filter-options">
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fSize" value="all" checked>
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">All Sizes</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fSize" value="160-200">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">160 – 200 Sq. Yd</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fSize" value="201-300">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">201 – 300 Sq. Yd</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fSize" value="301-400">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">301 – 400 Sq. Yd</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fSize" value="401+">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">400+ Sq. Yd</span>
-                            </label>
-                          </div>
-                        </div>
-
-                        <!-- Pane: Direction -->
-                        <div class="pcard__filter-pane" role="tabpanel" id="paneDirection" aria-labelledby="tabDirection" data-pane="direction" hidden>
-                          <span class="pcard__filter-pane-title">Facing / Direction</span>
-                          <div class="pcard__filter-options">
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fDirection" value="all" checked>
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">All Directions</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fDirection" value="North">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">North Facing</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fDirection" value="South">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">South Facing</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fDirection" value="East">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">East Facing</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fDirection" value="West">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">West Facing</span>
-                            </label>
-                          </div>
-                        </div>
-
-                        <!-- Pane: Location -->
-                        <div class="pcard__filter-pane" role="tabpanel" id="paneLocation" aria-labelledby="tabLocation" data-pane="location" hidden>
-                          <span class="pcard__filter-pane-title">Location</span>
-                          <div class="pcard__filter-options">
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fLocation" value="all" checked>
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">All Locations</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fLocation" value="near">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">Near the 150 FT Main Road</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fLocation" value="far">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">Far from the 150 FT Main Road</span>
-                            </label>
-                          </div>
-                        </div>
-
-                        <!-- Pane: Availability -->
-                        <div class="pcard__filter-pane" role="tabpanel" id="paneAvail" aria-labelledby="tabAvail" data-pane="avail" hidden>
-                          <span class="pcard__filter-pane-title">Availability</span>
-                          <div class="pcard__filter-options">
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fAvail" value="all" checked>
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">All Plots</span>
-                            </label>
-                            <label class="pcard__radio-item">
-                              <input type="radio" name="fAvail" value="available">
-                              <span class="pcard__radio-circle"></span>
-                              <span class="pcard__radio-text">Available only plots</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="pcard__filter-footer">
-                      <button class="pcard__filter-reset" id="filterResetBtn" type="button">Clear all</button>
-                      <span class="pcard__filter-count" id="filterCount">104 plots matching</span>
-                      <button class="pcard__filter-apply" id="filterApplyBtn" type="button">Apply</button>
-                    </div>
-                  </div>
-                  <div class="pcard__grid" id="plotGrid" role="group" aria-label="Select your plot"></div>
-                  <div class="pcard__pager">
-                    <button type="button" id="pagePrev" aria-label="Previous plots">
-                      <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="pillar-accordion-chevron" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </button>
+              <div class="amenity-pillar-content">
+                <div class="amenity-interactive-list">
+                  <!-- 1. Multipurpose lawn -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/Park.jpg" data-category="LIVE" data-name="Multipurpose lawn"
+                      data-desc="Space for community gatherings.">
+                      <img src="Assets/Park.jpg" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Multipurpose lawn:</strong> space for community gatherings</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
                     </button>
-                    <span id="pageLabel">36 of 104</span>
-                    <button type="button" id="pageNext" aria-label="Next plots">
-                      <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/Park.jpg" alt="Multipurpose lawn" class="amenity-inline-img" loading="lazy">
+                    </div>
+                  </div>
+
+                  <!-- 2. Swimming pool (Default Active) -->
+                  <div class="amenity-row-wrap is-open">
+                    <button type="button" class="amenity-list-item active" role="tab" aria-selected="true" tabindex="0"
+                      data-img="Assets/Swimming-pool.png" data-category="LIVE" data-name="Swimming pool"
+                      data-desc="Space to unwind and refresh.">
+                      <img src="Assets/Swimming-pool.png" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Swimming pool:</strong> space to unwind and refresh</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
                     </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/Swimming-pool.png" alt="Swimming pool" class="amenity-inline-img" loading="lazy">
+                    </div>
                   </div>
-                  <p class="pcard__dir" id="cardDir"><strong>Direction</strong> | <span>Select a plot</span></p>
-                  <!-- Rotatable compass rose positioned at x:562, y:762 -->
-                  <div class="pcard__compass" id="cardCompass" aria-hidden="true">
-                    <img src="Assets/compass.png" alt="" decoding="async">
+
+                  <!-- 3. Water infrastructure -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/MJR_8_Water Tank_HD.jpg" data-category="LIVE" data-name="Water infrastructure"
+                      data-desc="A dedicated water tank.">
+                      <img src="Assets/MJR_8_Water Tank_HD.jpg" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Water infrastructure:</strong> a dedicated water tank</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/MJR_8_Water Tank_HD.jpg" alt="Water infrastructure" class="amenity-inline-img" loading="lazy">
+                    </div>
+                  </div>
+
+                  <!-- 4. EV charging -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/ev-charging.jpg" data-category="LIVE" data-name="EV charging"
+                      data-desc="Provision for electric mobility, with a station planned.">
+                      <img src="Assets/ev-charging.jpg" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>EV charging:</strong> provision for electric mobility, with a station planned</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/ev-charging.jpg" alt="EV charging" class="amenity-inline-img" loading="lazy">
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- Minimized legend strip: reduces into a strip showing map legends -->
-              <aside class="pcard__strip" id="cardStrip" aria-label="Map legends">
-                <div class="pcard__strip-content">
-                  <div class="pcard__strip-row">
-                    <span class="pcard__legend-item"><i class="pcard__legend-box" style="background:#edfa84;"></i> Plot</span>
-                    <span class="pcard__legend-item"><i class="pcard__legend-box" style="background:#ffc251;"></i> Social Utility</span>
-                    <span class="pcard__legend-item"><i class="pcard__legend-box" style="background:#51dfff;"></i> Swimming Pool</span>
-                    <span class="pcard__legend-item"><i class="pcard__legend-box" style="background:#63d575;"></i> Parks &amp; Gazebos</span>
+            <!-- Group 2: PLAY -->
+            <div class="amenity-pillar-block" data-pillar="play">
+              <button type="button" class="amenity-pillar-trigger" aria-expanded="false">
+                <span class="pillar-trigger-icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="m10 8 6 4-6 4V8Z" />
+                  </svg>
+                </span>
+                <div class="pillar-trigger-text">
+                  <span class="pillar-trigger-name">PLAY</span>
+                  <span class="pillar-trigger-sub">Room for every age to be active.</span>
+                </div>
+                <span class="pillar-accordion-chevron" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </button>
+              <div class="amenity-pillar-content">
+                <div class="amenity-interactive-list">
+                  <!-- 5. Children's play area -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/children-play-area.png" data-category="PLAY" data-name="Children's play area"
+                      data-desc="A dedicated space for play.">
+                      <img src="Assets/children-play-area.png" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Children's play area:</strong> a dedicated space for play</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/children-play-area.png" alt="Children's play area" class="amenity-inline-img" loading="lazy">
+                    </div>
                   </div>
-                  <div class="pcard__strip-row">
-                    <span class="pcard__legend-item"><i class="pcard__legend-box pcard__legend-box--avail"></i> Available</span>
-                    <span class="pcard__legend-item"><i class="pcard__legend-box" style="background:#ca982c;"></i> Sold</span>
-                    <span class="pcard__legend-item"><i class="pcard__legend-box" style="background:#36512b;"></i> Selected</span>
+
+                  <!-- 6. Outdoor fitness area -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/outdoor-fitness-area.png" data-category="PLAY" data-name="Outdoor fitness area"
+                      data-desc="For a workout in the open air.">
+                      <img src="Assets/outdoor-fitness-area.png" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Outdoor fitness area:</strong> for a workout in the open air</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/outdoor-fitness-area.png" alt="Outdoor fitness area" class="amenity-inline-img" loading="lazy">
+                    </div>
+                  </div>
+
+                  <!-- 7. Three additional parks -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/three-parks.png" data-category="PLAY" data-name="Three additional parks"
+                      data-desc="Green spaces to walk, gather and play.">
+                      <img src="Assets/three-parks.png" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Three additional parks:</strong> green spaces to walk, gather and play</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/three-parks.png" alt="Three additional parks" class="amenity-inline-img" loading="lazy">
+                    </div>
                   </div>
                 </div>
-              </aside>
-            </div>
-          </div>
-          <p class="mplan__label" aria-hidden="true">Master<br>Plan</p>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- 07. Amenities: the logo shape rises, opens into a navy panel, then the deck -->
-    <section class="amen" id="amenities" aria-labelledby="amenHead">
-      <div class="amen__stage">
-        <div class="amen__shape" aria-hidden="true">
-          <span class="amen__bldg amen__bldg--1"></span>
-          <span class="amen__bldg amen__bldg--2"></span>
-          <span class="amen__bldg amen__bldg--3"></span>
-        </div>
-        <div class="amen__navy" aria-hidden="true"></div>
-
-        <div class="amen__track">
-          <p class="amen__q">The plots make sense. But what else comes with them?</p>
-          <span class="amen__rule" aria-hidden="true"></span>
-          <h2 class="amen__head" id="amenHead">A little more space<br>to live well.</h2>
-
-          <figure class="amen__frame">
-            <img src="Assets/MJR_8_Water Tank_HD.jpg" alt="Landscaped park with a pergola, benches and the water tank behind" loading="lazy" decoding="async">
-          </figure>
-          <p class="amen__copy">From play areas for children to quiet spaces for rest and fitness, the layout has outdoor amenities for different ages and interests.</p>
-        </div>
-
-        <div class="amen__deck">
-          <!-- Category 1: Live Stack -->
-          <div class="acard amen-stack amen-stack--live" data-category="live" aria-label="Live amenities card deck">
-            <div class="amen-stack__cards">
-              <!-- Sub-cover (Card 0) -->
-              <article class="icard icard--cover" data-index="0">
-                <div class="icard__photo icard__photo--cover">
-                  <img src="Assets/live-cover.jpg" alt="Live" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title icard__title--cover">Live</h3>
-                  <p class="icard__desc">Everyday comforts, built into the community.</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 1 -->
-              <article class="icard" data-index="1">
-                <div class="icard__photo">
-                  <img src="Assets/multipurpose-lawn.png" alt="Multipurpose lawn" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Multipurpose lawn</h3>
-                  <p class="icard__desc">Space for community gatherings</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 2 -->
-              <article class="icard" data-index="2">
-                <div class="icard__photo">
-                  <img src="Assets/Swimming-pool.png" alt="Swimming pool" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Swimming pool</h3>
-                  <p class="icard__desc">Space to unwind and refresh</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 3 -->
-              <article class="icard" data-index="3">
-                <div class="icard__photo">
-                  <img src="Assets/water-infrastructure.jpg" alt="Water infrastructure" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Water infrastructure</h3>
-                  <p class="icard__desc">A dedicated water tank</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 4 -->
-              <article class="icard" data-index="4">
-                <div class="icard__photo">
-                  <img src="Assets/ev-charging.jpg" alt="EV charging" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">EV charging</h3>
-                  <p class="icard__desc">Provision for electric mobility, with a station planned</p>
-                </div>
-              </article>
-            </div>
-          </div>
-
-          <!-- Category 2: Play Stack -->
-          <div class="acard amen-stack amen-stack--play" data-category="play" aria-label="Play amenities card deck">
-            <div class="amen-stack__cards">
-              <!-- Sub-cover (Card 0) -->
-              <article class="icard icard--cover" data-index="0">
-                <div class="icard__photo icard__photo--cover">
-                  <img src="Assets/play-cover.png" alt="Play" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title icard__title--cover">Play</h3>
-                  <p class="icard__desc">Room for every age to be active.</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 1 -->
-              <article class="icard" data-index="1">
-                <div class="icard__photo">
-                  <img src="Assets/children-play-area.png" alt="Children’s play area" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Children’s play area</h3>
-                  <p class="icard__desc">A dedicated space for play</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 2 -->
-              <article class="icard" data-index="2">
-                <div class="icard__photo">
-                  <img src="Assets/outdoor-fitness-area.png" alt="Outdoor fitness area" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Outdoor fitness area</h3>
-                  <p class="icard__desc">For a workout in the open air</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 3 -->
-              <article class="icard" data-index="3">
-                <div class="icard__photo">
-                  <img src="Assets/three-parks.png" alt="Three additional parks" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Three additional parks</h3>
-                  <p class="icard__desc">Green spaces to walk, gather and play</p>
-                </div>
-              </article>
-            </div>
-          </div>
-
-          <!-- Category 3: Relax Stack -->
-          <div class="acard amen-stack amen-stack--relax" data-category="relax" aria-label="Relax amenities card deck">
-            <div class="amen-stack__cards">
-              <!-- Sub-cover (Card 0) -->
-              <article class="icard icard--cover" data-index="0">
-                <div class="icard__photo icard__photo--cover">
-                  <img src="Assets/relax-cover.jpg" alt="Relax" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title icard__title--cover">Relax</h3>
-                  <p class="icard__desc">Slower moments, close to home.</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 1 -->
-              <article class="icard" data-index="1">
-                <div class="icard__photo">
-                  <img src="Assets/senior-citizen-park.png" alt="Senior citizen park" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Senior citizen park</h3>
-                  <p class="icard__desc">A dedicated setting for older adults</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 2 -->
-              <article class="icard" data-index="2">
-                <div class="icard__photo">
-                  <img src="Assets/Pergolas-and-sit-outs.png" alt="Pergolas and sit-outs" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Pergolas and sit-outs</h3>
-                  <p class="icard__desc">One in each of the three parks</p>
-                </div>
-              </article>
-
-              <!-- Inner Card 3 -->
-              <article class="icard" data-index="3">
-                <div class="icard__photo">
-                  <img src="Assets/open-space.png" alt="Open space" loading="lazy" decoding="async">
-                </div>
-                <div class="icard__content">
-                  <h3 class="icard__title">Open space</h3>
-                  <p class="icard__desc">For meditation and yoga</p>
-                </div>
-              </article>
-            </div>
-          </div>
-
-          <!-- Main Deck Cover (Card 4) -->
-          <article class="acard acard--main-cover" aria-label="Amenities overview cover">
-            <img class="acard__cover-svg" src="Assets/Amenities-cover.svg?v=2" alt="Amenities - More Than You Expect" loading="lazy" decoding="async">
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 04. Location: Where Connectivity Meets Convenience -->
-    <section class="conn" id="location" aria-labelledby="connTitle">
-      <header class="conn__header">
-        <h2 class="conn__title" id="connTitle">
-          <span class="conn__line"><span>Where connectivity meets</span></span>
-          <span class="conn__line"><span>convenience.</span></span>
-        </h2>
-        <p class="conn__lead">MJR Township sits on the Tirupati Highway (NH 167K) at Kalwakurthy, where the Srisailam Highway, the Jadcherla&ndash;Kodad Highway and the Hyderabad&ndash;Nagarjuna Sagar Highway bring the wider region within easy reach.</p>
-        <p class="conn__tagline">Daily travel is simpler, and so is the way back to the city.</p>
-      </header>
-
-      <!-- Pinned stage: each scroll plays one video start to finish, fast through the middle,
-           then its card rises in; the next video picks up from its first frame -->
-      <div class="conn__stage">
-        <div class="conn__scene">
-          <video class="conn__video" src="Assets/mjr-location-1-scrub.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
-          <video class="conn__video" src="Assets/mjr-location-2-scrub.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
-          <video class="conn__video" src="Assets/mjr-location-3-scrub.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
-          <video class="conn__video" src="Assets/mjr-location-4-scrub.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
-          <article class="conn__card">
-            <h3 class="conn__card-title">To Hyderabad</h3>
-            <ul class="conn__card-list">
-              <li>Financial District</li>
-              <li>Gachibowli</li>
-              <li>Rajiv Gandhi International Airport</li>
-              <li>Outer Ring Road</li>
-            </ul>
-            <p class="conn__card-note">with the proposed Regional Ring Road in the larger picture.</p>
-          </article>
-          <article class="conn__card">
-            <h3 class="conn__card-title">Education nearby</h3>
-            <ul class="conn__card-list">
-              <li>Global International School</li>
-              <li>Nishita College of Engineering &amp; Technology</li>
-              <li>Skill University</li>
-            </ul>
-          </article>
-          <article class="conn__card">
-            <h3 class="conn__card-title">Healthcare nearby</h3>
-            <ul class="conn__card-list">
-              <li>Bhoolaxmi Memorial Hospital</li>
-              <li>Grace Multispeciality Hospital</li>
-              <li>Madhavanji Super Speciality Hospital &amp; College</li>
-            </ul>
-          </article>
-          <article class="conn__card">
-            <h3 class="conn__card-title">Around Kalwakurthy</h3>
-            <ul class="conn__card-list">
-              <li>Umamaheshwaram Temple</li>
-              <li>Gollatha Gudi (Alwanpalli Temple)</li>
-              <li>Nettempadu irrigation projects</li>
-              <li>Statue of Gautama Buddha at Nagarkurnool</li>
-            </ul>
-          </article>
-        </div>
-
-        <!-- After the last card: the scene slides left to a strip and the RERA panel follows in -->
-        <div class="conn__rera">
-          <div class="conn__rera-copy">
-            <h3 class="conn__rera-title">Built around the right foundation.</h3>
-            <p class="conn__rera-desc">MJR Township is a registered project under <strong>TG RERA, No. P01600010465</strong>. It is developed by <strong>MJR Infra Developers on Survey No. 720 &amp; 729,</strong> Tirupati Highway (NH 167K), Kalwakurthy, Nagarkurnool (D) &ndash; 509 324, Telangana.</p>
-            <p class="conn__rera-note">Project documents and approvals are available for review. Ask our team, and we will walk you through them before you decide.</p>
-            <a class="btn btn--gold conn__rera-btn" href="tel:+919010055596">Call us</a>
-          </div>
-          <img class="conn__folder" src="Assets/Telangana RERA Certificate on Folder.png" alt="Telangana State Real Estate Regulatory Authority registration certificate for MJR Township" loading="lazy" decoding="async">
-        </div>
-      </div>
-    </section>
-
-    <!-- 12. About: the team behind the foundation -->
-    <section class="about" id="about" aria-labelledby="aboutTitle">
-      <div class="about__intro">
-        <figure class="about__photo" data-rise>
-          <img src="Assets/MJR_Township_Standing_HR.jpg" alt="MJR Township entrance and landscaped avenue" loading="lazy" decoding="async">
-        </figure>
-        <div class="about__copy">
-          <p class="eyebrow" data-rise>About MJR Infra Developers</p>
-          <h2 class="sec-title" id="aboutTitle" data-rise>The team behind the foundation.</h2>
-          <p class="about__lead" data-rise>MJR Infra Developers believes good land deserves careful planning. Every layout begins with a simple question: how will people live here, five and ten years from now? Roads, open spaces and plot sizes are planned around that answer.</p>
-        </div>
-      </div>
-
-      <ul class="about__stats" aria-label="MJR Infra Developers in numbers">
-        <li data-rise><span class="about__num">Since <b data-count="2012" data-plain>2012</b></span><span class="about__label">Planning and building communities</span></li>
-        <li data-rise><span class="about__num"><b data-count="12">12</b>+</span><span class="about__label">Years of experience</span></li>
-        <li data-rise><span class="about__num"><b data-count="9">9</b></span><span class="about__label">Projects delivered</span></li>
-        <li data-rise><span class="about__num"><b data-count="1200">1,200</b>+</span><span class="about__label">Families served</span></li>
-      </ul>
-
-      <div class="about__pair">
-        <div class="about__approach" data-rise>
-          <h3 class="about__h3">Our approach</h3>
-          <p>We keep things clear. You get a registered project, a transparent process and a team that answers your questions before you ask them.</p>
-        </div>
-        <figure class="about__quote" data-rise>
-          <span class="about__mark" aria-hidden="true">&ldquo;</span>
-          <blockquote>We build communities where people can plan their future with confidence.</blockquote>
-          <figcaption><strong>M. Raghava Reddy</strong>Managing Director, MJR Infra Developers</figcaption>
-        </figure>
-      </div>
-
-      <div class="about__projects">
-        <h3 class="about__h3" data-rise>Other projects</h3>
-        <ol class="projects">
-          <li class="project" data-rise><span class="project__no">01</span><span class="project__name">MJR Greens</span><span class="project__place">Jadcherla</span></li>
-          <li class="project" data-rise><span class="project__no">02</span><span class="project__name">MJR Enclave</span><span class="project__place">Nagarkurnool</span></li>
-          <li class="project" data-rise><span class="project__no">03</span><span class="project__name">MJR Meadows</span><span class="project__place">Achampet</span></li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- 13. FAQ -->
-    <section class="faq" id="faq" aria-labelledby="faqTitle">
-      <div class="faq__side">
-        <p class="eyebrow" data-rise>Frequently asked questions</p>
-        <h2 class="sec-title" id="faqTitle" data-rise>Questions, answered.</h2>
-        <p class="faq__help" data-rise>Can&rsquo;t find what you need? Our team is a call away.</p>
-        <a class="faq__call" href="tel:+919010055596" data-rise>+91 90100 55596</a>
-      </div>
-      <div class="faq__list">
-        <details class="qa" data-rise open>
-          <summary>Where is MJR Township?</summary>
-          <div class="qa__a"><p>At Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy, Nagarkurnool district, Telangana.</p></div>
-        </details>
-        <details class="qa" data-rise>
-          <summary>How many plots are there, and what sizes?</summary>
-          <div class="qa__a"><p>There are 104 residential plots across 7.93 acres, ranging from approximately 120 to 550 sq. yd.</p></div>
-        </details>
-        <details class="qa" data-rise>
-          <summary>Is it a gated community?</summary>
-          <div class="qa__a"><p>Yes. MJR Township is a gated community with 30 ft and 40 ft internal roads, and a 150 ft wide abutting road.</p></div>
-        </details>
-        <details class="qa" data-rise>
-          <summary>Is the project RERA registered?</summary>
-          <div class="qa__a"><p>Yes. The TG RERA number is P01600010465.</p></div>
-        </details>
-        <details class="qa" data-rise>
-          <summary>What amenities are planned?</summary>
-          <div class="qa__a"><p>A swimming pool, children&rsquo;s play area, senior citizen park, multipurpose lawn, outdoor fitness area, three additional parks with pergolas and sit-outs, space for meditation and yoga, dedicated water infrastructure, and a planned EV charging station.</p></div>
-        </details>
-        <details class="qa" data-rise>
-          <summary>What is the price of a plot?</summary>
-          <div class="qa__a"><p>Pricing depends on the plot you choose. Leave your number, and our team will call you with current pricing and payment details.</p></div>
-        </details>
-        <details class="qa" data-rise>
-          <summary>Can I visit the site before deciding?</summary>
-          <div class="qa__a"><p>Of course. Schedule a visit, and we will show you the plots and the layout in person.</p></div>
-        </details>
-      </div>
-    </section>
-
-    <!-- 14. Site visit and enquiry -->
-    <section class="enquire" id="contact" aria-labelledby="enqTitle">
-      <div class="enquire__intro">
-        <p class="eyebrow" data-rise>Site visit and enquiry</p>
-        <h2 class="sec-title" id="enqTitle" data-rise>A place to build your future.</h2>
-        <p class="enquire__lead" data-rise>A well-planned residential layout offering the opportunity to own land, plan your future home, and build your property portfolio. Explore the available plots, review the layout, and discover the facilities designed to support comfortable community living.</p>
-      </div>
-
-      <div class="enquire__panel">
-        <div class="enquire__media" aria-hidden="true">
-          <img src="Assets/entrance-mjr.jpg" alt="" loading="lazy" decoding="async">
-        </div>
-        <div class="enquire__pitch">
-          <h3 class="enquire__h3" data-rise>Your vision deserves the right foundation.</h3>
-          <p data-rise>See the plots in person and talk through the terms with our team.</p>
-          <div class="enquire__ctas" data-rise>
-            <button class="btn btn--gold" type="button" data-open-booking="visit">Schedule a site visit</button>
-            <a class="btn btn--line-light" href="tel:+919010055596">Call sales</a>
-          </div>
-        </div>
-
-        <div class="lead" data-rise>
-          <form class="lead__form" id="leadForm" novalidate>
-            <h3 class="lead__title">Let&rsquo;s find the right plot for you</h3>
-            <div class="lead__field">
-              <label for="ldName">Name</label>
-              <input id="ldName" name="name" type="text" autocomplete="name" required aria-describedby="ldNameErr">
-              <p class="lead__err" id="ldNameErr" hidden>Please enter your name.</p>
-            </div>
-            <div class="lead__field">
-              <label for="ldPhone">Phone number</label>
-              <div class="lead__phone">
-                <span aria-hidden="true">+91</span>
-                <input id="ldPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="10" required aria-describedby="ldPhoneErr">
               </div>
-              <p class="lead__err" id="ldPhoneErr" hidden>Enter a 10 digit mobile number.</p>
             </div>
-            <fieldset class="lead__field lead__chips">
-              <legend>I&rsquo;m interested in</legend>
-              <label><input type="radio" name="interest" value="buy" checked><span>Buying a plot</span></label>
-              <label><input type="radio" name="interest" value="visit"><span>Site visit</span></label>
-              <label><input type="radio" name="interest" value="investment"><span>Investment</span></label>
-              <label><input type="radio" name="interest" value="price"><span>Price and payment details</span></label>
-              <label><input type="radio" name="interest" value="info"><span>More information</span></label>
-            </fieldset>
-            <div class="lead__field">
-              <label for="ldTime">Preferred callback time <span class="lead__opt">(optional)</span></label>
-              <select id="ldTime" name="time">
-                <option value="">Any time</option>
-                <option>Morning, 9 am to 12 pm</option>
-                <option>Afternoon, 12 pm to 4 pm</option>
-                <option>Evening, 4 pm to 8 pm</option>
-              </select>
+
+            <!-- Group 3: RELAX -->
+            <div class="amenity-pillar-block" data-pillar="relax">
+              <button type="button" class="amenity-pillar-trigger" aria-expanded="false">
+                <span class="pillar-trigger-icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22v-7" />
+                    <path d="M7 15c-2.8 0-5-2.2-5-5 0-2.4 1.7-4.4 4-4.9C6.6 2.8 9.1 1 12 1s5.4 1.8 6 4.1c2.3.5 4 2.5 4 4.9 0 2.8-2.2 5-5 5H7z" />
+                  </svg>
+                </span>
+                <div class="pillar-trigger-text">
+                  <span class="pillar-trigger-name">RELAX</span>
+                  <span class="pillar-trigger-sub">Slower moments, close to home.</span>
+                </div>
+                <span class="pillar-accordion-chevron" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </span>
+              </button>
+              <div class="amenity-pillar-content">
+                <div class="amenity-interactive-list">
+                  <!-- 8. Senior citizen park -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/senior-citizen-park.png" data-category="RELAX" data-name="Senior citizen park"
+                      data-desc="A dedicated setting for older adults.">
+                      <img src="Assets/senior-citizen-park.png" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Senior citizen park:</strong> a dedicated setting for older adults</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/senior-citizen-park.png" alt="Senior citizen park" class="amenity-inline-img" loading="lazy">
+                    </div>
+                  </div>
+
+                  <!-- 9. Pergolas and sit-outs -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/Pergolas-and-sit-outs.png" data-category="RELAX" data-name="Pergolas and sit-outs"
+                      data-desc="One in each of the three parks.">
+                      <img src="Assets/Pergolas-and-sit-outs.png" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Pergolas and sit-outs:</strong> one in each of the three parks</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/Pergolas-and-sit-outs.png" alt="Pergolas and sit-outs" class="amenity-inline-img" loading="lazy">
+                    </div>
+                  </div>
+
+                  <!-- 10. Open space -->
+                  <div class="amenity-row-wrap">
+                    <button type="button" class="amenity-list-item" role="tab" aria-selected="false" tabindex="-1"
+                      data-img="Assets/open-space.png" data-category="RELAX" data-name="Open space"
+                      data-desc="For meditation and yoga.">
+                      <img src="Assets/open-space.png" alt="" class="amenity-row-thumb" loading="lazy" aria-hidden="true">
+                      <span class="amenity-row-text"><strong>Open space:</strong> for meditation and yoga</span>
+                      <span class="amenity-row-chevron" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                    <div class="amenity-inline-preview">
+                      <img src="Assets/open-space.png" alt="Open space" class="amenity-inline-img" loading="lazy">
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <button class="btn btn--gold lead__submit" id="leadSubmit" type="submit">Get in touch</button>
-          </form>
-          <div class="lead__done" id="leadDone" hidden tabindex="-1">
-            <span class="lead__tick" aria-hidden="true"></span>
-            <h3 class="lead__title">Thank you.</h3>
-            <p>Our team will call you shortly to share pricing and availability and to answer your questions.</p>
+          </div>
+
+          <!-- Right: Equal-height white card containing a sticky preview group + amenity details -->
+          <div class="showcase-media-col">
+            <div class="amenity-sticky-group">
+              <div class="amenity-stage-card" role="tabpanel" aria-live="polite">
+                <img src="Assets/Swimming-pool.png" alt="Swimming pool" class="amenity-stage-img is-visible"
+                  id="amenityStageImgA">
+                <img src="Assets/Swimming-pool.png" alt="" class="amenity-stage-img"
+                  id="amenityStageImgB" aria-hidden="true">
+                <div class="amenity-stage-caption" id="amenityStageCaption">
+                  Swimming pool
+                </div>
+              </div>
+
+              <!-- Stepper Control ("2 / 10" + Prev/Next Arrows) -->
+              <div class="amenity-stepper-bar" aria-label="Amenity Preview Navigation">
+                <button type="button" class="amenity-step-btn" id="amenityPrevBtn" aria-label="Previous amenity">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <span class="amenity-step-count" id="amenityStepCount" aria-live="polite">2 / 10</span>
+                <button type="button" class="amenity-step-btn" id="amenityNextBtn" aria-label="Next amenity">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+
+              <!-- Amenity Details Below Preview (Category Label, Name, One-line Description) -->
+              <div class="amenity-preview-details" aria-live="polite">
+                <span class="amenity-detail-category" id="amenityDetailCategory">LIVE</span>
+                <h4 class="amenity-detail-name" id="amenityDetailName">Swimming pool</h4>
+                <p class="amenity-detail-desc" id="amenityDetailDesc">Space to unwind and refresh.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Amenities Closing Statement -->
+        <div class="amenities-closing-strip">
+          <div>
+            <h3 class="closing-strip-title">MORE THAN YOU EXPECT. EXACTLY WHAT YOU NEED.</h3>
+            <p class="closing-strip-copy">
+              A well-rounded lifestyle begins with the right surroundings: open spaces, modern facilities, and a
+              community designed for the way you want to live.
+            </p>
+            <p class="closing-strip-disclaimer">
+              Images and amenities are indicative and subject to approval from the competent authorities.
+            </p>
+          </div>
+          <button type="button" class="btn btn-gold btn-pill" data-open-modal="site-visit">
+            Book a Site Visit
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         9. TRUST AND REGISTRATION
+         ====================================================================== -->
+    <section class="editorial-section" id="trust">
+      <div class="shell">
+        <div class="trust-showcase-card">
+          <div class="trust-copy-col">
+            <span class="eyebrow-dash">TG RERA: P01600010465</span>
+            <h2 class="display-h2">BUILT AROUND THE RIGHT FOUNDATION.</h2>
+            <span class="accent-bar"></span>
+            <p class="editorial-body-lg">
+              MJR Township is a registered project under TG RERA, No. P01600010465. It is developed by MJR Infra
+              Developers on Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy, Nagarkurnool (D) – 509
+              324, Telangana.
+            </p>
+            <p class="editorial-body">
+              Project documents and approvals are available for review. Ask our team, and we will walk you through them
+              before you decide.
+            </p>
+            <div class="split-cta-wrap">
+              <button type="button" class="btn btn-gold btn-pill" data-open-modal="site-visit">
+                Book a Site Visit
+              </button>
+              <button type="button" class="btn btn-outline btn-pill" data-open-modal="brochure">
+                Download Brochure
+              </button>
+            </div>
+          </div>
+
+          <div class="trust-visual-col">
+            <img src="Assets/Telangana RERA Certificate on Folder.png"
+              alt="TG RERA Registration No. P01600010465 Folder" class="trust-folder-img" loading="lazy">
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 15. Closing line -->
-    <section class="closing" aria-label="Closing">
-      <img class="closing__bg" src="Assets/Park.jpg" alt="" loading="lazy" decoding="async">
-      <p class="closing__line" data-rise>An opportunity to own land and plan for tomorrow.</p>
+    <!-- ======================================================================
+         10. ABOUT MJR (Karthikeya Split + Stat Pills + Quote Cards)
+         ====================================================================== -->
+    <section class="editorial-section section-tinted" id="about-mjr">
+      <div class="shell">
+        <div class="about-split-layout">
+          <!-- Left Column: Headline + Story + Floating Stat Boxes (Karthikeya Style) -->
+          <div class="about-left-col">
+            <span class="eyebrow-dash">About MJR</span>
+            <h2 class="display-h2">THE TEAM BEHIND THE FOUNDATION.</h2>
+            <span class="accent-bar"></span>
+            <p class="editorial-body">
+              MJR Infra Developers believes good land deserves careful planning. Every layout begins with a simple
+              question: how will people live here, five and ten years from now? Roads, open spaces and plot sizes are
+              planned around that answer.
+            </p>
+
+            <!-- Karthikeya-style White Elevated Stat Cards -->
+            <div class="about-stat-cards">
+              <div class="about-stat-pill">
+                <span class="stat-pill-num">Since 2012</span>
+                <span class="stat-pill-lbl">Established</span>
+              </div>
+              <div class="about-stat-pill">
+                <span class="stat-pill-num">12+</span>
+                <span class="stat-pill-lbl">Years of experience</span>
+              </div>
+              <div class="about-stat-pill">
+                <span class="stat-pill-num">9</span>
+                <span class="stat-pill-lbl">Projects delivered</span>
+              </div>
+              <div class="about-stat-pill">
+                <span class="stat-pill-num">1,200+</span>
+                <span class="stat-pill-lbl">Families served</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Framed Cards (Karthikeya Quote Card Layout) -->
+          <div class="about-right-cards">
+            <!-- Card 1: Our approach -->
+            <article class="editorial-quote-card">
+              <div class="quote-card-head">
+                <div>
+                  <h3 class="quote-card-title">Our approach</h3>
+                  <span class="quote-card-role">MJR Infra Developers</span>
+                </div>
+                <img src="Assets/MJR Infra Developers_Logo_Web_Web.svg" alt="MJR Infra Developers"
+                  class="developer-mini-logo">
+              </div>
+              <p class="quote-card-body">
+                We keep things clear. You get a registered project, a transparent process and a team that answers your
+                questions before you ask them.
+              </p>
+            </article>
+
+            <!-- Card 2: Leadership note -->
+            <article class="editorial-quote-card">
+              <div class="quote-card-head">
+                <div>
+                  <h3 class="quote-card-title">M. Raghava Reddy</h3>
+                  <span class="quote-card-role">Managing Director, MJR Infra Developers · Leadership note</span>
+                </div>
+                <span class="quote-mark-glyph" aria-hidden="true">&ldquo;</span>
+              </div>
+              <p class="quote-card-body">
+                "We build communities where people can plan their future with confidence."
+              </p>
+            </article>
+
+            <!-- Card 3: Other projects -->
+            <article class="editorial-quote-card">
+              <div class="quote-card-head">
+                <div>
+                  <h3 class="quote-card-title">Other projects</h3>
+                  <span class="quote-card-role">Delivered across Telangana</span>
+                </div>
+              </div>
+              <div class="delivered-projects-row">
+                <span class="delivered-pill"><strong>MJR Greens</strong>, Jadcherla</span>
+                <span class="delivered-pill"><strong>MJR Enclave</strong>, Nagarkurnool</span>
+                <span class="delivered-pill"><strong>MJR Meadows</strong>, Achampet</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- ======================================================================
+         11. FREQUENTLY ASKED QUESTIONS (Rule-Free Surface Cards)
+         ====================================================================== -->
+    <section class="editorial-section" id="faq">
+      <div class="shell">
+        <div class="faq-split-layout">
+          <div class="faq-left-col">
+            <span class="eyebrow-dash">Questions &amp; Answers</span>
+            <h2 class="display-h2">FREQUENTLY ASKED QUESTIONS</h2>
+            <span class="accent-bar"></span>
+          </div>
+
+          <div class="faq-right-col">
+            <div class="faq-cards-stack">
+              <!-- FAQ 1 -->
+              <div class="faq-card active">
+                <button type="button" class="faq-trigger" aria-expanded="true">
+                  <span>Where is MJR Township?</span>
+                  <span class="faq-toggle-indicator" aria-hidden="true">+</span>
+                </button>
+                <div class="faq-body">
+                  <p class="faq-answer">
+                    MJR Township is located at Survey No. 720 and 729, on Tirupati Highway (NH 167K), Kalwakurthy,
+                    Nagarkurnool district, Telangana, India.
+                  </p>
+                </div>
+              </div>
+
+              <!-- FAQ 2 -->
+              <div class="faq-card">
+                <button type="button" class="faq-trigger" aria-expanded="false">
+                  <span>How many plots are there, and what sizes?</span>
+                  <span class="faq-toggle-indicator" aria-hidden="true">+</span>
+                </button>
+                <div class="faq-body">
+                  <p class="faq-answer">
+                    There are 104 residential plots across 7.93 acres, ranging from approximately 120 to 550 square
+                    yards, suiting many different plans.
+                  </p>
+                </div>
+              </div>
+
+              <!-- FAQ 3 -->
+              <div class="faq-card">
+                <button type="button" class="faq-trigger" aria-expanded="false">
+                  <span>Is it a gated community?</span>
+                  <span class="faq-toggle-indicator" aria-hidden="true">+</span>
+                </button>
+                <div class="faq-body">
+                  <p class="faq-answer">
+                    Yes, MJR Township is a gated community with 30 and 40 feet internal roads and a 150 feet abutting
+                    road.
+                  </p>
+                </div>
+              </div>
+
+              <!-- FAQ 4 -->
+              <div class="faq-card">
+                <button type="button" class="faq-trigger" aria-expanded="false">
+                  <span>Is the project RERA registered?</span>
+                  <span class="faq-toggle-indicator" aria-hidden="true">+</span>
+                </button>
+                <div class="faq-body">
+                  <p class="faq-answer">
+                    Yes, MJR Township is registered under TG RERA with registration number P01600010465, so you can
+                    verify the project details yourself.
+                  </p>
+                </div>
+              </div>
+
+              <!-- FAQ 5 -->
+              <div class="faq-card">
+                <button type="button" class="faq-trigger" aria-expanded="false">
+                  <span>What amenities are planned?</span>
+                  <span class="faq-toggle-indicator" aria-hidden="true">+</span>
+                </button>
+                <div class="faq-body">
+                  <p class="faq-answer">
+                    Amenities include a swimming pool, children's play area, senior citizen park, multipurpose lawn,
+                    outdoor fitness area and planned EV charging.
+                  </p>
+                </div>
+              </div>
+
+              <!-- FAQ 6 -->
+              <div class="faq-card">
+                <button type="button" class="faq-trigger" aria-expanded="false">
+                  <span>What is the price of a plot?</span>
+                  <span class="faq-toggle-indicator" aria-hidden="true">+</span>
+                </button>
+                <div class="faq-body">
+                  <p class="faq-answer">
+                    Pricing depends on your chosen plot. Leave your number, and our team will call with current prices
+                    and payment details.
+                  </p>
+                </div>
+              </div>
+
+              <!-- FAQ 7 -->
+              <div class="faq-card">
+                <button type="button" class="faq-trigger" aria-expanded="false">
+                  <span>Can I visit the site before deciding?</span>
+                  <span class="faq-toggle-indicator" aria-hidden="true">+</span>
+                </button>
+                <div class="faq-body">
+                  <p class="faq-answer">
+                    Of course. Schedule a visit, and our team will show you the plots, the roads and the layout in
+                    person.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         12. SITE VISIT AND ENQUIRY
+         ====================================================================== -->
+    <section class="editorial-section section-tinted" id="contact">
+      <div class="shell">
+        <div class="enquiry-split-grid">
+          <!-- Left: Editorial Callout + Visuals -->
+          <div class="enquiry-narrative-col">
+            <span class="eyebrow-dash">Site Visit &amp; Enquiry</span>
+            <h2 class="display-h2">A PLACE TO BUILD YOUR FUTURE.</h2>
+            <span class="accent-bar"></span>
+            <p class="editorial-body-lg">
+              A well-planned residential layout offering the opportunity to own land, plan your future home, and build
+              your property portfolio. Explore the available plots, review the layout, and discover the facilities
+              designed to support comfortable community living.
+            </p>
+
+            <div class="vision-callout-box">
+              <h3 class="vision-callout-title">YOUR VISION DESERVES THE RIGHT FOUNDATION.</h3>
+              <p class="vision-callout-copy">
+                See the plots in person and talk through the terms with our team.
+              </p>
+              <div class="vision-callout-actions">
+                <button type="button" class="btn btn-gold btn-pill" data-open-modal="site-visit">
+                  Book a Site Visit
+                </button>
+                <a href="tel:+919010055596" class="btn btn-outline btn-pill">
+                  Call Sales
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Enquiry Form Card -->
+          <div class="enquiry-form-card">
+            <h3 class="form-card-heading">LET'S FIND THE RIGHT PLOT FOR YOU</h3>
+            <form id="mainEnquiryForm">
+              <input type="hidden" id="selectedInterestInput" name="interest" value="Buying a plot">
+
+              <div class="form-field">
+                <label class="field-label" for="contactName">Name</label>
+                <input type="text" id="contactName" class="field-input" placeholder="Your full name" required>
+              </div>
+
+              <div class="form-field">
+                <label class="field-label" for="contactPhone">Phone number</label>
+                <input type="tel" id="contactPhone" class="field-input" placeholder="+91 90100 55596" required>
+              </div>
+
+              <div class="form-field">
+                <label class="field-label">I'm interested in:</label>
+                <div class="interest-chips" role="group" aria-label="I'm interested in">
+                  <button type="button" class="interest-chip selected" data-val="Buying a plot">Buying a plot</button>
+                  <button type="button" class="interest-chip" data-val="Site visit">Site visit</button>
+                  <button type="button" class="interest-chip" data-val="Investment">Investment</button>
+                  <button type="button" class="interest-chip" data-val="Price and payment details">Price and payment
+                    details</button>
+                  <button type="button" class="interest-chip" data-val="More information">More information</button>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="field-label" for="callbackTime">Preferred callback time (optional)</label>
+                <select id="callbackTime" class="field-select">
+                  <option value="Anytime">Anytime during business hours</option>
+                  <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
+                  <option value="Afternoon (12 PM - 4 PM)">Afternoon (12 PM - 4 PM)</option>
+                  <option value="Evening (4 PM - 8 PM)">Evening (4 PM - 8 PM)</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-gold btn-pill btn-block">
+                Request a Callback
+              </button>
+
+              <div class="form-feedback" id="mainFormFeedback" role="status">
+                Thank you. Our team will call you shortly to share pricing and availability and to answer your
+                questions.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <footer class="footer">
-    <div class="footer__top">
-      <div class="footer__brand">
-        <img class="footer__logo" src="Assets/TownShip logo_Final_New_Web_1.svg" alt="MJR Township" loading="lazy" decoding="async">
-        <p class="footer__name">MJR Township @ Kalwakurthy</p>
-        <address class="footer__addr">Survey No. 720 &amp; 729, Tirupati Highway (NH 167K), Kalwakurthy, Nagarkurnool (D) &ndash; 509 324, Telangana, India</address>
+  <!-- ======================================================================
+       13B. FOOTER (Clean Contemporary White Footer Like karthikeya.net)
+       ====================================================================== -->
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-columns">
+        <!-- Col 1: Brand & Address -->
+        <div class="footer-brand-col">
+          <img src="Assets/MJR Infra Developers_Logo_Web_Web.svg" alt="MJR Infra Developers" class="footer-logo">
+          <p class="footer-brand-desc">
+            A thoughtfully planned plotted development at Kalwakurthy, designed around the opportunity to own land, plan
+            your future and build for tomorrow.
+          </p>
+          <div class="footer-address-block">
+            <h4 class="footer-col-heading">MJR TOWNSHIP @ KALWAKURTHY</h4>
+            <p>
+              Survey No. 720 &amp; 729, Tirupati Highway (NH 167K),<br>
+              Kalwakurthy, Nagarkurnool (D) – 509 324, Telangana, India
+            </p>
+          </div>
+        </div>
+
+        <!-- Col 2: Quick Links -->
+        <div class="footer-links-col">
+          <h4 class="footer-col-heading">Quick Links</h4>
+          <ul class="footer-link-list">
+            <li><a href="#why-mjr">Why MJR</a></li>
+            <li><a href="#location">Location</a></li>
+            <li><a href="#master-plan">Master Plan</a></li>
+            <li><a href="#amenities">Amenities</a></li>
+            <li><a href="#trust">Approvals</a></li>
+            <li><a href="#about-mjr">About</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Other Projects -->
+        <div class="footer-links-col">
+          <h4 class="footer-col-heading">Other Projects</h4>
+          <ul class="footer-link-list">
+            <li><span>MJR Greens, Jadcherla</span></li>
+            <li><span>MJR Enclave, Nagarkurnool</span></li>
+            <li><span>MJR Meadows, Achampet</span></li>
+          </ul>
+          <div class="footer-rera-tag">
+            TG RERA: P01600010465
+          </div>
+        </div>
+
+        <!-- Col 4: Contact -->
+        <div class="footer-contact-col">
+          <h4 class="footer-col-heading">Phone</h4>
+          <p class="footer-contact-line"><a href="tel:+919010055596">+91-90100 55596</a></p>
+
+          <h4 class="footer-col-heading" style="margin-top: 20px;">Email &amp; Web</h4>
+          <p class="footer-contact-line"><a href="mailto:sales@mjrinfra.com">sales@mjrinfra.com</a></p>
+          <p class="footer-contact-line"><a href="https://www.mjrinfra.com.in" target="_blank"
+              rel="noopener">www.mjrinfra.com.in</a></p>
+        </div>
       </div>
-      <nav class="footer__nav" aria-label="Footer">
-        <a href="#overview">Overview</a>
-        <a href="#mplan">Master plan</a>
-        <a href="#amenities">Amenities</a>
-        <a href="#location">Location</a>
-        <a href="#about">About MJR</a>
-        <a href="#faq">FAQ</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <div class="footer__contact">
-        <a href="tel:+919010055596">+91 90100 55596</a>
-        <a href="mailto:sales@mjrinfra.com">sales@mjrinfra.com</a>
-        <a href="https://www.mjrinfra.com.in" target="_blank" rel="noopener">www.mjrinfra.com.in</a>
-        <p class="footer__rera">TG RERA: P01600010465</p>
+
+      <div class="footer-bottom-bar">
+        <p class="footer-disclaimer">
+          The information on this website, including images, plans, dimensions, amenities and specifications, is
+          indicative of the development as proposed and is subject to approval from the competent authorities.
+        </p>
+        <p class="footer-copyright">
+          &copy; 2026 <strong>MJR Infra Developers</strong>. All Rights Reserved.
+        </p>
       </div>
-    </div>
-    <div class="footer__base">
-      <p class="footer__note">The information on this website, including images, plans, dimensions, amenities and specifications, is indicative of the development as proposed and is subject to approval from the competent authorities.</p>
-      <p class="footer__copy">&copy; <span id="year">2026</span> MJR Infra Developers</p>
     </div>
   </footer>
 
-  <!-- Site visit / brochure request -->
-  <dialog class="booking" id="bookingDialog" aria-labelledby="bookingTitle">
-    <button class="booking__close" type="button" data-close-booking aria-label="Close">
-      <span class="menu__close-x" aria-hidden="true"></span>
+  <!-- ======================================================================
+       STICKY MOBILE BOTTOM ACTION BAR (<= 900px, Auto-Hides on Form/Keyboard/Inspector)
+       ====================================================================== -->
+  <div class="mobile-sticky-bar" role="region" aria-label="Quick Actions">
+    <button type="button" class="btn btn-gold" data-open-modal="site-visit">
+      Book a Site Visit
     </button>
+    <a href="tel:+919010055596" class="btn btn-outline-light">
+      Call
+    </a>
+  </div>
 
-    <div class="booking__body" id="bookingFormView">
-      <p class="booking__eyebrow" id="bookingEyebrow">MJR Township @ Kalwakurthy</p>
-      <h2 class="booking__title" id="bookingTitle">Schedule a site visit</h2>
-      <p class="booking__intro" id="bookingIntro">Walk the layout, see the roads and pick out plots in person. Our sales team will call to confirm a time.</p>
-
-      <form class="booking__form" id="bookingForm" novalidate>
-        <input type="hidden" name="intent" id="bookingIntent" value="visit">
-        <input type="hidden" name="plot" id="bookingPlot" value="">
-        <div class="field">
-          <label for="bkName">Name</label>
-          <input id="bkName" name="name" type="text" autocomplete="name" required>
-          <p class="field__error" id="bkNameErr" hidden>Please enter your name.</p>
+  <!-- ======================================================================
+       MODALS
+       ====================================================================== -->
+  <!-- Modal 1: Book a Site Visit -->
+  <div class="modal-backdrop" id="modalSiteVisit" role="dialog" aria-modal="true" aria-labelledby="modalVisitTitle">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      <h3 class="modal-title" id="modalVisitTitle">Book a Site Visit</h3>
+      <p class="modal-subtitle">See the plots in person and talk through the terms with our team.</p>
+      <form>
+        <div class="form-field">
+          <label class="field-label">Name</label>
+          <input type="text" class="field-input" placeholder="Your full name" required>
         </div>
-        <div class="field">
-          <label for="bkPhone">Phone number</label>
-          <div class="field__phone">
-            <span aria-hidden="true">+91</span>
-            <input id="bkPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="10" required aria-describedby="bkPhoneErr">
-          </div>
-          <p class="field__error" id="bkPhoneErr" hidden>Enter a 10 digit mobile number.</p>
+        <div class="form-field">
+          <label class="field-label">Phone number</label>
+          <input type="tel" class="field-input" placeholder="+91 90100 55596" required>
         </div>
-        <div class="field" id="bkDateField">
-          <label for="bkDate">Preferred date <span class="field__opt">(optional)</span></label>
-          <input id="bkDate" name="date" type="date">
+        <div class="form-field">
+          <label class="field-label">Preferred callback time (optional)</label>
+          <input type="text" class="field-input" placeholder="e.g. Tomorrow morning">
         </div>
-        <button class="btn btn--green booking__submit" id="bookingSubmit" type="submit">
-          <span class="booking__submit-label">Request a call back</span>
-        </button>
-        <p class="booking__alt">Prefer to talk now? <a href="tel:+919010055596">Call +91 90100 55596</a></p>
+        <button type="submit" class="btn btn-gold btn-pill btn-block">Book a Site Visit</button>
       </form>
     </div>
+  </div>
 
-    <div class="booking__body booking__done" id="bookingDoneView" hidden tabindex="-1">
-      <p class="booking__eyebrow">Request received</p>
-      <h2 class="booking__title" id="bookingDoneTitle">Thank you.</h2>
-      <p class="booking__intro" id="bookingDoneText">Our sales team will call you shortly.</p>
-      <button class="btn btn--green" type="button" data-close-booking>Back to the site</button>
+  <!-- Modal 2: Download Brochure -->
+  <div class="modal-backdrop" id="modalBrochure" role="dialog" aria-modal="true" aria-labelledby="modalBrochureTitle">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      <h3 class="modal-title" id="modalBrochureTitle">Download Brochure</h3>
+      <p class="modal-subtitle">Leave your number, and our team will share the project brochure, layout plan and current
+        details.</p>
+      <form>
+        <div class="form-field">
+          <label class="field-label">Name</label>
+          <input type="text" class="field-input" placeholder="Your full name" required>
+        </div>
+        <div class="form-field">
+          <label class="field-label">Phone number</label>
+          <input type="tel" class="field-input" placeholder="+91 90100 55596" required>
+        </div>
+        <button type="submit" class="btn btn-gold btn-pill btn-block">Download Brochure</button>
+      </form>
     </div>
-  </dialog>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-  <script src="js/plots-data.js?v=4" defer></script>
-  <script src="js/main.js?v=31" defer></script>
-  <script src="js/amenities.js?v=16" defer></script>
-  <script src="js/connectivity.js?v=11" defer></script>
-  <script src="js/sections.js?v=1" defer></script>
+  <!-- Modal 3: Enquire About This Plot -->
+  <div class="modal-backdrop" id="modalPlotEnquiry" role="dialog" aria-modal="true" aria-labelledby="modalPlotTitle">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close-btn" aria-label="Close dialog">&times;</button>
+      <h3 class="modal-title" id="modalPlotTitle">Enquire About This Plot</h3>
+      <p class="modal-subtitle" id="enquiryPlotDetail">Leave your number, and our team will call with current prices and
+        payment details.</p>
+      <form>
+        <input type="hidden" id="enquiryPlotNumber" name="plot_number">
+        <div class="form-field">
+          <label class="field-label">Name</label>
+          <input type="text" class="field-input" placeholder="Your full name" required>
+        </div>
+        <div class="form-field">
+          <label class="field-label">Phone number</label>
+          <input type="tel" class="field-input" placeholder="+91 90100 55596" required>
+        </div>
+        <button type="submit" class="btn btn-gold btn-pill btn-block">Request a Callback</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/plots-data.js"></script>
+  <script src="js/main.js"></script>
 </body>
+
 </html>

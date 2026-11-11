@@ -1,0 +1,11 @@
+{
+  "name": "mjr-township-m2",
+  "version": "1.0.0",
+  "description": "MJR Township - A Thoughtfully Planned Plotted Development at Kalwakurthy",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "private": true
+}

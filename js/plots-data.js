@@ -1,101 +1,167 @@
-/* MJR Township plot data.
-   Positions (x, y) are pixel centres on "Top-Down Residential Landscape Masterplan.png"
-   (1606 x 979), traced from the final layout plan. Sizes, facing and availability are
+/* MJR Township plot data, on "Assets/layout-og with 104.png" (laid out here in a
+   2560 x 1440 frame). Plot numbers, rows and roads follow the sales layout; each
+   plot's outline (shape), centre (x, y) and drawn area are traced from the image's
+   navy cells (two cells are joined where the sales layout has one deep plot, and
+   one cell is split where it has two). Regenerate this file whenever the layout
+   image changes.
+   Plots 1-3 are the EV charging station and plot 42 is not for sale: their tiles
+   show on the plan but they cannot be selected or enquired about.
+   Sizes come from the drawn areas, and facing, availability and highlights are
    working values: replace them with the sales team's schedule before launch. */
 (() => {
-  const IMG_W = 1606;
-  const IMG_H = 979;
+  const IMG_W = 2560;
+  const IMG_H = 1440;
 
-  // Sold plots (from the selection card design, plus a few further up the layout)
-  const SOLD = new Set([3, 9, 11, 15, 17, 20, 23, 25, 27, 30, 32, 35, 52, 57, 66, 70, 75, 88, 91, 99]);
+  // Sold plots (working values)
+  const SOLD = new Set([9, 11, 15, 17, 20, 23, 25, 27, 30, 32, 35, 52, 57, 66, 70, 75]);
+
+  // Plots that are not for sale: shown on the plan, never selectable
+  const RESERVED = {
+    1: 'EV charging station',
+    2: 'EV charging station',
+    3: 'EV charging station',
+    42: 'Not for sale',
+  };
+
+  // Square yards per square unit of drawn plot, so a typical plot reads about 220 sq. yards
+  const SQYD_PER_PX = 220 / 2961;
+
+  /* [no, block, side (t = top row, b = bottom row), column, last column in the
+     row, road it fronts (ft), centre x, centre y, drawn area, beside an open
+     space (green or water zone), beside an amenity zone, cut by the diagonal
+     boundary, outline] */
+  const CELLS = [
+    [1, 'D2', 'b', 11, 11, 150, 2035.8, 1158, 4369, 0, 0, 1, '1999,1105 2083,1172 2083,1178.5 1999,1178.5'],
+    [2, 'D2', 'b', 10, 11, 150, 1973.2, 1131.5, 5089, 0, 0, 0, '1947,1067 1999,1102 1999,1178.5 1947,1178.5'],
+    [3, 'D2', 'b', 9, 11, 150, 1920.6, 1111.3, 7060, 0, 1, 0, '1893.5,1034.5 1916,1034.5 1947,1060 1947,1178.5 1893.5,1178.5'],
+    [4, 'D2', 'b', 8, 11, 150, 1869.5, 1108.3, 7611, 0, 1, 0, '1841.5,1034.5 1893.5,1034.5 1893.5,1178.5 1841.5,1178.5'],
+    [5, 'D2', 'b', 7, 11, 150, 1817.4, 1108.5, 7424, 0, 1, 0, '1789.5,1034.5 1841.5,1034.5 1841.5,1178.5 1789.5,1178.5'],
+    [6, 'D2', 'b', 6, 11, 150, 1763.8, 1108.8, 7538, 0, 1, 0, '1736.5,1034.5 1789.5,1034.5 1789.5,1178.5 1736.5,1178.5'],
+    [7, 'D2', 'b', 5, 11, 150, 1711.7, 1108, 7536, 0, 1, 0, '1684.5,1034.5 1736.5,1034.5 1736.5,1178.5 1684.5,1178.5'],
+    [8, 'D2', 'b', 4, 11, 150, 1658.9, 1108.8, 7069, 0, 1, 0, '1632,1034.5 1684.5,1034.5 1684.5,1178.5 1632,1178.5'],
+    [9, 'D2', 'b', 3, 11, 150, 1606.8, 1108.4, 7650, 0, 1, 0, '1579.5,1034.5 1632,1034.5 1632,1178.5 1579.5,1178.5'],
+    [10, 'D2', 'b', 2, 11, 150, 1553.5, 1109.4, 7862, 0, 0, 0, '1526,1034.5 1579.5,1034.5 1579.5,1178.5 1526,1178.5'],
+    [11, 'D2', 'b', 1, 11, 150, 1500.4, 1106.8, 7460, 0, 0, 0, '1473.5,1034.5 1526,1034.5 1526,1178.5 1473.5,1178.5'],
+    [12, 'D2', 'b', 0, 11, 150, 1450.3, 1109.3, 6559, 0, 0, 0, '1431.5,1034.5 1473.5,1034.5 1473.5,1178.5 1431.5,1178.5'],
+    [13, 'D1', 'b', 5, 5, 150, 1313.7, 1109.7, 7455, 0, 0, 0, '1285.5,1034.5 1334.5,1034.5 1334.5,1178.5 1285.5,1178.5'],
+    [14, 'D1', 'b', 4, 5, 150, 1260, 1108.2, 7406, 0, 0, 0, '1232,1034.5 1285.5,1034.5 1285.5,1178.5 1232,1178.5'],
+    [15, 'D1', 'b', 3, 5, 150, 1207.4, 1109.4, 7803, 0, 0, 0, '1178.5,1034.5 1232,1034.5 1232,1178.5 1178.5,1178.5'],
+    [16, 'D1', 'b', 2, 5, 150, 1154, 1106.6, 7644, 0, 0, 0, '1126.5,1034.5 1178.5,1034.5 1178.5,1178.5 1126.5,1178.5'],
+    [17, 'D1', 'b', 1, 5, 150, 1100.8, 1108.5, 7587, 0, 0, 0, '1074.5,1034.5 1126.5,1034.5 1126.5,1178.5 1074.5,1178.5'],
+    [18, 'D1', 'b', 0, 5, 150, 1009.9, 1088.7, 16114, 1, 0, 1, '930,1034.5 1074.5,1034.5 1074.5,1178.5 1046,1165 930,1093'],
+    [19, 'C2', 'b', 0, 7, 30, 948.8, 909, 3008, 1, 0, 0, '929,872.5 971.5,872.5 971.5,941 929,941'],
+    [20, 'C2', 'b', 1, 7, 30, 997.1, 910.9, 3263, 0, 0, 0, '971.5,872.5 1022.5,872.5 1022.5,941 971.5,941'],
+    [21, 'C2', 'b', 2, 7, 30, 1049, 910.9, 3482, 0, 0, 0, '1022.5,872.5 1074.5,872.5 1074.5,941 1022.5,941'],
+    [22, 'C2', 'b', 3, 7, 30, 1100.9, 910.3, 3425, 0, 0, 0, '1074.5,872.5 1125.5,872.5 1125.5,941 1074.5,941'],
+    [23, 'C2', 'b', 4, 7, 30, 1153.2, 910.3, 3424, 0, 0, 0, '1125.5,872.5 1177.5,872.5 1177.5,941 1125.5,941'],
+    [24, 'C2', 'b', 5, 7, 30, 1205.3, 911.1, 3423, 0, 0, 0, '1177.5,872.5 1230,872.5 1230,941 1177.5,941'],
+    [25, 'C2', 'b', 6, 7, 30, 1258.5, 910.3, 3352, 0, 0, 0, '1230,872.5 1283,872.5 1283,941 1230,941'],
+    [26, 'C2', 'b', 7, 7, 30, 1310.6, 910.9, 3549, 0, 0, 0, '1283,872.5 1334.5,872.5 1334.5,941 1283,941'],
+    [27, 'C3', 'b', 0, 3, 30, 1451.3, 910.2, 2779, 0, 0, 0, '1431.5,872.5 1472.5,872.5 1472.5,941 1431.5,941'],
+    [28, 'C3', 'b', 1, 3, 30, 1499.8, 910.9, 3594, 0, 0, 0, '1472.5,872.5 1525.5,872.5 1525.5,941 1472.5,941'],
+    [29, 'C3', 'b', 2, 3, 30, 1553.7, 910.7, 3496, 0, 1, 0, '1525.5,872.5 1579,872.5 1579,941 1525.5,941'],
+    [30, 'C3', 'b', 3, 3, 30, 1606.5, 878.6, 6899, 0, 1, 0, '1579,805 1600,805 1632,825 1632,941 1579,941'],
+    [31, 'C3', 't', 2, 2, 40, 1553.2, 837.9, 3469, 0, 1, 0, '1525.5,805 1579,805 1579,872.5 1525.5,872.5'],
+    [32, 'C3', 't', 1, 2, 40, 1499.4, 838.6, 3395, 0, 1, 0, '1472.5,805 1525.5,805 1525.5,872.5 1472.5,872.5'],
+    [33, 'C3', 't', 0, 2, 40, 1451.3, 839.8, 2641, 0, 1, 0, '1431.5,805 1472.5,805 1472.5,872.5 1431.5,872.5'],
+    [34, 'C2', 't', 7, 7, 40, 1311.8, 838.6, 3496, 0, 0, 0, '1283,805 1334.5,805 1334.5,872.5 1283,872.5'],
+    [35, 'C2', 't', 6, 7, 40, 1258.8, 838.2, 3333, 0, 0, 0, '1230,805 1283,805 1283,872.5 1230,872.5'],
+    [36, 'C2', 't', 5, 7, 40, 1205.3, 836.8, 3472, 0, 0, 0, '1177.5,805 1230,805 1230,872.5 1177.5,872.5'],
+    [37, 'C2', 't', 4, 7, 40, 1152.7, 837.6, 3386, 0, 0, 0, '1125.5,805 1177.5,805 1177.5,872.5 1125.5,872.5'],
+    [38, 'C2', 't', 3, 7, 40, 1100.8, 838, 3353, 0, 0, 0, '1074.5,805 1125.5,805 1125.5,872.5 1074.5,872.5'],
+    [39, 'C2', 't', 2, 7, 40, 1048.8, 838.6, 3294, 0, 0, 0, '1022.5,805 1074.5,805 1074.5,872.5 1022.5,872.5'],
+    [40, 'C2', 't', 1, 7, 40, 997.6, 837.4, 3295, 0, 0, 0, '971.5,805 1022.5,805 1022.5,872.5 971.5,872.5'],
+    [41, 'C2', 't', 0, 7, 40, 948.2, 839.7, 2861, 1, 0, 0, '929,805 971.5,805 971.5,872.5 929,872.5'],
+    [42, 'B3', 'b', 0, 0, 40, 1442, 698.2, 3093, 0, 1, 1, '1413,658 1476,698 1476,713 1413,713'],
+    [43, 'B2', 'b', 7, 7, 40, 1309.3, 678.2, 3713, 0, 1, 0, '1280.5,641 1334,641 1334,709 1280.5,709'],
+    [44, 'B2', 'b', 6, 7, 40, 1255.5, 643.3, 6518, 0, 1, 0, '1228.5,579 1280.5,579 1280.5,709 1228.5,709'],
+    [45, 'B2', 'b', 5, 7, 40, 1204.4, 677.8, 3388, 0, 0, 0, '1176.5,641 1228.5,641 1228.5,709 1176.5,709'],
+    [46, 'B2', 'b', 4, 7, 40, 1152, 677.3, 3279, 0, 0, 0, '1125,641 1176.5,641 1176.5,709 1125,709'],
+    [47, 'B2', 'b', 3, 7, 40, 1099.6, 678, 3348, 0, 0, 0, '1073.5,641 1125,641 1125,709 1073.5,709'],
+    [48, 'B2', 'b', 2, 7, 40, 1048.2, 677.2, 3270, 0, 0, 0, '1022,641 1073.5,641 1073.5,709 1022,709'],
+    [49, 'B2', 'b', 1, 7, 40, 997.6, 677.5, 3365, 0, 0, 0, '971,641 1022,641 1022,709 971,709'],
+    [50, 'B2', 'b', 0, 7, 40, 949.1, 676.8, 2796, 0, 0, 0, '929,641 971,641 971,709 929,709'],
+    [51, 'B1', 'b', 10, 10, 40, 823.1, 676.1, 2573, 1, 0, 0, '798,643.5 845,643.5 845,708 798,708'],
+    [52, 'B1', 'b', 9, 10, 40, 775.1, 676.9, 2604, 1, 0, 0, '751.5,643.5 798,643.5 798,708 751.5,708'],
+    [53, 'B1', 'b', 8, 10, 40, 727.9, 677.6, 2743, 1, 0, 0, '703.5,643.5 751.5,643.5 751.5,708 703.5,708'],
+    [54, 'B1', 'b', 7, 10, 40, 679.7, 677.5, 2844, 1, 0, 0, '655.5,643.5 703.5,643.5 703.5,708 655.5,708'],
+    [55, 'B1', 'b', 6, 10, 40, 632.7, 676.9, 2728, 1, 0, 0, '610,643.5 655.5,643.5 655.5,708 610,708'],
+    [56, 'B1', 'b', 5, 10, 40, 587.6, 677.3, 2738, 1, 0, 0, '562,643.5 610,643.5 610,708 562,708'],
+    [57, 'B1', 'b', 4, 10, 40, 540.6, 676.9, 2536, 1, 0, 0, '517,643.5 562,643.5 562,708 517,708'],
+    [58, 'B1', 'b', 3, 10, 40, 493.1, 676.2, 2562, 1, 0, 0, '469,643.5 517,643.5 517,708 469,708'],
+    [59, 'B1', 'b', 2, 10, 40, 443.7, 676.4, 2554, 1, 0, 0, '421,643.5 469,643.5 469,708 421,708'],
+    [60, 'B1', 'b', 1, 10, 40, 397.9, 676.6, 2576, 1, 0, 0, '375.5,643.5 421,643.5 421,708 375.5,708'],
+    [61, 'B1', 'b', 0, 10, 40, 351.4, 676.3, 2511, 0, 0, 0, '330,643.5 375.5,643.5 375.5,708 330,708'],
+    [62, 'B1', 't', 0, 10, 30, 352.1, 611.3, 2683, 0, 0, 0, '330,580 375.5,580 375.5,643.5 330,643.5'],
+    [63, 'B1', 't', 1, 10, 30, 397.3, 611.4, 2593, 0, 0, 0, '375.5,580 421,580 421,643.5 375.5,643.5'],
+    [64, 'B1', 't', 2, 10, 30, 444.1, 611.3, 2684, 0, 0, 0, '421,580 469,580 469,643.5 421,643.5'],
+    [65, 'B1', 't', 3, 10, 30, 493, 611.3, 2676, 0, 0, 0, '469,580 517,580 517,643.5 469,643.5'],
+    [66, 'B1', 't', 4, 10, 30, 540.1, 611.4, 2724, 0, 0, 0, '517,580 562,580 562,643.5 517,643.5'],
+    [67, 'B1', 't', 5, 10, 30, 587.2, 611.3, 2782, 0, 0, 0, '562,580 610,580 610,643.5 562,643.5'],
+    [68, 'B1', 't', 6, 10, 30, 632.8, 611.2, 2731, 0, 0, 0, '610,580 655.5,580 655.5,643.5 610,643.5'],
+    [69, 'B1', 't', 7, 10, 30, 679.8, 611.3, 2882, 0, 0, 0, '655.5,580 703.5,580 703.5,643.5 655.5,643.5'],
+    [70, 'B1', 't', 8, 10, 30, 727.7, 611.5, 2738, 0, 0, 0, '703.5,580 751.5,580 751.5,643.5 703.5,643.5'],
+    [71, 'B1', 't', 9, 10, 30, 774.6, 611.3, 2676, 0, 0, 0, '751.5,580 798,580 798,643.5 751.5,643.5'],
+    [72, 'B1', 't', 10, 10, 30, 823.2, 611.2, 2709, 0, 0, 0, '798,580 845,580 845,643.5 798,643.5'],
+    [73, 'B2', 't', 0, 6, 30, 948, 609.7, 2499, 0, 0, 0, '929,579 971,579 971,641 929,641'],
+    [74, 'B2', 't', 1, 6, 30, 997.8, 608.4, 2962, 0, 0, 0, '971,579 1022,579 1022,641 971,641'],
+    [75, 'B2', 't', 2, 6, 30, 1048.2, 609.5, 2858, 0, 0, 0, '1022,579 1073.5,579 1073.5,641 1022,641'],
+    [76, 'B2', 't', 3, 6, 30, 1099.7, 608.6, 2904, 0, 1, 0, '1073.5,579 1125,579 1125,641 1073.5,641'],
+    [77, 'B2', 't', 4, 6, 30, 1152.4, 609.1, 2897, 0, 1, 0, '1125,579 1176.5,579 1176.5,641 1125,641'],
+    [78, 'B2', 't', 5, 6, 30, 1204.5, 609.3, 2840, 0, 1, 0, '1176.5,579 1228.5,579 1228.5,641 1176.5,641'],
+    [79, 'B2', 't', 6, 6, 30, 1308.7, 609.8, 3131, 0, 1, 0, '1280.5,579 1317,579 1334,604 1334,641 1280.5,641'],
+    [80, 'A2', 'b', 3, 3, 30, 1096.6, 460.3, 3493, 0, 1, 1, '1073.5,410 1124.5,442 1124.5,488 1073.5,488'],
+    [81, 'A2', 'b', 2, 3, 30, 1047.3, 443.1, 4540, 0, 1, 0, '1022,384 1073.5,409 1073.5,488 1022,488'],
+    [82, 'A2', 'b', 1, 3, 30, 995.1, 429.9, 6006, 0, 0, 0, '970.5,360 1022,383 1022,488 970.5,488'],
+    [83, 'A2', 'b', 0, 3, 30, 946.8, 455.3, 2961, 0, 0, 0, '929,421 970.5,421 970.5,488 929,488'],
+    [84, 'A1', 'b', 9, 9, 30, 823, 454.5, 2842, 0, 0, 0, '799,420 845,420 845,486.5 799,486.5'],
+    [85, 'A1', 'b', 8, 9, 30, 774.9, 454.8, 2914, 0, 0, 0, '749,420 799,420 799,486.5 749,486.5'],
+    [86, 'A1', 'b', 7, 9, 30, 724.9, 454.5, 2822, 0, 0, 0, '702,420 749,420 749,486.5 702,486.5'],
+    [87, 'A1', 'b', 6, 9, 30, 675.9, 454.7, 3000, 0, 0, 0, '652,420 702,420 702,486.5 652,486.5'],
+    [88, 'A1', 'b', 5, 9, 30, 627.3, 454.2, 2992, 0, 0, 0, '602,420 652,420 652,486.5 602,486.5'],
+    [89, 'A1', 'b', 4, 9, 30, 578, 455, 2810, 0, 0, 0, '555,420 602,420 602,486.5 555,486.5'],
+    [90, 'A1', 'b', 3, 9, 30, 528.9, 454.4, 3044, 0, 0, 0, '504.5,420 555,420 555,486.5 504.5,486.5'],
+    [91, 'A1', 'b', 2, 9, 30, 479.1, 454.7, 2903, 0, 0, 0, '454,420 504.5,420 504.5,486.5 454,486.5'],
+    [92, 'A1', 'b', 1, 9, 30, 428.4, 454.7, 2867, 0, 0, 0, '403.5,420 454,420 454,486.5 403.5,486.5'],
+    [93, 'A1', 'b', 0, 9, 30, 377.4, 457.7, 3574, 0, 0, 0, '359,420 403.5,420 403.5,486.5 349.5,486.5'],
+    [94, 'A1', 't', 0, 9, 30, 383.4, 391.4, 2269, 1, 0, 0, '374,356 403.5,356 403.5,420 359.5,420'],
+    [95, 'A1', 't', 1, 9, 30, 428.3, 387.2, 2903, 1, 0, 0, '403.5,356 454,356 454,420 403.5,420'],
+    [96, 'A1', 't', 2, 9, 30, 479.1, 386.9, 2980, 1, 0, 0, '454,356 504.5,356 504.5,420 454,420'],
+    [97, 'A1', 't', 3, 9, 30, 529, 387.1, 3048, 1, 0, 0, '504.5,356 555,356 555,420 504.5,420'],
+    [98, 'A1', 't', 4, 9, 30, 578.4, 387.4, 2805, 1, 0, 0, '555,356 602,356 602,420 555,420'],
+    [99, 'A1', 't', 5, 9, 30, 626.9, 386.8, 3083, 1, 0, 0, '602,356 652,356 652,420 602,420'],
+    [100, 'A1', 't', 6, 9, 30, 675.9, 387.3, 3037, 1, 0, 0, '652,356 702,356 702,420 652,420'],
+    [101, 'A1', 't', 7, 9, 30, 725.3, 387.1, 2895, 1, 0, 0, '702,356 749,356 749,420 702,420'],
+    [102, 'A1', 't', 8, 9, 30, 774.6, 386.8, 2987, 1, 0, 0, '749,356 799,356 799,420 749,420'],
+    [103, 'A1', 't', 9, 9, 30, 822.9, 386.7, 2878, 1, 0, 0, '799,356 845,356 845,420 799,420'],
+    [104, 'A2', 't', 0, 0, 30, 945.6, 382.6, 3339, 0, 0, 0, '929,341 970.5,358 970.5,421 929,421'],
+  ];
 
   const plots = {};
-  const add = (n, x, y, a) => { plots[n] = { n, x, y, ...a }; };
-
-  // Lay a row of plot numbers evenly between x0 and x1 (centres)
-  const row = (nums, x0, x1, y, a) => {
-    const step = nums.length > 1 ? (x1 - x0) / (nums.length - 1) : 0;
-    nums.forEach((n, i) => add(n, x0 + step * i, y, {
-      ...a,
-      first: i === 0,
-      last: i === nums.length - 1,
-    }));
-  };
-  const range = (a, b) => { const r = []; const s = a <= b ? 1 : -1; for (let i = a; i !== b + s; i += s) r.push(i); return r; };
-
-  /* Block A: top-left, between the two upper 30 FT roads */
-  row(range(94, 103), 183, 503, 217, { block: 'A', side: 'top', road: 30, size: 167.3 });
-  row(range(93, 84), 183, 503, 272, { block: 'A', side: 'bottom', road: 30, size: 167.3 });
-
-  /* Block B: upper triangle beside the 30 FT vertical road */
-  add(104, 590, 220, { block: 'B', side: 'top', road: 30, size: 512.6, first: true, last: true, irregular: true });
-  row(range(83, 80), 574, 688, 272, { block: 'B', side: 'bottom', road: 30, size: 181.5 });
-
-  /* Block C: left middle, 30 FT road above, 40 FT road below */
-  row(range(62, 72), 166, 504, 355, { block: 'C', side: 'top', road: 30, size: 160.4 });
-  row(range(61, 51), 166, 504, 412, { block: 'C', side: 'bottom', road: 40, size: 160.4 });
-
-  /* Block D: centre middle */
-  const dx = (c) => 576 + 40.6 * c;
-  range(73, 78).forEach((n, i) => add(n, dx(i), 355, { block: 'D', side: 'top', road: 30, size: 200.0, first: i === 0 }));
-  add(44, dx(6), 384, { block: 'D', side: 'top', road: 30, size: 376.8, irregular: true });
-  add(79, dx(7), 355, { block: 'D', side: 'top', road: 30, size: 214.2, last: true, irregular: true });
-  range(50, 45).forEach((n, i) => add(n, dx(i), 412, { block: 'D', side: 'bottom', road: 40, size: 200.0, first: i === 0 }));
-  add(43, dx(7), 412, { block: 'D', side: 'bottom', road: 40, size: 238.9, last: true, irregular: true });
-
-  /* 42: small parcel beside the social infrastructure */
-  add(42, 940, 412, { block: 'S', side: 'bottom', road: 40, size: 261.4, first: true, last: true, irregular: true });
-
-  /* Block E: centre, 40 FT road above, 30 FT road below, open space to the west */
-  row(range(41, 34), 575, 860, 505, { block: 'E', side: 'top', road: 40, size: 211.1 });
-  row(range(19, 26), 575, 860, 565, { block: 'E', side: 'bottom', road: 30, size: 211.1 });
-
-  /* Block F: right of the 40 FT vertical road */
-  const fx = (c) => 936 + 41 * c;
-  range(33, 31).forEach((n, i) => add(n, fx(i), 505, { block: 'F', side: 'top', road: 40, size: 218.7, first: i === 0 }));
-  add(30, fx(3), 535, { block: 'F', side: 'top', road: 40, size: 448.2, last: true, irregular: true });
-  range(27, 29).forEach((n, i) => add(n, fx(i), 565, { block: 'F', side: 'bottom', road: 30, size: 218.7, first: i === 0, last: i === 2 }));
-
-  /* Block G: on the 150 FT main road, left of the 40 FT entrance road */
-  add(18, 612, 668, { block: 'G', side: 'main', road: 150, size: 538.4, first: true, irregular: true });
-  row(range(17, 13), 664, 856, 690, { block: 'G', side: 'main', road: 150, size: 395.6 });
-  plots[17].first = false;
-
-  /* Block H: on the 150 FT main road, right of the entrance road */
-  range(12, 1).forEach((n, i) => {
-    const tri = i >= 9; // 3, 2, 1 taper into the triangle
-    add(n, 935 + 40.4 * i + (tri ? (i - 8) * 6 : 0), tri ? 700 + (i - 8) * 8 : 690, {
-      block: 'H', side: 'main', road: 150,
-      size: tri ? [392.5, 356.0, 328.7][i - 9] : 410.1,
-      first: i === 0, last: i === 11, irregular: tri,
-    });
+  CELLS.forEach(([n, block, s, col, lastCol, road, x, y, areaPx, open, social, cut, shape]) => {
+    plots[n] = {
+      n, block, x, y, shape, road,
+      side: s === 't' ? 'top' : 'bottom',
+      colIndex: col,
+      first: col === 0,
+      last: col === lastCol,
+      open: !!open,
+      social: !!social,
+      // cut by the diagonal boundary, so smaller and not rectangular
+      irregular: !!cut,
+      size: Math.round(areaPx * SQYD_PER_PX * 10) / 10,
+    };
   });
-
-  /* ---------- Derived characteristics ---------- */
-  const OPEN = new Set([94, 95, 96, 93, 92, 62, 61, 41, 40, 19, 20, 18, 17]);
-  const OPEN_FACING = new Set([41, 19, 18, 62, 61]);
-  const SOCIAL = new Set([80, 81, 79, 43, 42, 30, 29, 31]);
-  const UTILITY = new Set([97, 98, 99, 100, 101]);
-  const ENTRANCE = new Set([13, 14, 12, 11, 34, 26, 33, 27]);
-  // Plot ends that meet a road on their side
-  const cornerAt = (p) => {
-    if (p.irregular && !['G', 'H'].includes(p.block)) return p.n === 104 || p.n === 79 || p.n === 43;
-    if (p.block === 'A') return p.last; // west end of A is the outer boundary
-    if (p.block === 'C') return p.last;
-    if (p.block === 'G') return p.last || p.first;
-    if (p.block === 'H') return p.first;
-    return p.first || p.last && p.block !== 'F';
-  };
 
   const pad = (n) => String(n).padStart(2, '0');
 
   Object.values(plots).forEach((p) => {
-    p.sold = SOLD.has(p.n);
-    p.corner = cornerAt(p);
+    p.reserved = RESERVED[p.n] || null;
+    p.sold = !p.reserved && SOLD.has(p.n);
+    p.corner = p.first || p.last;
     p.mainRoad = p.road === 150;
-    p.nearMain = p.mainRoad || (p.block === 'E' && p.side === 'bottom') || (p.block === 'F' && p.side === 'bottom');
-    p.open = OPEN.has(p.n);
-    p.edge = (p.block === 'A' || p.block === 'C') && p.first || p.irregular;
+    p.nearMain = p.mainRoad || p.block.startsWith('C');
+    p.edge = p.irregular || p.corner;
 
     // Facing follows the road the plot fronts; corners take the side road as well
     const base = p.side === 'top' ? 'North' : 'South';
@@ -110,26 +176,21 @@
     else if (p.nearMain) push('Near 150 FT Main Road');
     if (p.road === 40) push('40 FT Road');
     if (p.corner || p.mainRoad) push(p.mainRoad ? 'Wide Frontage' : 'Wide Road Frontage');
-    if (ENTRANCE.has(p.n)) push('Near Entrance');
-    if (OPEN_FACING.has(p.n)) push('Open Space Facing');
-    else if (p.open) push('Near Open Space');
-    if (SOCIAL.has(p.n)) push('Near Social Infrastructure');
-    if (UTILITY.has(p.n)) push('Near Public Utility');
-    if (p.road === 30 && !p.mainRoad) push('30 FT Road');
-    if (p.irregular) push(p.size > 400 ? 'Large Plot' : 'Irregular Plot');
+    if (p.open) push('Near Open Space');
+    if (p.social) push('Near Social Infrastructure');
+    if (p.road === 30) push('30 FT Road');
+    if (p.irregular) push('Irregular Plot');
     else if (p.edge) push('Edge Plot');
     if (tags.length < 3) push(p.corner || p.edge ? 'Good Visibility' : 'Internal Plot');
     p.highlights = tags;
 
     // One sentence on the strongest differentiator
     if (p.mainRoad && p.corner) p.desc = 'A corner plot on the 150 FT main road with frontage on two roads.';
-    else if (p.mainRoad && p.irregular) p.desc = 'A generously sized plot at the tip of the layout, fronting the 150 FT main road.';
     else if (p.mainRoad) p.desc = 'A well-positioned residential plot with direct frontage on the 150 FT main road.';
     else if (p.corner) p.desc = 'A spacious corner plot with excellent road frontage and convenient access.';
-    else if (OPEN_FACING.has(p.n)) p.desc = 'A well-positioned plot looking straight onto the open space.';
     else if (p.open) p.desc = 'A well-positioned plot a short walk from the open space.';
-    else if (p.irregular) p.desc = 'A larger, irregular plot at the edge of the layout with extra room to plan.';
-    else if (SOCIAL.has(p.n)) p.desc = 'A quiet plot close to the social infrastructure.';
+    else if (p.irregular) p.desc = 'An irregular plot at the edge of the layout with extra room to plan.';
+    else if (p.social) p.desc = 'A quiet plot close to the social infrastructure.';
     else if (p.road === 40) p.desc = 'A residential plot with frontage on a wide 40 FT internal road.';
     else if (p.nearMain) p.desc = 'A residential plot one block from the 150 FT main road.';
     else p.desc = 'A regular plot on a quiet 30 FT internal road, away from main-road traffic.';
@@ -139,5 +200,6 @@
     p.py = p.y / IMG_H;
   });
 
-  window.MJR_PLOTS = { list: range(1, 104).map((n) => plots[n]), byNo: plots, IMG_W, IMG_H };
+  const list = Object.values(plots).sort((a, b) => a.n - b.n);
+  window.MJR_PLOTS = { list, byNo: plots, IMG_W, IMG_H };
 })();

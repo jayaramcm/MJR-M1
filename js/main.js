@@ -1,1096 +1,1065 @@
-(() => {
-  const body = document.body;
-  const nav = document.getElementById('siteNav');
-  const hero = document.getElementById('top');
-  const video = document.getElementById('heroVideo');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+// ==========================================================================
+// MJR TOWNSHIP @ KALWAKURTHY — CLIENT CONTROLLER
+// ==========================================================================
 
-  /* ---------- Smooth scroll (Lenis on GSAP's ticker) ----------
-     One clock for scroll and animation: Lenis advances on gsap.ticker and
-     feeds ScrollTrigger, so scrubbed timelines never drift from the page. */
-  const hasGsap = window.gsap && window.ScrollTrigger;
-  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
-  let lenis = null;
-  if (hasGsap && window.Lenis && !reduceMotion.matches) {
-    lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, smoothWheel: true });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
-    gsap.ticker.lagSmoothing(0);
+let PLOTS_RECORDS = [];
+let AS_OF_DATE = 'October 2026';
+
+document.addEventListener('DOMContentLoaded', async () => {
+  initNavigation();
+  initHeroControls();
+  await loadPlotsData();
+  initMasterPlan();
+  initPlotFinder();
+  initAmenitiesShowcase();
+  initLocationShowcase();
+  initFAQ();
+  initModals();
+  initForms();
+  initStickyMobileBar();
+});
+
+/* --------------------------------------------------------------------------
+   0. LOAD REAL PLOT DATA FROM plots.json (Zero Invented Values)
+   -------------------------------------------------------------------------- */
+async function loadPlotsData() {
+  try {
+    const res = await fetch('plots.json', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.asOfDate) AS_OF_DATE = data.asOfDate;
+      if (Array.isArray(data.plots)) {
+        PLOTS_RECORDS = data.plots;
+      }
+    }
+  } catch (err) {
+    PLOTS_RECORDS = [];
   }
-  const scrollToEl = (el) => {
-    if (!el) return;
-    if (lenis) lenis.scrollTo(el, { offset: -70, duration: 1.6 });
-    else el.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-  };
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a || a.closest('.menu__nav') || a.classList.contains('skip-link')) return;
-    const el = document.querySelector(a.getAttribute('href'));
-    if (!el) return;
-    e.preventDefault();
-    scrollToEl(el);
-  });
 
-  /* ---------- Intro ---------- */
-  let started = false;
-  const start = () => {
-    if (started) return;
-    started = true;
-    requestAnimationFrame(() => body.classList.add('is-loaded'));
-  };
-  if (video.readyState >= 2) start();
-  else video.addEventListener('loadeddata', start, { once: true });
-  setTimeout(start, 1400); // never hold the copy hostage to a slow video
+  const metaEl = document.getElementById('availabilityAsOf');
+  if (metaEl) {
+    metaEl.textContent = `Availability as of ${AS_OF_DATE} · Confirm availability with our team`;
+  }
+}
 
-  /* ---------- Ink bleed (Cartier-style scroll transition) ----------
-     Ivory blots open from staggered seeds, grow and merge until the frame
-     is fully ivory, which is exactly the background of the next section.
-     Canvas draws soft discs; the SVG #inkEdge filter roughens the edges. */
-  const pin = document.getElementById('heroPin');
-  const ink = document.getElementById('heroInk');
-  const ctx = ink.getContext('2d');
-  const INK = '245, 241, 232';
-  const SCALE = 0.5; // half-res canvas: edges are soft anyway, and it keeps scrolling smooth
+/* --------------------------------------------------------------------------
+   1. NAVIGATION & MOBILE DRAWER
+   -------------------------------------------------------------------------- */
+function initNavigation() {
+  const header = document.getElementById('siteHeader');
+  const mobileToggle = document.getElementById('mobileNavToggle');
+  const mobileDrawer = document.getElementById('mobileNavDrawer');
+  const mobileOverlay = document.getElementById('mobileNavOverlay');
+  const mobileClose = document.getElementById('mobileNavClose');
+  const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
 
-  let rand = 20261022;
-  const rnd = () => ((rand = (rand * 16807) % 2147483647) / 2147483647);
-  // early drops are small and scattered; later ones are large and close the gaps
-  const seeds = Array.from({ length: 22 }, (_, i) => ({
-    x: 0.04 + rnd() * 0.92, y: 0.06 + rnd() * 0.88,
-    t0: 0.04 + (i / 22) * 0.6 + rnd() * 0.04,
-    size: 0.08 + (i / 22) * 0.3 + rnd() * 0.08,
-  }));
-  seeds.push({ x: 0.5, y: 0.5, t0: 0.6, size: 0.75 });
-
-  // Second, unfiltered canvas: the sketch shown inside the blots (the filter would warp it)
-  const sk = document.createElement('canvas');
-  sk.className = 'hero__ink hero__ink--sketch';
-  sk.setAttribute('aria-hidden', 'true');
-  ink.after(sk);
-  const sctx = sk.getContext('2d');
-
-  const sizeInk = () => {
-    ink.width = sk.width = Math.ceil(ink.clientWidth * SCALE);
-    ink.height = sk.height = Math.ceil(ink.clientHeight * SCALE);
-  };
-  const ease = (t) => 1 - Math.pow(1 - t, 3);
-
-  const drawInk = (p) => {
-    const w = ink.width, h = ink.height;
-    ctx.clearRect(0, 0, w, h);
-    sctx.clearRect(0, 0, w, h);
-    if (p <= 0) return;
-    const diag = Math.hypot(w, h);
-    for (const s of seeds) {
-      const t = Math.min(Math.max((p - s.t0) / 0.35, 0), 1);
-      if (!t) continue;
-      const r = ease(t) * s.size * diag;
-      const g = ctx.createRadialGradient(s.x * w, s.y * h, 0, s.x * w, s.y * h, r);
-      g.addColorStop(0, `rgba(${INK},1)`);
-      g.addColorStop(0.72, `rgba(${INK},0.97)`);
-      g.addColorStop(0.9, `rgba(${INK},0.55)`);
-      g.addColorStop(1, `rgba(${INK},0)`);
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(s.x * w, s.y * h, r, 0, Math.PI * 2);
-      ctx.fill();
-
-      // sketch mask: a slightly smaller soft disc, so a rough ivory rim frames it
-      const sr = r * 0.8;
-      const m = sctx.createRadialGradient(s.x * w, s.y * h, 0, s.x * w, s.y * h, sr);
-      m.addColorStop(0, 'rgba(0,0,0,1)');
-      m.addColorStop(0.6, 'rgba(0,0,0,1)');
-      m.addColorStop(1, 'rgba(0,0,0,0)');
-      sctx.fillStyle = m;
-      sctx.beginPath();
-      sctx.arc(s.x * w, s.y * h, sr, 0, Math.PI * 2);
-      sctx.fill();
-    }
-    // final wash guarantees a seamless hand-off to the ivory section
-    const wash = Math.min(Math.max((p - 0.86) / 0.12, 0), 1);
-    if (wash) {
-      ctx.fillStyle = `rgba(${INK},${wash})`; ctx.fillRect(0, 0, w, h);
-      sctx.fillStyle = `rgba(0,0,0,${wash})`; sctx.fillRect(0, 0, w, h);
-    }
-
-    // Fill the mask with the sketch, cropped like .intro__sketch (cover, 40% vertical,
-    // scale 1.05) over the visible hero area (canvas overhangs it by 90px each side).
-    if (sketch.complete && sketch.naturalWidth) {
-      const pad = 90 * SCALE, vw = w - pad * 2, vh = h - pad * 2;
-      const s = Math.max(vw / sketch.naturalWidth, vh / sketch.naturalHeight) * 1.05;
-      const dw = sketch.naturalWidth * s, dh = sketch.naturalHeight * s;
-      sctx.globalCompositeOperation = 'source-in';
-      sctx.drawImage(sketch, pad + (vw - dw) / 2, pad + (vh - dh) * 0.4, dw, dh);
-      sctx.globalCompositeOperation = 'source-over';
+  const updateHeaderHeightVar = () => {
+    if (header && window.scrollY <= 24) {
+      document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
     }
   };
-  const sketch = new Image();
-  sketch.src = 'Assets/Architectural Sketch of MJR Gate Entrance.png';
+  updateHeaderHeightVar();
+  window.addEventListener('resize', updateHeaderHeightVar, { passive: true });
 
-  /* ---------- Scroll & ink sizing ---------- */
-  let scrollTimer;
-  window.addEventListener('resize', () => {
-    sizeInk();
-    if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-  });
-  sizeInk();
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 24) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  }, { passive: true });
 
-  /* ---------- Video pause/play (WCAG 2.2.2) ---------- */
-  const toggle = document.getElementById('videoToggle');
-  const toggleLabel = toggle.querySelector('.hero__motion-label');
-  const setPaused = (paused) => {
-    toggle.setAttribute('aria-pressed', String(paused));
-    toggle.setAttribute('aria-label', paused ? 'Play background video' : 'Pause background video');
-    toggleLabel.textContent = paused ? 'Play' : 'Pause';
-  };
-  toggle.addEventListener('click', () => {
-    if (video.paused) { video.play().catch(() => {}); setPaused(false); }
-    else { video.pause(); setPaused(true); }
-  });
-  if (reduceMotion.matches) { video.removeAttribute('autoplay'); video.pause(); setPaused(true); }
-  else video.play().catch(() => setPaused(true));
-
-  /* ---------- Dialog helpers (animated open/close) ---------- */
-  const openDialog = (dlg) => {
-    lenis && lenis.stop();
-    dlg.showModal();
-    requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-open')));
-  };
-  const closeDialog = (dlg, after) => {
-    if (!dlg.open) { after && after(); return; }
-    dlg.classList.remove('is-open');
-    const done = () => { dlg.close(); lenis && lenis.start(); after && after(); };
-    if (reduceMotion.matches) done();
-    else setTimeout(done, dlg.id === 'menuDialog' ? 650 : 380);
-  };
-  [ 'menuDialog', 'bookingDialog' ].forEach((id) => {
-    const dlg = document.getElementById(id);
-    dlg.addEventListener('cancel', (e) => { e.preventDefault(); closeDialog(dlg); });
-  });
-
-  /* ---------- Menu ---------- */
-  const menu = document.getElementById('menuDialog');
-  const menuOpenBtn = document.getElementById('menuOpenBtn');
-  menuOpenBtn.addEventListener('click', () => openDialog(menu));
-  document.getElementById('menuCloseBtn').addEventListener('click', () => closeDialog(menu, () => menuOpenBtn.focus()));
-  menu.querySelectorAll('.menu__nav a').forEach((a) => {
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      const target = document.querySelector(a.getAttribute('href'));
-      closeDialog(menu, () => {
-        scrollToEl(target);
-        history.replaceState(null, '', a.getAttribute('href'));
-      });
-    });
-  });
-
-  /* ---------- Booking (site visit / brochure) ---------- */
-  const booking = document.getElementById('bookingDialog');
-  const form = document.getElementById('bookingForm');
-  const formView = document.getElementById('bookingFormView');
-  const doneView = document.getElementById('bookingDoneView');
-  const copy = {
-    visit: {
-      title: 'Schedule a site visit',
-      intro: 'Walk the layout, see the roads and pick out plots in person. Our sales team will call to confirm a time.',
-      submit: 'Request a call back',
-      done: 'Our sales team will call you shortly to confirm your site visit.',
-      date: true,
-    },
-    brochure: {
-      title: 'Download the brochure',
-      intro: 'Share your number and we will send the MJR Township brochure along with the latest plot availability.',
-      submit: 'Send me the brochure',
-      done: 'The brochure is on its way. Our team may call to answer any questions.',
-      date: false,
-    },
-  };
-  let lastTrigger = null;
-
-  const openBooking = (mode, trigger, plot) => {
-    const c = copy[mode] || copy.visit;
-    lastTrigger = trigger;
-    document.getElementById('bookingIntent').value = plot ? 'plot' : mode;
-    document.getElementById('bookingPlot').value = plot || '';
-    document.getElementById('bookingTitle').textContent = plot ? `Enquire about Plot ${plot}` : c.title;
-    document.getElementById('bookingIntro').textContent = plot
-      ? `Share your number and our sales team will call with pricing, availability and a site visit for Plot ${plot}.`
-      : c.intro;
-    form.querySelector('.booking__submit-label').textContent = c.submit;
-    document.getElementById('bkDateField').hidden = !c.date;
-    document.getElementById('bookingDoneText').textContent = plot ? `Our sales team will call you shortly about Plot ${plot}.` : c.done;
-    document.getElementById('bkDate').min = new Date().toISOString().slice(0, 10);
-    formView.hidden = false;
-    doneView.hidden = true;
-    form.reset();
-    form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
-    form.querySelectorAll('.field__error').forEach((el) => (el.hidden = true));
-    openDialog(booking);
+  const openDrawer = () => {
+    mobileDrawer.classList.add('open');
+    mobileOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
   };
 
-  document.querySelectorAll('[data-open-booking]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const mode = btn.dataset.openBooking;
-      if (menu.open) closeDialog(menu, () => openBooking(mode, menuOpenBtn));
-      else openBooking(mode, btn);
-    });
-  });
-  booking.querySelectorAll('[data-close-booking]').forEach((btn) =>
-    btn.addEventListener('click', () => closeDialog(booking, () => lastTrigger && lastTrigger.focus()))
-  );
-  booking.addEventListener('click', (e) => { if (e.target === booking) closeDialog(booking); });
-
-  const phone = document.getElementById('bkPhone');
-  phone.addEventListener('input', () => { phone.value = phone.value.replace(/\D/g, '').slice(0, 10); });
-
-  const validate = () => {
-    const name = document.getElementById('bkName');
-    const checks = [
-      [name, document.getElementById('bkNameErr'), name.value.trim().length >= 2],
-      [phone, document.getElementById('bkPhoneErr'), /^[6-9]\d{9}$/.test(phone.value)],
-    ];
-    let firstBad = null;
-    checks.forEach(([input, err, ok]) => {
-      input.setAttribute('aria-invalid', String(!ok));
-      err.hidden = ok;
-      if (!ok && !firstBad) firstBad = input;
-    });
-    if (firstBad) firstBad.focus();
-    return !firstBad;
+  const closeDrawer = () => {
+    mobileDrawer.classList.remove('open');
+    mobileOverlay.classList.remove('open');
+    document.body.style.overflow = '';
   };
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-    const submit = document.getElementById('bookingSubmit');
-    submit.setAttribute('aria-busy', 'true');
-    submit.querySelector('.booking__submit-label').textContent = 'Sending...';
-    // TODO: connect to the MJR sales CRM / lead endpoint. Until then the request is only acknowledged on screen.
-    setTimeout(() => {
-      submit.removeAttribute('aria-busy');
-      formView.hidden = true;
-      doneView.hidden = false;
-      doneView.focus();
-    }, 700);
-  });
+  if (mobileToggle) mobileToggle.addEventListener('click', openDrawer);
+  if (mobileClose) mobileClose.addEventListener('click', closeDrawer);
+  if (mobileOverlay) mobileOverlay.addEventListener('click', closeDrawer);
 
-  /* ---------- Hero & Intro sequence (unified timeline on #heroPin) ----------
-     1. Hero video plays with copy & facts.
-     2. As user scrolls, hero copy fades and ivory ink bleeds across the video.
-     3. The moment the ink fade finishes (at progress ~0.38):
-        - Entrance photo opens immediately full-bleed (ivory curtain dissolves).
-        - "INTRODUCING" appears on the entrance photo (bigger size, zero letter-spacing, no shadow).
-     4. Township card (bigger size min(88vw, 820px)) slides up with 3D inclination
-        directly over "INTRODUCING", placing "INTRODUCING" behind the card.
-     5. Sequence settles and smoothly unpins directly into #overview. */
-  if (hasGsap && !reduceMotion.matches) {
-    const heroContent = document.getElementById('heroContent');
-    const heroBase = document.querySelector('.hero__base');
-    const intro = document.getElementById('intro');
-    const photo = document.querySelector('.intro__photo');
-    const photoImg = photo.querySelector('.intro__color');
-    const sketchImg = photo.querySelector('.intro__sketch');
-    const overlay = photo.querySelector('.intro__overlay');
-    const word = document.querySelector('.intro__word');
-    const wordInner = document.querySelector('.intro__word-inner');
-    const card = document.querySelector('.intro__card:not(.intro__card--stats)');
-    const stats = document.querySelector('.intro__card--stats');
-
-    // Initial setup
-    gsap.set(intro, { opacity: 0 });
-    gsap.set([photoImg, sketchImg], { scale: 1.05 });
-    gsap.set(photoImg, { '--fill': 0 });
-    gsap.set(overlay, { opacity: 0 });
-    gsap.set(word, {
-      left: '50%',
-      top: '50%',
-      xPercent: -50,
-      yPercent: -50,
-      y: 0,
-    });
-    gsap.set(wordInner, {
-      opacity: 0,
-      scale: 0.95,
-      letterSpacing: '0px',
-    });
-    gsap.set([card, stats], {
-      left: '50%',
-      top: '50%',
-      xPercent: -50,
-      yPercent: -50,
-      y: () => window.innerHeight * 1.15,
-      rotationX: 24,
-      rotationZ: -7,
-      scale: 0.88,
-      transformPerspective: 1200,
-    });
-
-    const inkTracker = { val: 0 };
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#heroPin',
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1.0,
-        onUpdate: (self) => {
-          // Dark nav text over the ivory sketch, light over the tinted photo
-          const prog = self.progress;
-          nav.classList.toggle('is-inked', (prog >= 0.15 && prog < 0.50) || prog >= 0.999);
-          body.classList.add('is-scrolling');
-          clearTimeout(scrollTimer);
-          scrollTimer = setTimeout(() => body.classList.remove('is-scrolling'), 150);
-        },
-      },
-    });
-
-    tl
-      // Phase 1: Hero copy is gone by the time the ink is ~50-60% across (progress 0 -> 0.17)
-      .to([heroContent, heroBase], { opacity: 0, y: -24, duration: 0.17, ease: 'power1.in' }, 0)
-
-      // Phase 2: Ivory ink bleeds over the video (progress 0 -> 0.34)
-      .to(inkTracker, {
-        val: 1,
-        duration: 0.34,
-        ease: 'power1.inOut',
-        onUpdate: () => drawInk(inkTracker.val),
-      }, 0)
-
-      // Phase 3 (after ink fade): sketch, colour fill, word, cards
-      // Sketch fades in on the ivory background
-      .to(intro, { opacity: 1, duration: 0.08, ease: 'power2.out' }, 0.30)
-      // Photo slowly fills colour into the sketch from the centre outwards
-      .to([photoImg, sketchImg], { scale: 1.0, duration: 0.30, ease: 'none' }, 0.30)
-      .to(photoImg, { '--fill': 1, duration: 0.22, ease: 'power1.inOut' }, 0.36)
-      .to(overlay, { opacity: 1, duration: 0.10, ease: 'power1.out' }, 0.50)
-
-      // "INTRODUCING"
-      .to(wordInner, { opacity: 1, scale: 1.0, duration: 0.08, ease: 'power2.out' }, 0.58)
-
-      // Township card slides up over the word
-      .to(card, {
-        y: 0, rotationX: 0, rotationZ: 0, scale: 1,
-        duration: 0.20, ease: 'power2.out',
-      }, 0.66)
-
-      // Stats card slides up and stacks on the Township card; the first card eases back for depth
-      .to(card, { y: -56, scale: 0.94, duration: 0.18, ease: 'power2.out' }, 0.86)
-      .to(stats, {
-        y: 14, rotationX: 0, rotationZ: 0, scale: 1,
-        duration: 0.20, ease: 'power2.out',
-      }, 0.86)
-
-      // Hold before unpinning into #overview
-      .to({}, { duration: 0.14 });
-
-    /* ---------- 03 Overview: pinned horizontal scroll ----------
-       Copy rises in over Why MJR.svg -> track slides left -> big "Value pillars"
-       -> pillars swing in from the right one at a time (centre -> left slot -> out)
-       -> Master plan pulls open -> interactive Plot Card slides up from bottom. */
-    const why = document.getElementById('overview');
-    if (why) {
-      body.classList.add('has-why-pin');
-      const track = why.querySelector('.why__track');
-      const introCopy = why.querySelectorAll('.why__panel--intro .why__title, .why__panel--intro .why__lede');
-      const pillarsTitle = why.querySelector('.why__header--pillars') || why.querySelector('.why__title--pillars');
-      const pillars = [...why.querySelectorAll('.pillar')];
-      const copies = pillars.map((p) => p.querySelector('.pillar__copy'));
-      const card = why.querySelector('.pcard');
-      const mplanEl = why.querySelector('.mplan');
-      const stage = document.getElementById('planStage');
-      const tower = why.querySelector('.why__art--tower');
-      const mplan = why.querySelector('.mplan');
-      const mplanImg = why.querySelector('.mplan__img');
-      const mplanLabel = why.querySelector('.mplan__label');
-      const STRIP = 0.91; // strip left edge as a fraction of the viewport
-
-      // Conveyor positions
-      const OFF_RIGHT = { x: () => window.innerWidth, rotation: 14, scale: 1, opacity: 1, filter: 'blur(0px)' };
-      const CENTER = { x: 0, rotation: 0, scale: 1, opacity: 1, filter: 'blur(0px)' };
-      const LEFT = { x: () => -window.innerWidth * 0.37, rotation: 0, scale: 0.74, opacity: 0.8, filter: 'blur(3px)' };
-      const OFF_LEFT = { x: () => -window.innerWidth * 0.9, rotation: -6, scale: 0.6, opacity: 0, filter: 'blur(6px)' };
-      const move = { duration: 1, ease: 'power2.inOut' };
-      // Next pillar waiting at the right edge: the first pillar's entry pose (14deg tilt),
-      // paused with just the capital's corner showing
-      const PEEK_TILT = 14;
-      const PEEK = {
-        x: () => {
-          const vw = window.innerWidth;
-          const w = pillars[0].querySelector('.pillar__img').offsetWidth;
-          // capital height above the base pivot; the tilt swings it right by sin(a) * h
-          const h = Math.max(vw * 0.3396, window.innerHeight * 0.6037);
-          const swing = Math.sin(PEEK_TILT * Math.PI / 180) * h;
-          return vw / 2 + w / 2 - swing - vw * 0.04;
-        },
-        rotation: PEEK_TILT, scale: 1, opacity: 1, filter: 'blur(0px)',
-      };
-
-      gsap.set(introCopy, { opacity: 0, y: 40 });
-      gsap.set(pillarsTitle, { opacity: 0, scale: 0.92 });
-      gsap.set(pillars, OFF_RIGHT);
-      gsap.set(copies, { opacity: 0, y: 24 });
-      gsap.set(card, {
-        yPercent: -50,
-        y: () => window.innerHeight * 1.2,
-        rotationX: 24,
-        rotationZ: -7,
-        scale: 0.9,
-        transformPerspective: 1200,
-      });
-      const ROAD_SCALE = 1606 / 1540;
-      const roadX = () => -(45 / 1540) * window.innerWidth;
-      const roadPullStart = () => roadX() + window.innerWidth * 0.18;
-      const grassPullStart = () => window.innerWidth * 0.18;
-      const introY = () => {
-        const h = window.innerWidth * 979 / 1540;
-        const vh = window.innerHeight;
-        // Start 7% into the image at the top
-        const base = -0.07 * h;
-        // Bottom road starts around 0.76 * h; ensure at least 65px is visible above vh
-        const roadY = 0.76 * h;
-        if (base + roadY > vh - 65) {
-          return vh - 65 - roadY;
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetId = link.getAttribute('href');
+      if (targetId && targetId.startsWith('#')) {
+        e.preventDefault();
+        const targetSection = document.querySelector(targetId);
+        if (targetSection) {
+          closeDrawer();
+          const offsetTop = targetSection.getBoundingClientRect().top + window.scrollY - 82;
+          window.scrollTo({ top: offsetTop, behavior: 'smooth' });
         }
-        return base;
-      };
-
-      gsap.set(mplan, { clipPath: 'inset(0% 0% 0% 100%)' });
-      gsap.set(stage, {
-        x: roadPullStart,
-        y: introY,
-        scale: ROAD_SCALE,
-        transformOrigin: '0 0',
-      });
-      gsap.set(mplanImg, {
-        x: grassPullStart,
-        y: 0,
-        scale: 1,
-        transformOrigin: '50% 50%',
-      });
-
-      const explorer = initExplorer({ mplan: mplanEl, mplanImg, stage, card, openBooking, roadX, introY, ROAD_SCALE });
-
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: why,
-          start: 'top top',
-          end: () => '+=' + window.innerHeight * 14,
-          pin: true,
-          scrub: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const isScrollingBack = self.direction === -1;
-
-            if (isScrollingBack) {
-              // 1. If a plot is currently selected & zoomed, close popup & zoom back to overview
-              if (explorer.getSelected && explorer.getSelected() !== null && self.progress < 0.99) {
-                explorer.closePop();
-              }
-              // 2. If the card is minimized, expand it back to full card
-              if (explorer.isMinimized && explorer.isMinimized() && self.progress < 0.85) {
-                explorer.expand();
-              }
-              // 3. If the card is flipped, flip back to front overview
-              if (explorer.isFlipped && explorer.isFlipped() && self.progress < 0.80) {
-                explorer.reset(false);
-              }
-            }
-
-            // Scrolling back before the card settled closes the explorer cleanly
-            if (self.progress < 0.74) {
-              explorer.reset(true);
-            }
-          },
-          onLeaveBack: () => {
-            explorer.reset(true);
-          },
-        },
-      })
-        // Panel 1
-        .to(introCopy, { opacity: 1, y: 0, stagger: 0.15, duration: 0.5, ease: 'power2.out' })
-        .to({}, { duration: 0.4 })
-        .to(track, { x: () => -window.innerWidth, duration: 1.2, ease: 'power1.inOut' })
-
-        // Big "Value pillars"
-        .to(pillarsTitle, { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' })
-        .to({}, { duration: 0.3 })
-
-        // Pillar 1 swings in over the heading; heading fades
-        .to(pillars[0], { ...CENTER, ...move }, 'p1')
-        .to(pillars[1], { ...PEEK, ...move }, 'p1+=0.2')
-        // Tower spills into panel 2; push its right edge past the left of the viewport
-        .to(tower, { x: () => -(tower.offsetLeft + tower.offsetWidth - window.innerWidth) - 40, ...move }, 'p1')
-        .to(pillarsTitle, { scale: 0.85, duration: 0.8, ease: 'power2.inOut' }, 'p1')
-        .to(pillarsTitle, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 'p1+=0.6')
-        .to(copies[0], { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
-        .to({}, { duration: 0.3 })
-
-        // Pillar 2 pushes pillar 1 left
-        .to(pillars[0], { ...LEFT, ...move }, 'p2')
-        .to(pillars[1], { ...CENTER, ...move }, 'p2')
-        .to(pillars[2], { ...PEEK, ...move }, 'p2+=0.2')
-        .to(copies[1], { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
-        .to({}, { duration: 0.3 })
-
-        // Pillar 3 in, pillar 2 left, pillar 1 out
-        .to(pillars[0], { ...OFF_LEFT, ...move }, 'p3')
-        .to(pillars[1], { ...LEFT, ...move }, 'p3')
-        .to(pillars[2], { ...CENTER, ...move }, 'p3')
-        .to(copies[2], { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
-        .to({}, { duration: 0.3 })
-        // Master plan strip only after Belong has been read
-        .to(mplan, { clipPath: `inset(0% 0% 0% ${STRIP * 100}%)`, duration: 0.8, ease: 'power2.out' }, 'ms')
-        .fromTo(mplanLabel, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out' }, 'ms+=0.2')
-        .to({}, { duration: 0.4 })
-
-        // Pulled open: the strip's edge sweeps left to fill the screen, and both
-        // the grassy background and the layout map slide in together from the right
-        .to(mplan, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.8, ease: 'power2.inOut' }, 'mp')
-        .to(mplanImg, { x: 0, duration: 1.8, ease: 'power2.inOut' }, 'mp')
-        .to(stage, { x: roadX, y: introY, scale: ROAD_SCALE, duration: 1.8, ease: 'power2.inOut' }, 'mp')
-        .to(mplanLabel, { x: () => -window.innerWidth * STRIP, duration: 1.8, ease: 'power2.inOut' }, 'mp')
-        .to(mplanLabel, { opacity: 0, duration: 0.5, ease: 'power1.in' }, 'mp+=0.5')
-        .to(pillars[1], { ...OFF_LEFT, duration: 1.6, ease: 'power2.inOut' }, 'mp')
-        .to(pillars[2], { ...OFF_LEFT, duration: 1.8, ease: 'power2.inOut' }, 'mp')
-        .to({}, { duration: 0.5 })
-
-        // Plot card slides up from below with a tilt and settles at the vertical centre
-        .to(card, {
-          y: 0, rotationX: 0, rotationZ: 0, scale: 1,
-          duration: 1.2, ease: 'power2.out',
-        }, 'cl')
-        // Hold so the visitor can explore before the section unpins
-        .to({}, { duration: 4.5 });
-    }
-
-    window.addEventListener('resize', () => {
-      sizeInk();
-      drawInk(inkTracker.val);
-      ScrollTrigger.refresh();
+      }
     });
-    window.addEventListener('load', () => ScrollTrigger.refresh());
+  });
+
+  // Scrollspy
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let current = 'hero';
+    const scrollPos = window.scrollY + 140;
+    sections.forEach(sec => {
+      if (scrollPos >= sec.offsetTop && scrollPos < sec.offsetTop + sec.offsetHeight) {
+        current = sec.id;
+      }
+    });
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+    });
+  }, { passive: true });
+}
+
+/* --------------------------------------------------------------------------
+   2. HERO VIDEO CONTROLS & REDUCED MOTION
+   -------------------------------------------------------------------------- */
+function initHeroControls() {
+  const heroVideo = document.getElementById('heroVideo');
+  const playBtn = document.getElementById('heroPlayToggle');
+  const muteBtn = document.getElementById('heroMuteToggle');
+
+  if (!heroVideo) return;
+
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const applyMotionPreference = (matches) => {
+    if (matches) {
+      heroVideo.pause();
+      heroVideo.removeAttribute('autoplay');
+    } else {
+      heroVideo.play().catch(() => { });
+    }
+  };
+  applyMotionPreference(reducedMotionQuery.matches);
+  if (typeof reducedMotionQuery.addEventListener === 'function') {
+    reducedMotionQuery.addEventListener('change', (e) => applyMotionPreference(e.matches));
   }
 
-  /* ---------- Plot explorer ----------
-     Views of the master plan stage (x, y, scale from its top-left corner):
-       intro   - plan fills the frame behind the closer-look card
-       fit     - whole plan fitted into the space left of the card, pins on
-       zoom    - a selected plot zoomed in, details popup above it */
-  function initExplorer({ mplan, mplanImg, stage, card, openBooking, roadX, introY, ROAD_SCALE }) {
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      if (heroVideo.paused) {
+        heroVideo.play();
+        playBtn.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+      } else {
+        heroVideo.pause();
+        playBtn.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+      }
+    });
+  }
+
+  if (muteBtn) {
+    muteBtn.addEventListener('click', () => {
+      heroVideo.muted = !heroVideo.muted;
+      if (heroVideo.muted) {
+        muteBtn.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+      } else {
+        muteBtn.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
+      }
+    });
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. MASTER PLAN WORKBENCH & INSPECTOR (MJR M4 Map Layout & Interactivity)
+   -------------------------------------------------------------------------- */
+let selectMasterPlanPlot = null;
+
+function initMasterPlan() {
+  const viewport = document.getElementById('masterPlanViewport');
+  const stage = document.getElementById('masterPlanStage');
+  const bgImg = document.getElementById('mplanBgImg');
+  const pinsEl = document.getElementById('planPins');
+  const shape = document.getElementById('planShape');
+  const compass = document.getElementById('mapCompassBadge');
+  const zoomInBtn = document.getElementById('zoomInMasterPlan');
+  const zoomOutBtn = document.getElementById('zoomOutMasterPlan');
+  const zoomResetBtn = document.getElementById('zoomResetMasterPlan');
+
+  const data = window.MJR_PLOTS;
+  if (!viewport || !stage || !pinsEl || !data) return;
+
+  const FACING_ANGLES = {
+    'North': 0,
+    'North-East': 45,
+    'East': 90,
+    'South-East': 135,
+    'South': 180,
+    'South-West': 225,
+    'West': 270,
+    'North-West': 315,
+  };
+
+  let selectedNo = null;
+  let userZoom = 1;
+  const pins = {};
+
+  const statusText = (p) => (p.reserved ? p.reserved : p.sold ? 'Sold Out' : 'Available');
+
+  // Create all 104 interactive plot pins on the MJR M4 layout
+  pinsEl.innerHTML = '';
+  data.list.forEach((p) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pin map-plot-node' + (p.sold ? ' is-sold' : '') + (p.reserved ? ' is-reserved' : '');
+    b.dataset.plotNum = String(p.n);
+    b.textContent = p.n;
+    b.title = `Plot ${p.label} — ${statusText(p)} (${p.size} sq. yd.)`;
+    b.setAttribute('aria-label', `Plot ${p.label}, ${statusText(p)}`);
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (selectedNo === p.n) {
+        selectPlot(null);
+      } else {
+        selectPlot(p.n);
+      }
+    });
+    pinsEl.appendChild(b);
+    pins[p.n] = b;
+  });
+
+  // Outline the selected plot to its exact drawn shape on the 2560 x 1440 layout
+  const showShape = (p) => {
+    if (!shape) return;
+    if (p && p.shape) shape.setAttribute('points', p.shape);
+    shape.classList.toggle('is-on', !!(p && p.shape));
+  };
+
+  // Stage geometry & screen-space pin positioning (MJR M4 coordinates)
+  const ROAD_X0 = 0.1102;
+  const ROAD_X1 = 0.8914;
+  const ROAD_SPAN = ROAD_X1 - ROAD_X0;
+
+  const applyView = () => {
+    const vpW = viewport.clientWidth || 880;
+    const vpH = viewport.clientHeight || 620;
+    const stageBaseH = vpW * (data.IMG_H / data.IMG_W);
+
+    let targetScale, targetX, targetY, bgScale;
+
+    if (selectedNo !== null && data.byNo[selectedNo]) {
+      const p = data.byNo[selectedNo];
+      targetScale = 2.45 * userZoom;
+      targetX = (vpW * 0.5) - (p.px * vpW * targetScale);
+      targetY = (vpH * 0.52) - (p.py * stageBaseH * targetScale);
+      bgScale = 1.12;
+      viewport.classList.add('is-zoomed');
+    } else {
+      const fitW = 1 / ROAD_SPAN;
+      const fitH = vpH / (0.94 * stageBaseH);
+      targetScale = Math.min(fitW, fitH) * userZoom;
+      const scaledW = vpW * targetScale;
+      const scaledH = stageBaseH * targetScale;
+      targetX = (vpW - ROAD_SPAN * scaledW) / 2 - ROAD_X0 * scaledW;
+      const topPad = 0.04 * scaledH;
+      const botEdge = 0.988 * scaledH;
+      const spanH = botEdge - topPad;
+      targetY = (vpH - spanH) / 2 - topPad;
+      bgScale = 1;
+      viewport.classList.remove('is-zoomed');
+    }
+
+    stage.style.transform = `translate3d(${targetX.toFixed(1)}px, ${targetY.toFixed(1)}px, 0) scale(${targetScale.toFixed(4)})`;
+    if (bgImg) {
+      bgImg.style.transform = `scale(${bgScale})`;
+    }
+
+    const sW = vpW * targetScale;
+    const sH = stageBaseH * targetScale;
+    for (let i = 0; i < data.list.length; i++) {
+      const p = data.list[i];
+      const pin = pins[p.n];
+      if (!pin) continue;
+      const px = targetX + p.px * sW;
+      const py = targetY + p.py * sH;
+      pin.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      pin.classList.toggle('is-selected', selectedNo === p.n);
+    }
+  };
+
+  const selectPlot = (n) => {
+    if (n === null || !data.byNo[n]) {
+      selectedNo = null;
+      userZoom = 1;
+      showShape(null);
+      if (compass) compass.style.transform = 'rotate(0deg)';
+      applyView();
+      renderInspector(null, selectPlot);
+      return;
+    }
+
+    const p = data.byNo[n];
+    selectedNo = p.n;
+    userZoom = 1;
+    showShape(p);
+    if (compass) {
+      const deg = FACING_ANGLES[p.facing] ?? 0;
+      compass.style.transform = `rotate(${deg}deg)`;
+    }
+    applyView();
+    renderInspector(p, selectPlot);
+  };
+
+  selectMasterPlanPlot = selectPlot;
+
+  // Clicking empty map area resets selection back to overview
+  viewport.addEventListener('click', (e) => {
+    if (e.target.closest('.pin')) return;
+    if (selectedNo !== null) {
+      selectPlot(null);
+    }
+  });
+
+  if (zoomInBtn) {
+    zoomInBtn.addEventListener('click', () => {
+      userZoom = Math.min(userZoom + 0.25, 2.0);
+      applyView();
+    });
+  }
+  if (zoomOutBtn) {
+    zoomOutBtn.addEventListener('click', () => {
+      userZoom = Math.max(userZoom - 0.25, 0.75);
+      applyView();
+    });
+  }
+  if (zoomResetBtn) {
+    zoomResetBtn.addEventListener('click', () => {
+      selectPlot(null);
+    });
+  }
+
+  window.addEventListener('resize', applyView);
+
+  // Initial render: overview map + right column legend & dropdown
+  applyView();
+  renderInspector(null, selectPlot);
+}
+
+function renderInspector(plot, onSelectPlot) {
+  const inspector = document.getElementById('plotInspector');
+  const data = window.MJR_PLOTS;
+  if (!inspector || !data) return;
+
+  // Build dropdown options for all 104 plots
+  let optionsHtml = `<option value="" ${!plot ? 'selected' : ''}>Select a Plot (01 – 104)...</option>`;
+  data.list.forEach((p) => {
+    const statusTag = p.reserved ? p.reserved : p.sold ? 'Sold Out' : 'Available';
+    const isSel = plot && plot.n === p.n ? 'selected' : '';
+    optionsHtml += `<option value="${p.n}" ${isSel}>Plot #${p.label} — ${p.size} sq. yd. (${statusTag})</option>`;
+  });
+
+  // Legend HTML (Always shown in the right column)
+  const legendHtml = `
+    <div class="inspector-legend-box" aria-label="Map Legend">
+      <span class="inspector-legend-title">Map Legend</span>
+      <div class="inspector-legend-grid">
+        <span class="inspector-legend-item">
+          <span class="legend-pin-swatch swatch-m4-avail"></span>
+          <span>Available</span>
+        </span>
+        <span class="inspector-legend-item">
+          <span class="legend-pin-swatch swatch-m4-sold"></span>
+          <span>Sold Out</span>
+        </span>
+        <span class="inspector-legend-item">
+          <span class="legend-pin-swatch swatch-m4-selected"></span>
+          <span>Selected</span>
+        </span>
+        <span class="inspector-legend-item">
+          <span class="legend-pin-swatch swatch-m4-reserved"></span>
+          <span>Reserved / EV</span>
+        </span>
+      </div>
+    </div>
+  `;
+
+  // Dropdown Selector HTML
+  const selectorHtml = `
+    <div class="inspector-selector-field">
+      <label class="spec-label" for="inspectorPlotSelect">Choose from dropdown or click any plot on map</label>
+      <select id="inspectorPlotSelect" class="inspector-select">
+        ${optionsHtml}
+      </select>
+    </div>
+  `;
+
+  let detailsHtml = '';
+
+  if (plot) {
+    const statusClass = plot.reserved ? 'is-reserved' : plot.sold ? 'is-sold' : '';
+    const statusLabel = plot.reserved ? plot.reserved : plot.sold ? 'Sold Out' : 'Available';
+    const highlightsHtml = (plot.highlights || [])
+      .map((h) => `<span class="inspector-hl-tag">${h}</span>`)
+      .join('');
+
+    const actionBtnHtml = plot.reserved
+      ? `<button type="button" class="btn btn-outline-light btn-pill btn-block" disabled style="opacity:0.55; cursor:not-allowed;">${plot.reserved} — Not for Sale</button>`
+      : `<button type="button" class="btn btn-gold btn-pill btn-block" id="inspectorEnquireBtn">
+           Enquire About Plot #${plot.label}
+         </button>`;
+
+    detailsHtml = `
+      <div>
+        <span class="inspector-kicker">Block ${plot.block} &middot; ${plot.road} FT Road Frontage</span>
+        <div class="inspector-heading-row">
+          <h3 class="inspector-heading">Plot #${plot.label}</h3>
+          <span class="inspector-status-pill ${statusClass}">${statusLabel}</span>
+        </div>
+        <p class="inspector-desc" style="margin-top: 8px;">${plot.desc}</p>
+      </div>
+
+      <div class="inspector-specs">
+        <div class="inspector-spec-cell">
+          <span class="spec-label">Plot Size</span>
+          <span class="spec-value">${plot.size.toFixed(1)} sq. yd.</span>
+        </div>
+        <div class="inspector-spec-cell">
+          <span class="spec-label">Direction</span>
+          <span class="spec-value">${plot.facing} Facing</span>
+        </div>
+        <div class="inspector-spec-cell">
+          <span class="spec-label">Abutting Road</span>
+          <span class="spec-value">${plot.road} FT Wide</span>
+        </div>
+        <div class="inspector-spec-cell">
+          <span class="spec-label">Position</span>
+          <span class="spec-value">${plot.corner ? 'Corner Plot' : 'Regular Plot'}</span>
+        </div>
+      </div>
+
+      <div>
+        <span class="spec-label" style="display:block; margin-bottom:6px;">Highlights</span>
+        <div class="inspector-highlights">${highlightsHtml}</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        ${actionBtnHtml}
+      </div>
+    `;
+  } else {
+    // Overview state before a specific plot is chosen (shows township summary + prompt)
+    detailsHtml = `
+      <div>
+        <span class="inspector-kicker">Interactive Layout Plan</span>
+        <div class="inspector-heading-row">
+          <h3 class="inspector-heading">Select a Plot (01–104)</h3>
+        </div>
+        <p class="inspector-desc" style="margin-top: 8px;">
+          Click any numbered plot directly on the master plan or select a plot number from the dropdown above to zoom in and view its exact size, direction, road width and availability.
+        </p>
+      </div>
+
+      <div class="inspector-specs">
+        <div class="inspector-spec-cell">
+          <span class="spec-label">Approx. plot sizes</span>
+          <span class="spec-value">120–550 sq. yd.</span>
+        </div>
+        <div class="inspector-spec-cell">
+          <span class="spec-label">Internal roads</span>
+          <span class="spec-value">30 &amp; 40 FT</span>
+        </div>
+        <div class="inspector-spec-cell">
+          <span class="spec-label">Abutting highway</span>
+          <span class="spec-value">150 FT</span>
+        </div>
+        <div class="inspector-spec-cell">
+          <span class="spec-label">Total plots</span>
+          <span class="spec-value">104 Plots</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-gold btn-pill btn-block" id="inspectorEnquireBtn">
+        Enquire About Available Plots
+      </button>
+    `;
+  }
+
+  inspector.innerHTML = `
+    ${legendHtml}
+    ${selectorHtml}
+    ${detailsHtml}
+  `;
+
+  const selectEl = document.getElementById('inspectorPlotSelect');
+  if (selectEl && typeof onSelectPlot === 'function') {
+    selectEl.addEventListener('change', () => {
+      const val = selectEl.value ? Number(selectEl.value) : null;
+      onSelectPlot(val);
+    });
+  }
+
+  const enquireBtn = document.getElementById('inspectorEnquireBtn');
+  if (enquireBtn) {
+    enquireBtn.addEventListener('click', () => {
+      if (plot) {
+        openPlotEnquiryModal(plot.label, `${plot.size.toFixed(1)}`, `${plot.road} FT`);
+      } else {
+        openPlotEnquiryModal('General Plot Enquiry', '', '');
+      }
+    });
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. PLOT FINDER (2 Filters: Plot Size & Road Width)
+   -------------------------------------------------------------------------- */
+function initPlotFinder() {
+  const sizeChips = document.querySelectorAll('.chip-size');
+  const roadChips = document.querySelectorAll('.chip-road');
+  const resetBtn = document.getElementById('resetFiltersBtn');
+
+  let activeSize = 'all';
+  let activeRoad = 'Either';
+
+  const SIZE_LABELS = {
+    '120-150': 'up to 150 sq. yd.',
+    '150-200': '151–200 sq. yd.',
+    '200-300': '201–300 sq. yd.',
+    '300+': 'above 300 sq. yd.'
+  };
+
+  // Dim map plots that fall outside the active filters (null = compute from MJR_PLOTS or show all)
+  const highlightOnMap = (matchSet) => {
+    const isFiltered = activeSize !== 'all' || activeRoad !== 'Either';
     const data = window.MJR_PLOTS;
-    if (!data) return { reset() {} };
-    const pinsEl = document.getElementById('planPins');
-    const grid = document.getElementById('plotGrid');
-    const pop = document.getElementById('plotPop');
-    const pageLabel = document.getElementById('pageLabel');
-    const prev = document.getElementById('pagePrev');
-    const next = document.getElementById('pageNext');
-    const dir = document.getElementById('cardDir').querySelector('span');
-    const filterBtn = document.getElementById('filterBtn');
-    const filterPanel = document.getElementById('filterMenu');
-    const filterSize = document.getElementById('filterSize');
-    const filterDirection = document.getElementById('filterDirection');
-    const filterLocation = document.getElementById('filterLocation');
-    const filterAvailable = document.getElementById('filterAvailable');
-    const filterCount = document.getElementById('filterCount');
-    const filterResetBtn = document.getElementById('filterResetBtn');
-    const filterApplyBtn = document.getElementById('filterApplyBtn');
-    const compass = document.getElementById('cardCompass');
-    const minBtn = document.getElementById('cardMinBtn');
-    const expandBtn = document.getElementById('cardExpandBtn');
-    const PER = 36;
-    let page = 0, selected = null, mode = 'intro';
-
-    const filterState = {
-      size: 'all',
-      direction: 'all',
-      location: 'all',
-      availableOnly: false,
-    };
-
-    const FACING_ANGLES = {
-      'North': 0,
-      'North-East': 45,
-      'East': 90,
-      'South-East': 135,
-      'South': 180,
-      'South-West': 225,
-      'West': 270,
-      'North-West': 315,
-    };
-
-    const matches = (p) => {
-      if (filterState.availableOnly && p.sold) return false;
-      if (filterState.size !== 'all') {
-        if (filterState.size === '160-200' && (p.size < 160 || p.size > 200.4)) return false;
-        if (filterState.size === '201-300' && (p.size < 200.5 || p.size > 300.4)) return false;
-        if (filterState.size === '301-400' && (p.size < 300.5 || p.size > 400.4)) return false;
-        if (filterState.size === '401+' && p.size < 400.5) return false;
+    document.querySelectorAll('.map-plot-node').forEach(node => {
+      const plotNum = node.getAttribute('data-plot-num');
+      let dim = false;
+      if (isFiltered) {
+        if (matchSet !== null) {
+          dim = !matchSet.has(String(plotNum));
+        } else if (data && data.byNo[Number(plotNum)]) {
+          const p = data.byNo[Number(plotNum)];
+          const matchSize = activeSize === 'all' || getBucket(p.size) === activeSize;
+          const matchRoad = activeRoad === 'Either' || `${p.road} FT` === activeRoad;
+          dim = !(matchSize && matchRoad);
+        }
       }
-      if (filterState.direction !== 'all') {
-        if (!p.facing.includes(filterState.direction)) return false;
+      node.classList.toggle('is-filtered-out', dim);
+      node.classList.toggle('is-dimmed', dim);
+    });
+  };
+
+  const getBucket = (area) => {
+    if (!area) return 'all';
+    if (area <= 150) return '120-150';
+    if (area <= 200) return '150-200';
+    if (area <= 300) return '200-300';
+    return '300+';
+  };
+
+  const renderSchedule = () => {
+    const grid = document.getElementById('finderResultsGrid');
+    const countEl = document.getElementById('finderMatchCount');
+    if (!grid) return;
+
+    if (PLOTS_RECORDS.length === 0) {
+      const sizeText = activeSize === 'all' ? '120–550 sq. yd.' : SIZE_LABELS[activeSize];
+      const roadText = activeRoad === 'Either' ? '30 & 40 FT roads' : `${activeRoad} road`;
+      highlightOnMap(null);
+      if (countEl) {
+        countEl.textContent = `Your preference: ${sizeText}, ${roadText}`;
       }
-      if (filterState.location !== 'all') {
-        if (filterState.location === 'near' && !p.nearMain) return false;
-        if (filterState.location === 'far' && p.nearMain) return false;
-      }
-      return true;
-    };
+      grid.innerHTML = `
+        <div class="schedule-empty-card">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">
+              Request plots matching ${sizeText} on ${roadText}
+            </h3>
+            <p style="font-size: 0.94rem; color: var(--text-secondary);">
+              Leave your number, and our team will share the official plot schedule, exact dimensions and current availability from the layout sheet.
+            </p>
+          </div>
+          <button type="button" class="btn btn-gold btn-pill" onclick="openPlotEnquiryModal('Preference: ${sizeText} (${roadText})', '', '')">
+            Get Matching Plots
+          </button>
+        </div>
+      `;
+      return;
+    }
 
-    const isFiltered = () =>
-      filterState.size !== 'all' ||
-      filterState.direction !== 'all' ||
-      filterState.location !== 'all' ||
-      filterState.availableOnly;
-
-    const updateFilterCount = () => {
-      if (!filterCount) return;
-      const count = data.list.filter(matches).length;
-      filterCount.textContent = `${count} plot${count === 1 ? '' : 's'} matching`;
-    };
-
-    const applyFilters = () => {
-      updateFilterCount();
-      filterBtn.classList.toggle('is-active', isFiltered());
-      if (selected !== null && !matches(data.byNo[selected])) {
-        closePop();
-      }
-      renderGrid();
-    };
-
-    /* Pins on the plan (rendered in crisp screen-space) */
-    const pins = {};
-    data.list.forEach((p) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'pin' + (p.sold ? ' is-sold' : '');
-      b.textContent = p.n;
-      b.setAttribute('aria-label', `Plot ${p.label}, ${p.sold ? 'sold out' : 'available'}`);
-      b.addEventListener('click', (e) => {
-        e.stopPropagation();
-        select(p.n);
-      });
-      pinsEl.appendChild(b);
-      pins[p.n] = b;
+    const filtered = PLOTS_RECORDS.filter(p => {
+      const matchSize = activeSize === 'all' || getBucket(p.areaSqYd) === activeSize;
+      const matchRoad = activeRoad === 'Either' || p.roadWidth === activeRoad;
+      return matchSize && matchRoad;
     });
 
-    /* Card grid, 36 per page */
-    const renderGrid = () => {
-      const start = page * PER;
-      const items = data.list.slice(start, start + PER);
-      grid.innerHTML = '';
-      for (let i = 0; i < PER; i++) {
-        const p = items[i];
-        if (!p) { const e = document.createElement('span'); e.className = 'pcard__empty'; grid.appendChild(e); continue; }
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.textContent = p.n;
-        b.classList.toggle('is-sold', p.sold);
-        b.classList.toggle('is-selected', selected === p.n);
-        const isMatch = matches(p);
-        b.disabled = !isMatch;
-        b.classList.toggle('is-disabled', !isMatch);
-        b.setAttribute('aria-pressed', String(selected === p.n));
-        b.setAttribute('aria-label', `Plot ${p.label}, ${p.sold ? 'sold out' : 'available'}${!isMatch ? ', filtered out' : ''}`);
-        b.addEventListener('click', (e) => {
-          e.stopPropagation();
-          select(p.n);
-        });
-        grid.appendChild(b);
-      }
-      pageLabel.textContent = `${Math.min(start + PER, data.list.length)} of ${data.list.length}`;
-      prev.disabled = page === 0;
-      next.disabled = start + PER >= data.list.length;
-      data.list.forEach((p) => {
-        const isMatch = matches(p);
-        pins[p.n].classList.toggle('is-filtered-out', !isMatch);
-        pins[p.n].classList.toggle('is-selected', selected === p.n);
-      });
-    };
+    if (countEl) {
+      countEl.textContent = `${filtered.length} of ${PLOTS_RECORDS.length} plots match`;
+    }
+    highlightOnMap(new Set(filtered.map(p => String(p.number))));
 
-    /* Smooth page sliding animation */
-    let isPaging = false;
-    const changePage = (newPage, direction) => {
-      if (isPaging || newPage === page) return;
-      isPaging = true;
-      const outX = direction === 'next' ? -35 : 35;
-      const inX = direction === 'next' ? 35 : -35;
-      gsap.to(grid, {
-        x: outX,
-        opacity: 0,
-        duration: 0.18,
-        ease: 'power1.in',
-        onComplete: () => {
-          page = newPage;
-          renderGrid();
-          gsap.fromTo(grid,
-            { x: inX, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.26, ease: 'power2.out', onComplete: () => { isPaging = false; } }
-          );
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="schedule-empty-card">
+          <p style="font-size: 0.95rem; color: var(--text-secondary);">No plots match the selected combination.</p>
+          <button type="button" class="btn btn-outline btn-sm" id="emptyResetBtn">Reset Filters</button>
+        </div>
+      `;
+      const emptyReset = document.getElementById('emptyResetBtn');
+      if (emptyReset) emptyReset.addEventListener('click', resetAll);
+      return;
+    }
+
+    let rows = filtered.map(p => `
+      <tr>
+        <td><strong>Plot #${p.number}</strong></td>
+        <td>${p.areaSqYd ? `${p.areaSqYd} sq. yd.` : '—'}</td>
+        <td>${p.roadWidth || '—'}</td>
+        <td>${p.facing || '—'}</td>
+        <td>${p.status || 'Available'}</td>
+        <td style="text-align:right;">
+          <button type="button" class="btn btn-gold btn-sm btn-pill" onclick="openPlotEnquiryModal('${p.number}', '${p.areaSqYd || ''}', '${p.roadWidth || ''}')">
+            Enquire About This Plot
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    grid.innerHTML = `
+      <div style="overflow-x:auto;">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Plot No.</th>
+              <th>Area</th>
+              <th>Road Width</th>
+              <th>Facing</th>
+              <th>Status</th>
+              <th style="text-align:right;">Action</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  };
+
+  const resetAll = () => {
+    activeSize = 'all';
+    activeRoad = 'Either';
+    sizeChips.forEach(c => c.classList.toggle('active', c.dataset.value === 'all'));
+    roadChips.forEach(c => c.classList.toggle('active', c.dataset.value === 'Either'));
+    renderSchedule();
+  };
+
+  sizeChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      sizeChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeSize = chip.dataset.value;
+      renderSchedule();
+    });
+  });
+
+  roadChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      roadChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeRoad = chip.dataset.value;
+      renderSchedule();
+    });
+  });
+
+  if (resetBtn) resetBtn.addEventListener('click', resetAll);
+  renderSchedule();
+}
+
+/* --------------------------------------------------------------------------
+   5. AMENITIES INTERACTIVE SHOWCASE
+   -------------------------------------------------------------------------- */
+function initAmenitiesShowcase() {
+  const stageImgA = document.getElementById('amenityStageImgA');
+  const stageImgB = document.getElementById('amenityStageImgB');
+  const stageCaption = document.getElementById('amenityStageCaption');
+  const prevBtn = document.getElementById('amenityPrevBtn');
+  const nextBtn = document.getElementById('amenityNextBtn');
+  const stepCountEl = document.getElementById('amenityStepCount');
+  const detailCategoryEl = document.getElementById('amenityDetailCategory');
+  const detailNameEl = document.getElementById('amenityDetailName');
+  const detailDescEl = document.getElementById('amenityDetailDesc');
+  const pillarBlocks = Array.from(document.querySelectorAll('.amenity-pillar-block'));
+  const listItems = Array.from(document.querySelectorAll('.amenity-list-item'));
+  const rowWraps = Array.from(document.querySelectorAll('.amenity-row-wrap'));
+
+  if (!listItems.length) return;
+
+  // E. Preload all amenity images to avoid flicker
+  listItems.forEach(item => {
+    const src = item.dataset.img;
+    if (src) {
+      const preload = new Image();
+      preload.src = src;
+    }
+  });
+
+  let activeIndex = listItems.findIndex(item => item.classList.contains('active'));
+  if (activeIndex < 0) activeIndex = 0;
+
+  let showingImgA = true;
+
+  const crossfadePreview = (imgSrc, amenityName) => {
+    if (stageCaption && amenityName) {
+      stageCaption.textContent = amenityName;
+    }
+    if (!stageImgA || !stageImgB || !imgSrc) return;
+
+    const currentImg = showingImgA ? stageImgA : stageImgB;
+    const nextImg = showingImgA ? stageImgB : stageImgA;
+
+    if (currentImg.getAttribute('src') === imgSrc) {
+      currentImg.alt = amenityName || '';
+      return;
+    }
+
+    nextImg.src = imgSrc;
+    nextImg.alt = amenityName || '';
+    nextImg.removeAttribute('aria-hidden');
+    currentImg.setAttribute('aria-hidden', 'true');
+
+    nextImg.classList.add('is-visible');
+    currentImg.classList.remove('is-visible');
+    showingImgA = !showingImgA;
+  };
+
+  const selectAmenityByIndex = (index, options = {}) => {
+    const { focusTab = false, toggleMobileInline = false } = options;
+    const total = listItems.length;
+    const normalizedIndex = ((index % total) + total) % total;
+    const targetBtn = listItems[normalizedIndex];
+    if (!targetBtn) return;
+
+    const targetWrap = targetBtn.closest('.amenity-row-wrap');
+    const wasAlreadyOpen = targetWrap && targetWrap.classList.contains('is-open');
+
+    activeIndex = normalizedIndex;
+
+    // Update all 10 tab buttons
+    listItems.forEach((btn, idx) => {
+      const isSelected = idx === activeIndex;
+      btn.classList.toggle('active', isSelected);
+      btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      btn.setAttribute('tabindex', isSelected ? '0' : '-1');
+      if (isSelected && focusTab) {
+        btn.focus();
+      }
+    });
+
+    // Update mobile inline image expansion (only one open at a time)
+    rowWraps.forEach(wrap => {
+      if (wrap === targetWrap) {
+        if (toggleMobileInline && window.innerWidth < 768 && wasAlreadyOpen) {
+          wrap.classList.remove('is-open');
+        } else {
+          wrap.classList.add('is-open');
+        }
+      } else {
+        wrap.classList.remove('is-open');
+      }
+    });
+
+    // F. Highlight the category block containing the active amenity
+    const parentBlock = targetBtn.closest('.amenity-pillar-block');
+    pillarBlocks.forEach(block => {
+      const isActiveBlock = block === parentBlock;
+      block.classList.toggle('active', isActiveBlock);
+      const trigger = block.querySelector('.amenity-pillar-trigger');
+      if (trigger) {
+        trigger.setAttribute('aria-expanded', isActiveBlock ? 'true' : 'false');
+      }
+    });
+
+    // E. Crossfade preview image & show only amenity name in caption
+    crossfadePreview(targetBtn.dataset.img, targetBtn.dataset.name);
+
+    // D. Update amenity details block below the sticky preview (category, name, description)
+    if (detailCategoryEl && targetBtn.dataset.category) {
+      detailCategoryEl.textContent = targetBtn.dataset.category;
+    }
+    if (detailNameEl && targetBtn.dataset.name) {
+      detailNameEl.textContent = targetBtn.dataset.name;
+    }
+    if (detailDescEl && targetBtn.dataset.desc) {
+      detailDescEl.textContent = targetBtn.dataset.desc;
+    }
+
+    // A. Update "X / 10" stepper indicator
+    if (stepCountEl) {
+      stepCountEl.textContent = `${activeIndex + 1} / ${total}`;
+    }
+  };
+
+  // Row click & keyboard navigation (role="tab")
+  listItems.forEach((item, idx) => {
+    item.addEventListener('click', () => {
+      selectAmenityByIndex(idx, { toggleMobileInline: true });
+    });
+
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        selectAmenityByIndex(activeIndex + 1, { focusTab: true });
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        selectAmenityByIndex(activeIndex - 1, { focusTab: true });
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        selectAmenityByIndex(0, { focusTab: true });
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        selectAmenityByIndex(listItems.length - 1, { focusTab: true });
+      }
+    });
+  });
+
+  // Category header trigger click (activates category + its first amenity, or toggles accordion on mobile)
+  pillarBlocks.forEach(block => {
+    const trigger = block.querySelector('.amenity-pillar-trigger');
+    if (trigger) {
+      trigger.addEventListener('click', () => {
+        const isMobile = window.innerWidth < 768;
+        if (isMobile && block.classList.contains('active')) {
+          block.classList.remove('active');
+          trigger.setAttribute('aria-expanded', 'false');
+          return;
+        }
+        const firstItem = block.querySelector('.amenity-list-item');
+        if (firstItem) {
+          const itemIdx = listItems.indexOf(firstItem);
+          if (itemIdx !== -1) {
+            selectAmenityByIndex(itemIdx);
+          }
         }
       });
-    };
-
-    prev.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (page > 0) changePage(page - 1, 'prev');
-    });
-    next.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if ((page + 1) * PER < data.list.length) changePage(page + 1, 'next');
-    });
-
-    /* Filters toggle & controls */
-    const openFilters = () => {
-      filterPanel.hidden = false;
-      filterBtn.textContent = 'Close';
-      filterBtn.setAttribute('aria-expanded', 'true');
-      updateFilterCount();
-    };
-    const closeFilters = () => {
-      filterPanel.hidden = true;
-      filterBtn.textContent = 'Filters';
-      filterBtn.setAttribute('aria-expanded', 'false');
-    };
-    filterBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (filterPanel.hidden) {
-        openFilters();
-      } else {
-        closeFilters();
-      }
-    });
-    filterPanel.addEventListener('click', (e) => e.stopPropagation());
-
-    /* Two-column filter tabs */
-    const tabs = filterPanel.querySelectorAll('.pcard__filter-tab');
-    const panes = filterPanel.querySelectorAll('.pcard__filter-pane');
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const targetTab = tab.dataset.filterTab;
-        tabs.forEach((t) => {
-          const isActive = t === tab;
-          t.classList.toggle('is-active', isActive);
-          t.setAttribute('aria-selected', String(isActive));
-        });
-        panes.forEach((p) => {
-          const isMatch = p.dataset.pane === targetTab;
-          p.classList.toggle('is-active', isMatch);
-          p.hidden = !isMatch;
-        });
-      });
-    });
-
-    /* Radio button options */
-    filterPanel.querySelectorAll('input[name="fSize"]').forEach((r) => {
-      r.addEventListener('change', () => { filterState.size = r.value; applyFilters(); });
-    });
-    filterPanel.querySelectorAll('input[name="fDirection"]').forEach((r) => {
-      r.addEventListener('change', () => { filterState.direction = r.value; applyFilters(); });
-    });
-    filterPanel.querySelectorAll('input[name="fLocation"]').forEach((r) => {
-      r.addEventListener('change', () => { filterState.location = r.value; applyFilters(); });
-    });
-    filterPanel.querySelectorAll('input[name="fAvail"]').forEach((r) => {
-      r.addEventListener('change', () => { filterState.availableOnly = r.value === 'available'; applyFilters(); });
-    });
-
-    filterResetBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      filterState.size = 'all';
-      filterState.direction = 'all';
-      filterState.location = 'all';
-      filterState.availableOnly = false;
-      const sizeRadio = filterPanel.querySelector('input[name="fSize"][value="all"]');
-      if (sizeRadio) sizeRadio.checked = true;
-      const dirRadio = filterPanel.querySelector('input[name="fDirection"][value="all"]');
-      if (dirRadio) dirRadio.checked = true;
-      const locRadio = filterPanel.querySelector('input[name="fLocation"][value="all"]');
-      if (locRadio) locRadio.checked = true;
-      const availRadio = filterPanel.querySelector('input[name="fAvail"][value="all"]');
-      if (availRadio) availRadio.checked = true;
-      applyFilters();
-    });
-    filterApplyBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeFilters();
-    });
-    filterPanel.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeFilters(); filterBtn.focus(); } });
-
-    /* Stage views */
-    const W = () => mplan.clientWidth;
-    const H = () => W() * data.IMG_H / data.IMG_W;
-    const views = {
-      intro: () => ({
-        stage: {
-          x: roadX(),
-          y: introY(),
-          scale: ROAD_SCALE,
-        },
-        bg: {
-          x: 0,
-          y: 0,
-          scale: 1,
-        },
-      }),
-      zoom: (p) => {
-        const narrow = window.innerWidth < 760;
-        const cardW = card.classList.contains('is-minimized') ? 0 : card.offsetWidth;
-        const s = 3.2;
-        const targetScreenX = narrow ? window.innerWidth * 0.5 : (window.innerWidth - cardW) * 0.52;
-        const targetScreenY = window.innerHeight * 0.56;
-        const lx = targetScreenX - p.px * W() * s;
-        const ly = targetScreenY - p.py * H() * s;
-        const bgScale = 0.6 * s; // 60% of layout scale (parallax depth)
-        const bgX = (lx - roadX()) * 0.25;
-        const bgY = (ly - introY()) * 0.25;
-        return {
-          stage: {
-            x: lx,
-            y: ly,
-            scale: s,
-          },
-          bg: {
-            x: bgX,
-            y: bgY,
-            scale: bgScale,
-          },
-        };
-      },
-    };
-    const updatePins = () => {
-      const curX = gsap.getProperty(stage, 'x') || 0;
-      const curY = gsap.getProperty(stage, 'y') || 0;
-      const curScale = gsap.getProperty(stage, 'scaleX') || 1;
-      const sW = W() * curScale;
-      const sH = H() * curScale;
-      for (let i = 0; i < data.list.length; i++) {
-        const p = data.list[i];
-        const pin = pins[p.n];
-        if (!pin) continue;
-        const px = curX + p.px * sW;
-        const py = curY + p.py * sH;
-        pin.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0) translate(-50%, -50%)`;
-      }
-    };
-    const go = (v, instant) => {
-      gsap.killTweensOf(stage);
-      if (mplanImg) gsap.killTweensOf(mplanImg);
-      if (instant || reduceMotion.matches) {
-        gsap.set(stage, v.stage);
-        if (mplanImg && v.bg) gsap.set(mplanImg, v.bg);
-        updatePins();
-        return;
-      }
-      gsap.to(stage, { ...v.stage, duration: 1.3, ease: 'power3.inOut', onUpdate: updatePins });
-      if (mplanImg && v.bg) {
-        gsap.to(mplanImg, { ...v.bg, duration: 1.3, ease: 'power3.inOut' });
-      }
-    };
-    updatePins();
-    window.addEventListener('resize', () => {
-      if (mode === 'zoom' && selected) {
-        go(views.zoom(data.byNo[selected]), true);
-      } else {
-        go(views.intro(), true);
-      }
-    });
-
-    /* Popup */
-    const fill = (p) => {
-      document.getElementById('ppTitle').textContent = `Plot ${p.label}`;
-      const st = document.getElementById('ppStatus');
-      st.textContent = p.sold ? 'Sold Out' : 'Available';
-      st.classList.toggle('is-sold', p.sold);
-      document.getElementById('ppSize').textContent = p.size.toFixed(1);
-      document.getElementById('ppFacing').textContent = p.facing;
-      document.getElementById('ppDesc').textContent = p.desc;
-      document.getElementById('ppHighlights').innerHTML = p.highlights.map((h) => `<li>${h}</li>`).join('');
-      const enq = document.getElementById('ppEnquire');
-      enq.textContent = 'Enquire this plot';
-      enq.dataset.plot = p.label;
-      dir.textContent = `${p.facing} Facing`;
-    };
-    document.getElementById('ppEnquire').addEventListener('click', (e) => openBooking('visit', e.currentTarget, e.currentTarget.dataset.plot));
-
-    const select = (n) => {
-      if (selected === n) {
-        closePop();
-        return;
-      }
-      const p = data.byNo[n];
-      if (!p) return;
-      if (!card.classList.contains('is-flipped')) explore();
-      selected = n;
-      page = Math.floor((n - 1) / PER);
-      fill(p);
-      renderGrid();
-      const wasHidden = pop.hidden;
-      pop.hidden = false;
-      if (wasHidden && !reduceMotion.matches) gsap.fromTo(pop, { opacity: 0, y: 24, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, delay: 0.35, ease: 'power3.out' });
-      mode = 'zoom';
-      mplan.classList.add('is-zoomed');
-      go(views.zoom(p));
-      if (compass) {
-        const deg = FACING_ANGLES[p.facing] ?? 0;
-        compass.style.transform = `rotate(${deg}deg)`;
-      }
-    };
-    const closePop = () => {
-      pop.hidden = true;
-      selected = null;
-      dir.textContent = 'Select a plot';
-      mplan.classList.remove('is-zoomed');
-      if (compass) compass.style.transform = 'rotate(0deg)';
-      renderGrid();
-      mode = 'intro';
-      go(views.intro());
-    };
-    document.getElementById('ppClose').addEventListener('click', closePop);
-
-    const explore = () => {
-      card.classList.add('is-flipped');
-      mplan.classList.add('is-exploring');
-      updatePins();
-      renderGrid();
-      // Keep layout map at exact same size and position when card is flipped!
-      // Only scale and move when a plot is selected.
-      setTimeout(() => grid.querySelector('button')?.focus({ preventScroll: true }), 900);
-    };
-    const reset = (instant) => {
-      mode = 'intro';
-      selected = null;
-      pop.hidden = true;
-      closeFilters();
-      card.classList.remove('is-flipped');
-      card.classList.remove('is-minimized');
-      card.style.opacity = '1';
-      if (card.querySelector('.pcard__inner')) {
-        card.querySelector('.pcard__inner').style.opacity = '1';
-        card.querySelector('.pcard__inner').style.transform = '';
-      }
-      if (minBtn) {
-        minBtn.setAttribute('aria-label', 'Minimize card to legend');
-        minBtn.setAttribute('title', 'Minimize');
-      }
-      mplan.classList.remove('is-exploring');
-      mplan.classList.remove('is-zoomed');
-      dir.textContent = 'Select a plot';
-      if (compass) compass.style.transform = 'rotate(0deg)';
-      renderGrid();
-      go(views.intro(), !!instant);
-    };
-
-    const expand = () => {
-      if (!card.classList.contains('is-minimized')) return;
-      card.classList.remove('is-minimized');
-      card.style.opacity = '1';
-      if (card.querySelector('.pcard__inner')) {
-        card.querySelector('.pcard__inner').style.opacity = '1';
-        card.querySelector('.pcard__inner').style.transform = '';
-      }
-      if (minBtn) {
-        minBtn.setAttribute('aria-label', 'Minimize card to legend');
-        minBtn.setAttribute('title', 'Minimize');
-      }
-      if (mode === 'zoom' && selected) {
-        go(views.zoom(data.byNo[selected]));
-      }
-    };
-
-    const minimize = () => {
-      if (card.classList.contains('is-minimized')) return;
-      closeFilters();
-      card.classList.add('is-minimized');
-      card.style.opacity = '1';
-      if (minBtn) {
-        minBtn.setAttribute('aria-label', 'Expand card');
-        minBtn.setAttribute('title', 'Expand');
-      }
-      if (mode === 'zoom' && selected) {
-        go(views.zoom(data.byNo[selected]));
-      }
-    };
-
-    const toggleMinimize = (e) => {
-      if (e) e.stopPropagation();
-      closeFilters();
-      if (card.classList.contains('is-minimized')) {
-        gsap.to(card.querySelector('.pcard__strip'), {
-          scale: 0.94,
-          opacity: 0,
-          duration: 0.18,
-          ease: 'power1.in',
-          onComplete: () => {
-            expand();
-            gsap.fromTo(card.querySelector('.pcard__inner'),
-              { scale: 0.96, opacity: 0 },
-              { scale: 1, opacity: 1, duration: 0.28, ease: 'power2.out' }
-            );
-            if (minBtn) {
-              gsap.fromTo(minBtn, { rotation: 90 }, { rotation: 0, duration: 0.25, ease: 'back.out(2)' });
-            }
-          }
-        });
-      } else {
-        gsap.to(card.querySelector('.pcard__inner'), {
-          scale: 0.96,
-          opacity: 0,
-          duration: 0.2,
-          ease: 'power2.in',
-          onComplete: () => {
-            minimize();
-            gsap.fromTo(card.querySelector('.pcard__strip'),
-              { scale: 0.94, opacity: 0 },
-              { scale: 1, opacity: 1, duration: 0.26, ease: 'power2.out' }
-            );
-            if (minBtn) {
-              gsap.fromTo(minBtn, { rotation: -90 }, { rotation: 0, duration: 0.25, ease: 'back.out(2)' });
-            }
-          }
-        });
-      }
-    };
-
-    if (minBtn) {
-      minBtn.addEventListener('click', toggleMinimize);
     }
-    if (expandBtn) {
-      expandBtn.addEventListener('click', toggleMinimize);
-    }
+  });
 
-    card.addEventListener('click', (e) => e.stopPropagation());
-    pop.addEventListener('click', (e) => e.stopPropagation());
-    document.getElementById('exploreBtn').addEventListener('click', (e) => { e.stopPropagation(); explore(); });
-    card.querySelector('.pcard__face--front').addEventListener('click', () => explore());
-    document.getElementById('cardBackBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      reset(false);
-      document.getElementById('exploreBtn').focus({ preventScroll: true });
+  // A. Previous / Next stepper arrow buttons
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      selectAmenityByIndex(activeIndex - 1);
     });
-    mplan.addEventListener('click', (e) => {
-      if (e.target.closest('.pin') || e.target.closest('.pcard') || e.target.closest('.plotpop') || e.target.closest('.mplan__label')) {
-        return;
-      }
-      if (selected !== null) {
-        closePop();
-      }
-    });
-    mplan.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !pop.hidden && filterPanel.hidden) closePop();
-    });
-
-    renderGrid();
-    return {
-      reset,
-      closePop,
-      expand,
-      minimize,
-      toggleMinimize,
-      getSelected: () => selected,
-      isMinimized: () => card.classList.contains('is-minimized'),
-      isFlipped: () => card.classList.contains('is-flipped'),
-    };
   }
-})();
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      selectAmenityByIndex(activeIndex + 1);
+    });
+  }
+
+  // Initialize state cleanly
+  selectAmenityByIndex(activeIndex);
+}
+
+/* --------------------------------------------------------------------------
+   6. LOCATION INTERACTIVE CORRIDORS
+   -------------------------------------------------------------------------- */
+function initLocationShowcase() {
+  const cards = document.querySelectorAll('.location-corridor-card');
+  const videoEl = document.getElementById('locationVideo');
+  const titleEl = document.getElementById('locationMediaTitle');
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      cards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const vSrc = card.dataset.video;
+      const vTitle = card.dataset.title;
+      if (titleEl && vTitle) titleEl.textContent = vTitle;
+      if (videoEl && vSrc) {
+        const source = videoEl.querySelector('source');
+        if (source && source.getAttribute('src') !== vSrc) {
+          source.setAttribute('src', vSrc);
+          videoEl.load();
+          videoEl.play().catch(() => { });
+        }
+      }
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   7. FAQ ACCORDION
+   -------------------------------------------------------------------------- */
+function initFAQ() {
+  const faqCards = document.querySelectorAll('.faq-card');
+  faqCards.forEach(card => {
+    const trigger = card.querySelector('.faq-trigger');
+    if (trigger) {
+      trigger.addEventListener('click', () => {
+        const isOpen = card.classList.contains('active');
+        faqCards.forEach(c => {
+          c.classList.remove('active');
+          const t = c.querySelector('.faq-trigger');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) {
+          card.classList.add('active');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   8. MODALS & FORMS
+   -------------------------------------------------------------------------- */
+function initModals() {
+  const triggers = document.querySelectorAll('[data-open-modal]');
+  const modalMap = {
+    'site-visit': document.getElementById('modalSiteVisit'),
+    'brochure': document.getElementById('modalBrochure')
+  };
+
+  triggers.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.getAttribute('data-open-modal');
+      const targetModal = modalMap[key];
+      if (targetModal) openModal(targetModal);
+    });
+  });
+
+  document.querySelectorAll('.modal-close-btn, .modal-backdrop').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target === el || el.classList.contains('modal-close-btn')) {
+        closeAllModals();
+      }
+    });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllModals();
+  });
+}
+
+function openModal(modal) {
+  if (!modal) return;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAllModals() {
+  document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('open'));
+  document.body.style.overflow = '';
+}
+
+window.openPlotEnquiryModal = function (plotNum, area, road) {
+  const modal = document.getElementById('modalPlotEnquiry');
+  const inputNum = document.getElementById('enquiryPlotNumber');
+  const detail = document.getElementById('enquiryPlotDetail');
+
+  if (inputNum) inputNum.value = plotNum;
+  if (detail) {
+    const parts = [`Plot ${plotNum}`];
+    if (area) parts.push(`${area} sq. yd.`);
+    if (road) parts.push(road);
+    detail.textContent = `${parts.join(' · ')} — Leave your number, and our team will call with current prices and payment details.`;
+  }
+  openModal(modal);
+};
+
+function initForms() {
+  const mainForm = document.getElementById('mainEnquiryForm');
+  const chips = document.querySelectorAll('.interest-chip');
+  const hiddenInput = document.getElementById('selectedInterestInput');
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      if (hiddenInput) hiddenInput.value = chip.dataset.val;
+    });
+  });
+
+  if (mainForm) {
+    mainForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const feedback = document.getElementById('mainFormFeedback');
+      if (feedback) feedback.style.display = 'block';
+      mainForm.reset();
+    });
+  }
+
+  document.querySelectorAll('.modal-dialog form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Thank you. Our team will call you shortly to share pricing and availability and to answer your questions.');
+      closeAllModals();
+      form.reset();
+    });
+  });
+}
+
+/* --------------------------------------------------------------------------
+   9. STICKY MOBILE BAR AUTO-HIDE
+   -------------------------------------------------------------------------- */
+function initStickyMobileBar() {
+  const stickyBar = document.querySelector('.mobile-sticky-bar');
+  if (!stickyBar) return;
+
+  let isFormInView = false;
+  let isInspectorInView = false;
+  let isKeyboardOpen = false;
+
+  const updateVisibility = () => {
+    const isModalOpen = document.querySelector('.modal-backdrop.open') !== null;
+    if (isFormInView || isInspectorInView || isKeyboardOpen || isModalOpen) {
+      stickyBar.classList.add('is-hidden');
+      stickyBar.setAttribute('aria-hidden', 'true');
+    } else {
+      stickyBar.classList.remove('is-hidden');
+      stickyBar.removeAttribute('aria-hidden');
+    }
+  };
+
+  const contactSection = document.getElementById('contact');
+  if (contactSection && 'IntersectionObserver' in window) {
+    const formObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isFormInView = entry.isIntersecting;
+        updateVisibility();
+      });
+    }, { threshold: 0.08 });
+    formObserver.observe(contactSection);
+  }
+
+  const plotInspector = document.getElementById('plotInspector');
+  if (plotInspector && 'IntersectionObserver' in window) {
+    const inspectorObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isInspectorInView = entry.isIntersecting;
+        updateVisibility();
+      });
+    }, { threshold: 0.25 });
+    inspectorObserver.observe(plotInspector);
+  }
+
+  document.addEventListener('focusin', (e) => {
+    if (e.target && e.target.matches('input, select, textarea')) {
+      isKeyboardOpen = true;
+      updateVisibility();
+    }
+  });
+
+  document.addEventListener('focusout', (e) => {
+    if (e.target && e.target.matches('input, select, textarea')) {
+      setTimeout(() => {
+        const active = document.activeElement;
+        isKeyboardOpen = !!(active && active.matches && active.matches('input, select, textarea'));
+        updateVisibility();
+      }, 100);
+    }
+  });
+
+  if (window.visualViewport) {
+    const initialHeight = window.innerHeight;
+    window.visualViewport.addEventListener('resize', () => {
+      isKeyboardOpen = window.visualViewport.height < initialHeight * 0.78;
+      updateVisibility();
+    });
+  }
+}
